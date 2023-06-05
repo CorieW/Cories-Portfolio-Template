@@ -1,0 +1,31 @@
+#project-sections {
+    display: flex;
+    width: 100%;
+    margin: 20px 0 10px;
+    padding: 0;
+
+    border-top: 1px solid var(--border-color);
+
+    li {
+        margin: 0;
+        padding: 10px 15px;
+        user-select: none;
+        list-style-type: none;
+
+        font-size: 22px;
+
+        &:hover {
+            cursor: pointer;
+            background-color: var(--soft-background-color);
+        }
+
+        &.active {
+            background-color: var(--soft-background-color);
+            border-bottom: 2px solid var(--primary-color);
+            
+            a {
+                color: var(--primary-color);
+            }
+        }
+    }
+}

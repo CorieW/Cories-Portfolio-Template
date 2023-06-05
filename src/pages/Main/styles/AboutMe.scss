@@ -1,0 +1,44 @@
+#about-me-container {
+    width: min-content;
+
+    #upper-container {
+        display: flex;
+
+        #img-container {
+            display: flex;
+            justify-content: center;
+            width: 300px;
+            height: 300px;
+            margin-right: 50px;
+    
+            overflow: hidden;
+            
+            border-radius: 50%;
+
+            img {
+                background-color: var(--soft-background-color);
+            }
+        }
+
+        h2 {
+            width: max-content;
+            align-self: center;
+            margin: 0;
+            
+            text-align: left;
+            color: var(--text-color);
+            font-size: 70px;
+            font-weight: normal;
+        }
+    }
+
+    #info-container {
+        flex: 1;
+
+        p {
+            text-align: justify;
+            color: var(--soft-text-color);
+            font-size: 30px;
+        }
+    }
+}
