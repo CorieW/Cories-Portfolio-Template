@@ -1,7 +1,8 @@
 # Added
-- Changed the nav.
-- Basic and messy implementation of main page's javascript. Consists of section clamping and active section tracking.
-- Consistent layout added for "404 Project Not Found" and "404 Page Not Found".
+- Changed primary color.
+- Main page's hash value changes as section changes.
+- Main page's hash value that the page is loaded with is used to figure out which section to begin with.
+- 'Useful Links' section had the incorrect URL. Replaced with proper URL to Trello.
 
 # Useful Links
-- https://trello.com/c/Wkuo5UI5/1-restful-api-endpoints
+Project's Trello: https://trello.com/b/Y9F2vMus/portfolio

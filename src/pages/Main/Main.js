@@ -5,22 +5,58 @@ import Nav from '../../components/Nav/Nav';
 import selfie from '../../assets/profile_img.jpg';
 
 function Main() {
-  const [activeHash, setActiveHash] = useState('about-me-section');
+  const [activeHash, setActiveHash] = useState();
   let currSectionIndex = 0;
   let prevScrollY = 0;
 
   useEffect(() => {
+    const handleLoad = () => {
+      // Get the current hash value
+      let hashValue = window.location.hash.substring(1);
+
+      if (hashValue === '') {
+        // If the hash value is empty, set the hash value to the first section
+        // Get the first section
+        const sectionElements = document.getElementsByClassName('section');
+        const firstSection = sectionElements[0];
+        // Set the hash value to the id of the first section
+        window.location.hash = firstSection.id;
+        hashValue = firstSection.id;
+      }
+
+      // Set the section index to the index of the section with the updated hash value
+      currSectionIndex = getActiveSectionIndexByHashValue(hashValue);
+      // Update the active hash value, which will update the active link in the nav bar
+      setActiveHash(hashValue);
+      // Move to the active section
+      setActiveSection();
+    };
+
+    window.addEventListener('load', handleLoad);
+
     // Add event listener to listen for changes in the hash value
     // When the hash value changes, update the active hash value.
     const handleHashChange = () => {
+      // Get the updated hash value
       const updatedHashValue = window.location.hash.substring(1);
+      // Set the section index to the index of the section with the updated hash value
+      currSectionIndex = getActiveSectionIndexByHashValue(updatedHashValue);
+      // Update the active hash value, which will update the active link in the nav bar
       setActiveHash(updatedHashValue);
     };
 
     window.addEventListener('hashchange', handleHashChange);
 
+    const getActiveSectionIndexByHashValue = (hashValue) => {
+      const sectionElements = document.getElementsByClassName('section');
+      for (let i = 0; i < sectionElements.length; i++) {
+        if (sectionElements[i].id === hashValue) return i;
+      }
+      return 0;
+    }
+
     const handleScroll = (e) => {
-      e.preventDefault();
+      console.log('scrolling')
       // Get the current scroll position
       const scrollPosition = window.scrollY;
       const deltaY = scrollPosition - prevScrollY;
@@ -75,7 +111,18 @@ function Main() {
       else if (scrollUpReady && e.deltaY < 0 && currSectionIndex !== 0) currSectionIndex -= 1;
       else return
 
-      window.scrollTo(0, activeSection.offsetTop);
+      setActiveSection();
+    }
+
+    const setActiveSection = () => {
+      const sectionElements = document.getElementsByClassName('section');
+      let activeSection = sectionElements[currSectionIndex];
+      window.location.hash = activeSection.id;
+      const scrollOptions = {
+        top: activeSection.offsetTop,
+        behavior: 'smooth'
+      }
+      window.scrollTo(scrollOptions);
     }
 
     window.addEventListener('touchmove', moveSection, { passive: false });
