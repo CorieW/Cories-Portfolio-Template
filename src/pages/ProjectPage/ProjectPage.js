@@ -73,16 +73,17 @@ function ProjectPage(props) {
   });
   // Index of the active section
   const [activeSection, setActiveSection] = useState(0);
+  // Index of the active image
   const [activeImage, setActiveImage] = useState(0);
 
   useEffect(() => {
     // Remove the '#' symbol from the hash value
-    const hashValue = window.location.hash.substr(1);
+    const hashValue = window.location.hash.substring(1);
     setActiveSection(getSectionIndexByHashValue(hashValue));
 
     // Add event listener to listen for changes in the hash value
     const handleHashChange = () => {
-      const updatedHashValue = window.location.hash.substr(1);
+      const updatedHashValue = window.location.hash.substring(1);
       setActiveSection(getSectionIndexByHashValue(updatedHashValue));
     };
 
@@ -177,7 +178,7 @@ function ProjectPage(props) {
     return (
       <div id='project-page-container'>
         <div id='details'>
-          <h2>Project Not Found</h2>
+          <h2>404 Project Not Found</h2>
         </div>
       </div>
     )

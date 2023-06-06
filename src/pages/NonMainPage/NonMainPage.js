@@ -7,7 +7,7 @@ import './NonMainPage.scss';
 function NonMainPage() {
   return (
     <>
-      <Nav />
+      <Nav/>
       <div id='content-container'>
           <Routes>
               <Route exact path='/projects' element={<ProjectPage />} />
