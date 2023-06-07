@@ -1,0 +1,54 @@
+#skills-container {
+    padding: 0 10%;
+
+    div {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        gap: 20px;
+
+        table {
+            overflow: hidden;
+            border-radius: 10px;
+            height: fit-content;
+
+            text-align: center;
+            font-size: 18px;
+
+            * {
+                margin: 0;
+                padding: 10px;
+                border: 1px solid var(--soft-border-color);
+            }
+
+            thead {
+                font-size: 20px;
+                background-color: var(--soft-border-color);
+                
+                *:first-of-type {
+                    border-radius: 10px 0 0 0;
+                }
+
+                *:last-of-type {
+                    border-radius: 0 10px 0 0;
+                }
+            }
+
+            tbody {
+                tr {
+                    &:last-of-type {
+                        td {
+                            &:first-of-type {
+                                border-radius: 0 0 0 10px;
+                            }
+
+                            &:last-of-type {
+                                border-radius: 0 0 10px 0;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

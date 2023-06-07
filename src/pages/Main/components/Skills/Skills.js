@@ -1,0 +1,155 @@
+import './Skills.scss';
+
+function Skills() {
+    return (
+        <div id='skills-container'>
+            <h2>Skills</h2>
+            <div>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Programming Language</th>
+                        <th>Proficiency</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>JavaScript</td>
+                        <td>Proficient</td>
+                    </tr>
+                    <tr>
+                        <td>HTML</td>
+                        <td>Proficient</td>
+                    </tr>
+                    <tr>
+                        <td>CSS</td>
+                        <td>Proficient</td>
+                    </tr>
+                    <tr>
+                        <td>Java</td>
+                        <td>Proficient</td>
+                    </tr>
+                    <tr>
+                        <td>C#</td>
+                        <td>Proficient</td>
+                    </tr>
+                    <tr>
+                        <td>Python</td>
+                        <td>Proficient</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Framework</th>
+                        <th>Proficiency</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>React</td>
+                        <td>Proficient</td>
+                    </tr>
+                    <tr>
+                        <td>Node.js</td>
+                        <td>Proficient</td>
+                    </tr>
+                    <tr>
+                        <td>Express</td>
+                        <td>Proficient</td>
+                    </tr>
+                    <tr>
+                        <td>Bootstrap</td>
+                        <td>Proficient</td>
+                    </tr>
+                    <tr>
+                        <td>jQuery</td>
+                        <td>Proficient</td>
+                    </tr>
+                    <tr>
+                        <td>ASP.NET</td>
+                        <td>Proficient</td>
+                    </tr>
+                    <tr>
+                        <td>Swing</td>
+                        <td>Proficient</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Database</th>
+                        <th>Proficiency</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>MySQL</td>
+                        <td>Proficient</td>
+                    </tr>
+                    <tr>
+                        <td>SQLite</td>
+                        <td>Proficient</td>
+                    </tr>
+                    <tr>
+                        <td>SQL Server</td>
+                        <td>Proficient</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ORM</th>
+                        <th>Proficiency</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Sequelize</td>
+                        <td>Proficient</td>
+                    </tr>
+                    <tr>
+                        <td>Entity Framework</td>
+                        <td>Proficient</td>
+                    </tr>
+                    <tr>
+                        <td>Hibernate</td>
+                        <td>Proficient</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Other</th>
+                        <th>Proficiency</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Git</td>
+                        <td>Proficient</td>
+                    </tr>
+                    <tr>
+                        <td>GitHub</td>
+                        <td>Proficient</td>
+                    </tr>
+                    <tr>
+                        <td>Unity</td>
+                        <td>Proficient</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    )
+}
+
+export default Skills;

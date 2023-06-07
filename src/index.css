@@ -1,5 +1,5 @@
 :root {
-  --primary-color: rgb(255, 231, 53);
+  --primary-color: gold;
   --background-color: #111;
   --soft-background-color: #222;
   --intense-text-color: #fff;
@@ -10,10 +10,6 @@
 
   background-color: var(--background-color);
   color: var(--text-color);
-}
-
-html {
-  scroll-behavior: smooth;
 }
 
 body {
