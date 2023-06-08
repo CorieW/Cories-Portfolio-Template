@@ -1,153 +1,155 @@
+import React, {useState, useEffect} from 'react';
 import './Skills.scss';
 
 function Skills() {
+    const [skillCategories, setSkillCategories] = useState([
+        {
+            category: 'Programming Language',
+            skills: [
+                {
+                    name: 'JavaScript',
+                    proficiency: 'Proficient'
+                },
+                {
+                    name: 'HTML',
+                    proficiency: 'Proficient'
+                },
+                {
+                    name: 'CSS',
+                    proficiency: 'Proficient'
+                },
+                {
+                    name: 'Java',
+                    proficiency: 'Proficient'
+                },
+                {
+                    name: 'C#',
+                    proficiency: 'Proficient'
+                },
+                {
+                    name: 'Python',
+                    proficiency: 'Proficient'
+                }
+            ]
+        },
+        {
+            category: 'Framework',
+            skills: [
+                {
+                    name: 'React',
+                    proficiency: 'Proficient'
+                },
+                {
+                    name: 'Node.js',
+                    proficiency: 'Proficient'
+                },
+                {
+                    name: 'Express',
+                    proficiency: 'Proficient'
+                },
+                {
+                    name: 'Bootstrap',
+                    proficiency: 'Proficient'
+                },
+                {
+                    name: 'jQuery',
+                    proficiency: 'Proficient'
+                },
+                {
+                    name: 'ASP.NET',
+                    proficiency: 'Proficient'
+                },
+                {
+                    name: 'Swing',
+                    proficiency: 'Proficient'
+                }
+            ]
+        },
+        {
+            category: 'Database',
+            skills: [
+                {
+                    name: 'MySQL',
+                    proficiency: 'Proficient'
+                },
+                {
+                    name: 'SQLite',
+                    proficiency: 'Proficient'
+                },
+                {
+                    name: 'SQL Server',
+                    proficiency: 'Proficient'
+                }
+            ]
+        },
+        {
+            category: 'ORM',
+            skills: [
+                {
+                    name: 'Sequelize',
+                    proficiency: 'Proficient'
+                },
+                {
+                    name: 'Entity Framework',
+                    proficiency: 'Proficient'
+                },
+                {
+                    name: 'Hibernate',
+                    proficiency: 'Proficient'
+                }
+            ]
+        },
+        {
+            category: 'Other',
+            skills: [
+                {
+                    name: 'Git',
+                    proficiency: 'Proficient'
+                },
+                {
+                    name: 'GitHub',
+                    proficiency: 'Proficient'
+                },
+                {
+                    name: 'Unity',
+                    proficiency: 'Proficient'
+                }
+            ]
+        }
+    ]);
+
+    function getSkillsListContainer() {
+        console.log(skillCategories)
+        return (
+            <div id='skills-content-container'>
+
+                {skillCategories.map((category, index) => {
+                    return (
+                        <div className='skill-category-container' key={index}>
+                            <div className='skill-category'>
+                                <p className='category'>{category.category}</p>
+                            </div>   
+                            <ul className='skills-list'>
+                                {category.skills.map((skill, index) => {
+                                    return (
+                                        <li className='skill-listing' key={index}>
+                                            <img src='https://via.placeholder.com/50' alt='Skill icon' className='skill-icon' />
+                                            <p className='skill-name'>{skill.name}</p>
+                                        </li>
+                                    )
+                                })}
+                            </ul>
+                        </div>
+                    )
+                })}
+            </div>
+        )
+    }
+
     return (
         <div id='skills-container'>
             <h2>Skills</h2>
-            <div>
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Programming Language</th>
-                        <th>Proficiency</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>JavaScript</td>
-                        <td>Proficient</td>
-                    </tr>
-                    <tr>
-                        <td>HTML</td>
-                        <td>Proficient</td>
-                    </tr>
-                    <tr>
-                        <td>CSS</td>
-                        <td>Proficient</td>
-                    </tr>
-                    <tr>
-                        <td>Java</td>
-                        <td>Proficient</td>
-                    </tr>
-                    <tr>
-                        <td>C#</td>
-                        <td>Proficient</td>
-                    </tr>
-                    <tr>
-                        <td>Python</td>
-                        <td>Proficient</td>
-                    </tr>
-                    </tbody>
-                </table>
-
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Framework</th>
-                        <th>Proficiency</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>React</td>
-                        <td>Proficient</td>
-                    </tr>
-                    <tr>
-                        <td>Node.js</td>
-                        <td>Proficient</td>
-                    </tr>
-                    <tr>
-                        <td>Express</td>
-                        <td>Proficient</td>
-                    </tr>
-                    <tr>
-                        <td>Bootstrap</td>
-                        <td>Proficient</td>
-                    </tr>
-                    <tr>
-                        <td>jQuery</td>
-                        <td>Proficient</td>
-                    </tr>
-                    <tr>
-                        <td>ASP.NET</td>
-                        <td>Proficient</td>
-                    </tr>
-                    <tr>
-                        <td>Swing</td>
-                        <td>Proficient</td>
-                    </tr>
-                    </tbody>
-                </table>
-
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Database</th>
-                        <th>Proficiency</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>MySQL</td>
-                        <td>Proficient</td>
-                    </tr>
-                    <tr>
-                        <td>SQLite</td>
-                        <td>Proficient</td>
-                    </tr>
-                    <tr>
-                        <td>SQL Server</td>
-                        <td>Proficient</td>
-                    </tr>
-                    </tbody>
-                </table>
-
-                <table>
-                    <thead>
-                    <tr>
-                        <th>ORM</th>
-                        <th>Proficiency</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>Sequelize</td>
-                        <td>Proficient</td>
-                    </tr>
-                    <tr>
-                        <td>Entity Framework</td>
-                        <td>Proficient</td>
-                    </tr>
-                    <tr>
-                        <td>Hibernate</td>
-                        <td>Proficient</td>
-                    </tr>
-                    </tbody>
-                </table>
-
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Other</th>
-                        <th>Proficiency</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>Git</td>
-                        <td>Proficient</td>
-                    </tr>
-                    <tr>
-                        <td>GitHub</td>
-                        <td>Proficient</td>
-                    </tr>
-                    <tr>
-                        <td>Unity</td>
-                        <td>Proficient</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+            {getSkillsListContainer()}
         </div>
     )
 }

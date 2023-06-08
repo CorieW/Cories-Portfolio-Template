@@ -4,6 +4,7 @@ import './styles/Main.scss';
 import Nav from '../../components/Nav/Nav';
 import selfie from '../../assets/profile_img.jpg';
 import Skills from './components/Skills/Skills';
+import Projects from './components/Projects/Projects';
 
 function Main() {
   const [activeSectionID, setActiveSectionID] = useState('about-me-section');
@@ -214,9 +215,7 @@ function Main() {
         <Skills />
       </div>
       <div className='section' id='projects-section'>
-        <h2>Projects</h2>
-        <div id='projects-container'>
-        </div>
+        <Projects />
       </div>
       <div className='section' id='contact-section'>
         <h2>Contact</h2>
