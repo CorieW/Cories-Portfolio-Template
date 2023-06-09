@@ -1,17 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import $ from 'jquery';
 import './styles/Main.scss';
 import Nav from '../../components/Nav/Nav';
-import selfie from '../../assets/profile_img.jpg';
 import Skills from './components/Skills/Skills';
 import Projects from './components/Projects/Projects';
+import AboutMe from './components/AboutMe/AboutMe';
 
 function Main() {
-  const [activeSectionID, setActiveSectionID] = useState('about-me-section');
+  const [activeSectionIndex, setActiveSectionIndex] = useState(0);
   const sectionHashes = ['about-me-section', 'skills-section', 'projects-section', 'contact-section'];
-  let currSectionIndex = 0;
-  let prevScrollY = 0;
-  let sectionLocked = true;
+  const currSectionIndexRef = useRef(0);
+  const sectionLockedRef = useRef(true);
 
   useEffect(() => {
     const getActiveSectionIndexByHashValue = (hashValue) => {
@@ -21,69 +20,59 @@ function Main() {
       return 0;
     }
 
-    const switchToActiveSection = () => {
-      const sectionElements = document.getElementsByClassName('section');
-      let activeSection = sectionElements[currSectionIndex];
-      const scrollOptions = {
-        top: activeSection.offsetTop,
-        behavior: 'smooth'
-      }
-      console.log(activeSection.offsetTop)
-      // Disable the section lock
-      sectionLocked = false;
-      // Scroll to the active section
-      window.scrollTo(scrollOptions);
-    }
+    let prevScrollY = 0;
 
     // Get the current hash value
     const hashValue = window.location.hash.substring(1);
     // Set the section index to the index of the section with the hash value
-    currSectionIndex = getActiveSectionIndexByHashValue(hashValue);
-    if (currSectionIndex !== 0) switchToActiveSection();
+    currSectionIndexRef.current = getActiveSectionIndexByHashValue(hashValue);
+    setActiveSectionIndex(currSectionIndexRef.current);
+    if (activeSectionIndex !== 0) switchToActiveSection();
 
     // Add event listener to listen for changes in the hash value
     // When the hash value changes, update the active hash value.
-    const handleHashChange = (e) => {
+    const handleHashReplaced = (e) => {
       // Get the updated hash value
       const updatedHashValue = window.location.hash.substring(1);
       // Set the section index to the index of the section with the updated hash value
-      currSectionIndex = getActiveSectionIndexByHashValue(updatedHashValue);
+      currSectionIndexRef.current = getActiveSectionIndexByHashValue(updatedHashValue);
       // Scroll to the active section
       switchToActiveSection();
     };
 
-    window.addEventListener('hashReplaced', handleHashChange);
+    window.addEventListener('hashReplaced', handleHashReplaced);
 
     const handleScroll = (e) => {
-      // Get the current scroll position
       const scrollPosition = window.scrollY;
       const bottomPostionOfView = window.scrollY + window.innerHeight;
 
-      // Get the sections
       const sectionElements = document.getElementsByClassName('section');
 
-      // Get the active section
-      let activeSection = sectionElements[currSectionIndex];
+      let activeSection = sectionElements[currSectionIndexRef.current];
       let sectionTop = activeSection.offsetTop;
       let sectionBottom = sectionTop + activeSection.offsetHeight;
 
-      // Clamp the scroll position to the current section
+      // Get the distance from the top of the section and the bottom of the currently selected section
       let remainingScrollFromBottom = sectionBottom - bottomPostionOfView;
       let remainingScrollFromTop = scrollPosition - sectionTop;
 
-      if (!sectionLocked) {
+      // Currently section is not locked, meaning the user is scrolling to a section
+      if (!sectionLockedRef.current) {
+        // Section is in view, lock the section
         if (Math.round(remainingScrollFromTop) === 0) {
-          console.log('Section locked');
-          sectionLocked = true;
-          // Now that the section is locked, update the active section ID
-          setActiveSectionID(sectionElements[currSectionIndex].id);
-          // Update the hash value
-          window.history.replaceState(null, null, `#${sectionElements[currSectionIndex].id}`);
+          // Lock the user to the current section
+          sectionLockedRef.current = true;
+          // Now that the section is locked, update the active section index
+          setActiveSectionIndex(currSectionIndexRef.current);
+          // Update the hash value in the URL to that of the active section
+          window.history.replaceState(null, null, `#${sectionElements[currSectionIndexRef.current].id}`);
         }
         
+        // Otherwise, don't do anything, continue to wait for the section to be in view
         return;
       }
       
+      // Lock the user to the current section if they scroll past the top or bottom of the section
       if (Math.round(remainingScrollFromBottom) <= 0) {
         const scrollOptions = {
           top: sectionBottom - window.innerHeight,
@@ -109,7 +98,7 @@ function Main() {
     const handleNavOnScroll = () => {
       const scrollPosition = window.scrollY;
       const sectionElements = document.getElementsByClassName('section');
-      let activeSection = sectionElements[currSectionIndex];
+      let activeSection = sectionElements[currSectionIndexRef.current];
       let sectionTop = activeSection.offsetTop;
 
       // Get distance from top of the section
@@ -126,7 +115,7 @@ function Main() {
     window.addEventListener('scroll', handleNavOnScroll);
 
     const moveSection = (e) => {
-      if (!sectionLocked) {
+      if (!sectionLockedRef.current) {
         e.preventDefault();
         // Interrupted scroll, continue scrolling to the active section
         switchToActiveSection();
@@ -134,7 +123,7 @@ function Main() {
       }
 
       const sectionElements = document.getElementsByClassName('section');
-      let activeSection = sectionElements[currSectionIndex];
+      let activeSection = sectionElements[currSectionIndexRef.current];
       
       // Check if the current section is in view
       let sectionTop = activeSection.offsetTop;
@@ -145,8 +134,8 @@ function Main() {
       const scrollDownReady = Math.round(remainingScrollFromBottom) <= 0;
       const scrollUpReady = Math.round(remainingScrollFromTop) <= 0;
 
-      if (scrollDownReady && e.deltaY > 0 && sectionElements.length !== currSectionIndex + 1) currSectionIndex += 1;
-      else if (scrollUpReady && e.deltaY < 0 && currSectionIndex !== 0) currSectionIndex -= 1;
+      if (scrollDownReady && e.deltaY > 0 && sectionElements.length !== currSectionIndexRef.current + 1) currSectionIndexRef.current += 1;
+      else if (scrollUpReady && e.deltaY < 0 && currSectionIndexRef.current !== 0) currSectionIndexRef.current -= 1;
       else return
 
       switchToActiveSection();
@@ -158,7 +147,7 @@ function Main() {
     // Clean up the event listener on component unmount
     return () => {
       // window.removeEventListener('load', handleLoad);
-      window.removeEventListener('hashchange', handleHashChange);
+      window.removeEventListener('hashReplaced', handleHashReplaced);
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('scroll', handleNavOnScroll);
       window.removeEventListener('touchmove', moveSection);
@@ -177,39 +166,64 @@ function Main() {
     )
   }
 
-  function onLinkClick(e) {
-    e.preventDefault();
-    const hash = e.target.hash.substring(1);
-    window.history.replaceState(null, null, `#${hash}`);
+  function getLinkComponentFor(hashValue, name) {
+    const handleLinkClick = (e) => {
+      e.preventDefault();
+      const hash = e.target.hash.substring(1);
+      window.history.replaceState(null, null, `#${hash}`);
+  
+      const event = new CustomEvent('hashReplaced', { detail: { hash } });
+      window.dispatchEvent(event);
+    }
 
-    const event = new CustomEvent('hashReplaced', { detail: { hash } });
-    window.dispatchEvent(event);
-  }
-
-  function getLinkComponentFor(hashValue, name, defActive = false) {
     // Check if the hash value matches the active hash value
     // This is used to determine if the link is active
-    let isActive = activeSectionID === hashValue;
+    let isActive = sectionHashes[activeSectionIndex] === hashValue;
     return (
-      <li><a href={'#' + hashValue} className={isActive ? 'active' : ''} onClick={onLinkClick}>{name}</a></li>
+      <li><a href={'#' + hashValue} className={isActive ? 'active' : ''} onClick={handleLinkClick}>{name}</a></li>
     )
+  }
+
+  function switchToActiveSection() {
+    const sectionElements = document.getElementsByClassName('section');
+    let activeSection = sectionElements[currSectionIndexRef.current];
+    const scrollOptions = {
+      top: activeSection.offsetTop,
+      behavior: 'smooth'
+    }
+    // Disable the section lock
+    sectionLockedRef.current = false;
+    // Scroll to the active section
+    window.scrollTo(scrollOptions);
+  }
+
+  function switchSectionInDirection(direction) {
+    // Can't move down if at the bottom
+    if (direction === 1 && activeSectionIndex === sectionHashes.length - 1) return;
+    // Can't move up if at the top
+    if (direction === -1 && activeSectionIndex === 0) return;
+
+    currSectionIndexRef.current = activeSectionIndex + direction;
+    switchToActiveSection();
+  }
+
+  function isMoveSectionBtnDisabled(direction) {
+    // Can't move down if at the bottom
+    if (direction === 1 && activeSectionIndex === sectionHashes.length - 1) return true;
+    // Can't move up if at the top
+    if (direction === -1 && activeSectionIndex === 0) return true;
+    return false;
   }
 
   return (
     <div id='main-page-container'>
       <Nav linksComponent={getLinksComponent()}/>
+      <div id='move-section-btns-container'>
+        <button className={isMoveSectionBtnDisabled(-1) ? 'disabled' : ''} id='move-section-up-btn' onClick={() => switchSectionInDirection(-1)}><i className="fa-solid fa-arrow-up"></i></button>
+        <button className={isMoveSectionBtnDisabled(1) ? 'disabled' : ''} id='move-section-down-btn' onClick={() => switchSectionInDirection(1)}><i className="fa-solid fa-arrow-down"></i></button>
+      </div>
       <div className='section' id='about-me-section'>
-        <div id='about-me-container'>
-          <div id='upper-container'>
-            <div id='img-container'>
-              <img src={selfie} alt='Profile image' />
-            </div>
-            <h2>Hello, I am <br/><strong>Corie Watson</strong>. <br/>I am a Developer</h2>
-          </div>
-          <div id='info-container'>
-            <p>Sed eget sagittis lacus, ac hendrerit enim. Curabitur quis tellus et odio scelerisque rhoncus at eget magna. Sed mattis sapien lacus, at auctor mauris tempor eget. Donec velit ipsum, blandit sed arcu eu, volutpat placerat massa. Fusce volutpat leo ut turpis mattis lobortis. Duis aliquam urna et ex hendrerit, sed lacinia leo volutpat. Aliquam et placerat metus. Duis tincidunt posuere mi, vel posuere magna vehicula at. Vestibulum ullamcorper justo massa, at maximus nisl dapibus eu. Cras eu odio vitae dolor maximus bibendum. Phasellus laoreet nulla quis pharetra eleifend. Nunc ac vestibulum dolor. </p>
-          </div>
-        </div>
+        <AboutMe />
       </div>
       <div className='section' id='skills-section'>
         <Skills />

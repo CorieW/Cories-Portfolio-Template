@@ -1,7 +1,39 @@
 #main-page-container {    
     box-sizing: border-box;
 
-    @import 'AboutMe.scss';
+    #move-section-btns-container {
+        position: fixed;
+        bottom: 50px;
+        right: 10px;
+
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        button {
+            width: 65px;
+            height: 65px;
+            margin: 0;
+            padding: 0;
+            border: none;
+            border-radius: 50%;
+            background-color: var(--intense-text-color);
+            color: var(--background-color);
+            font-size: 24px;
+            font-weight: 600;
+            cursor: pointer;
+
+            &:hover {
+                background-color: var(--primary-color);
+            }
+
+            &.disabled {
+                background-color: var(--soft-background-color);
+                color: var(--soft-text-color);
+                cursor: not-allowed;
+            }
+        }
+    }
 
     .section {
         display: flex;
