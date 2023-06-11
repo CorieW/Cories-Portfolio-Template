@@ -1,125 +1,49 @@
 import React, {useState, useEffect} from 'react';
 import './Skills.scss';
+import firebase from '../../../../firebase.js';
+import Loading from '../Loading/Loading';
 
 function Skills() {
-    const [skillCategories, setSkillCategories] = useState([
-        {
-            category: 'Programming Language',
-            skills: [
-                {
-                    name: 'JavaScript',
-                    proficiency: 'Proficient'
-                },
-                {
-                    name: 'HTML',
-                    proficiency: 'Proficient'
-                },
-                {
-                    name: 'CSS',
-                    proficiency: 'Proficient'
-                },
-                {
-                    name: 'Java',
-                    proficiency: 'Proficient'
-                },
-                {
-                    name: 'C#',
-                    proficiency: 'Proficient'
-                },
-                {
-                    name: 'Python',
-                    proficiency: 'Proficient'
+    const [skillCategories, setSkillCategories] = useState(null);
+
+    useEffect(() => {
+        // get and add skills to skillCategories
+        const db = firebase.firestore();
+        let skillsRef = db.collection('skills');
+        skillsRef = db.collection('skills').orderBy('priority', 'desc');
+
+        const storageRef = firebase.storage().ref();
+
+        skillsRef.get().then(async (querySnapshot) => {
+            console.log(1);
+            const skillsCategories = [];
+          
+            for (const doc of querySnapshot.docs) {
+              const skillsCategory = doc.data();
+          
+              const getImageURLPromises = skillsCategory.skills.map(async (skill) => {
+                try {
+                  const imageRef = storageRef.child(skill.imageURL);
+                  const url = await imageRef.getDownloadURL();
+                  skill.imageURL = url;
+                  console.log(2);
+                } catch (error) {
+                  console.error('Error retrieving image URL:', error);
                 }
-            ]
-        },
-        {
-            category: 'Framework',
-            skills: [
-                {
-                    name: 'React',
-                    proficiency: 'Proficient'
-                },
-                {
-                    name: 'Node.js',
-                    proficiency: 'Proficient'
-                },
-                {
-                    name: 'Express',
-                    proficiency: 'Proficient'
-                },
-                {
-                    name: 'Bootstrap',
-                    proficiency: 'Proficient'
-                },
-                {
-                    name: 'jQuery',
-                    proficiency: 'Proficient'
-                },
-                {
-                    name: 'ASP.NET',
-                    proficiency: 'Proficient'
-                },
-                {
-                    name: 'Swing',
-                    proficiency: 'Proficient'
-                }
-            ]
-        },
-        {
-            category: 'Database',
-            skills: [
-                {
-                    name: 'MySQL',
-                    proficiency: 'Proficient'
-                },
-                {
-                    name: 'SQLite',
-                    proficiency: 'Proficient'
-                },
-                {
-                    name: 'SQL Server',
-                    proficiency: 'Proficient'
-                }
-            ]
-        },
-        {
-            category: 'ORM',
-            skills: [
-                {
-                    name: 'Sequelize',
-                    proficiency: 'Proficient'
-                },
-                {
-                    name: 'Entity Framework',
-                    proficiency: 'Proficient'
-                },
-                {
-                    name: 'Hibernate',
-                    proficiency: 'Proficient'
-                }
-            ]
-        },
-        {
-            category: 'Other',
-            skills: [
-                {
-                    name: 'Git',
-                    proficiency: 'Proficient'
-                },
-                {
-                    name: 'GitHub',
-                    proficiency: 'Proficient'
-                },
-                {
-                    name: 'Unity',
-                    proficiency: 'Proficient'
-                }
-            ]
-        }
-    ]);
+              });
+          
+              await Promise.all(getImageURLPromises);
+              skillsCategories.push(skillsCategory);
+            }
+          
+            console.log('skillsCategories:', skillsCategories);
+            setSkillCategories(skillsCategories);
+          
+            console.log('loaded');
+          });
+    }, []);
 
     function getSkillsListContainer() {
-        console.log(skillCategories)
         return (
             <div id='skills-content-container'>
 
@@ -133,8 +57,9 @@ function Skills() {
                                 {category.skills.map((skill, index) => {
                                     return (
                                         <li className='skill-listing' key={index}>
-                                            <img src='https://via.placeholder.com/50' alt='Skill icon' className='skill-icon' />
+                                            <img src={skill.imageURL} alt='Skill icon' className='skill-icon' />
                                             <p className='skill-name'>{skill.name}</p>
+                                            <p className='skill-desc'>{skill.desc}</p>
                                         </li>
                                     )
                                 })}
@@ -146,6 +71,11 @@ function Skills() {
         )
     }
 
+    if (!skillCategories) return (
+        <div id='skills-container'>
+            <Loading />
+        </div>
+    )
     return (
         <div id='skills-container'>
             <h2>Skills</h2>

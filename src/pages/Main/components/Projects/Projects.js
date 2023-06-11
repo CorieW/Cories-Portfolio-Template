@@ -1,6 +1,23 @@
+import React, {useState, useEffect} from 'react';
 import './styles/Projects.scss';
+import firebase from '../../../../firebase.js';
 
 function Projects() {
+    const [projects, setProjects] = useState([]);
+
+    useEffect(() => {
+        const db = firebase.firestore();
+        const projectsRef = db.collection('projects');
+
+        projectsRef.get().then((querySnapshot) => {
+            let projects = [];
+            querySnapshot.forEach((doc) => {
+                projects.push(doc.data());
+            });
+            setProjects(projects);
+        });
+    }, []);
+
     return (
         <div id='projects-container'>
             <h2>Projects</h2>
