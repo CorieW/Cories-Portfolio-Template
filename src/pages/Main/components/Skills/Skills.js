@@ -7,10 +7,13 @@ function Skills() {
     const [skillCategories, setSkillCategories] = useState(null);
 
     useEffect(() => {
+        fetchSkills();
+    }, []);
+
+    function fetchSkills() {
         // get and add skills to skillCategories
         const db = firebase.firestore();
-        let skillsRef = db.collection('skills');
-        skillsRef = db.collection('skills').orderBy('priority', 'desc');
+        let skillsRef = db.collection('skills').orderBy('priority', 'desc');
 
         const storageRef = firebase.storage().ref();
 
@@ -41,7 +44,7 @@ function Skills() {
           
             console.log('loaded');
           });
-    }, []);
+    }
 
     function getSkillsListContainer() {
         return (

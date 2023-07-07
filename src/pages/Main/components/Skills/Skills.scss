@@ -71,23 +71,34 @@
                     font-size: 20px;
                     overflow: hidden;
 
+                    color: var(--intense-text-color);
+
+                    transition: all 0.2s ease-in-out;
+
                     img {
+                        z-index: 0;
                         position: absolute;
                         top: 10px;
                         left: 10px;
                         rotate: -25deg;
-                        opacity: 0.3;
                         height: 100px;
                     }
 
                     .skill-name {
+                        z-index: 1;
                         margin: 0;
                         line-height: 100px;
                         font-size: 24px;
                         font-weight: 600;
                     }
 
+                    img, .skill-name {
+                        opacity: 0.2;
+                        transition: all 0.2s ease-in-out;
+                    }
+
                     .skill-desc {
+                        z-index: 1;
                         margin: 0;
                         padding: 0 20px 20px;
 
@@ -95,7 +106,15 @@
                     }
 
                     &:hover {
-                        height: fit-content;
+                        cursor: pointer;
+
+                        transition: all 0.5s ease-in-out;
+
+                        img, .skill-name {
+                            opacity: 1;
+
+                            transition: all 0.5s ease-in-out;
+                        }
                     }
                 }
             }

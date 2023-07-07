@@ -6,6 +6,10 @@ function Projects() {
     const [projects, setProjects] = useState([]);
 
     useEffect(() => {
+        fetchProjects();
+    }, []);
+
+    function fetchProjects() {
         const db = firebase.firestore();
         const projectsRef = db.collection('projects');
 
@@ -16,7 +20,7 @@ function Projects() {
             });
             setProjects(projects);
         });
-    }, []);
+    }
 
     return (
         <div id='projects-container'>
