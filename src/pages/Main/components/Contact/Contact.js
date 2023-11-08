@@ -14,7 +14,6 @@ function Contact() {
     useEffect(() => {
         requests.fetchContactInfo().then((data) => {
             if (data.info) {
-                console.log(data.info);
                 setContactInfo(data.info);
             }
         }
@@ -71,8 +70,6 @@ function Contact() {
 
     function renderContactPlaces() {
         if (!contactInfo) return;
-
-        console.log(contactInfo);
 
         const contactPlaces = contactInfo.sort((a, b) => b.importance - a.importance);
 

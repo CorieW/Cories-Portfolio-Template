@@ -10,7 +10,6 @@ function AboutMe() {
 
     useEffect(() => {
         requests.fetchAboutMe().then((data) => {
-            console.log(data);
             setProfileImgUrl(data.profileImgUrl);
             setHeaderText(data.headerText);
             setInfoText(data.infoText);

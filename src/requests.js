@@ -68,6 +68,40 @@ async function fetchSkills() {
     };
 }
 
+async function fetchSkills2() {
+    const db = firebase.firestore();
+    const skillsRef = db.collection('general').doc('skills');
+    const storageRef = firebase.storage().ref();
+
+    let skills = [];
+
+    try {
+        const doc = await skillsRef.get();
+        const skillsData = doc.data();
+
+        if (skillsData) {
+            const getImageURLPromises = skillsData.data.map(async (skill) => {
+                try {
+                    const imageRef = storageRef.child(skill.imageURL);
+                    const url = await imageRef.getDownloadURL();
+                    // If skill is not writable, create a new object
+                    return { ...skill, imageURL: url };
+                } catch (error) {
+                    console.error('Error retrieving image URL:', error);
+                    return skill; // Return the original skill if there's an error
+                }
+            });
+
+            skills = await Promise.all(getImageURLPromises);
+            console.log('skills', skills);
+        }
+    } catch (error) {
+        console.error('Error fetching skills:', error);
+    }
+
+    return skills;
+}
+
 async function fetchProjects() {
     const db = firebase.firestore();
     const projectsRef = db.collection('projects');
@@ -131,7 +165,7 @@ async function fetchSocialMedias() {
 
 export default {
     fetchAboutMe,
-    fetchSkills,
+    fetchSkills2,
     fetchProjects,
     fetchContactInfo,
     fetchSocialMedias
