@@ -5,6 +5,8 @@ import Nav from '../../components/Nav/Nav';
 import Skills from './components/Skills/Skills';
 import Projects from './components/Projects/Projects';
 import AboutMe from './components/AboutMe/AboutMe';
+import Contact from './components/Contact/Contact';
+import Toast from './components/Toast/Toast';
 
 function Main() {
   const [activeSectionIndex, setActiveSectionIndex] = useState(0);
@@ -67,11 +69,11 @@ function Main() {
           // Update the hash value in the URL to that of the active section
           window.history.replaceState(null, null, `#${sectionElements[currSectionIndexRef.current].id}`);
         }
-        
+
         // Otherwise, don't do anything, continue to wait for the section to be in view
         return;
       }
-      
+
       // Lock the user to the current section if they scroll past the top or bottom of the section
       if (Math.round(remainingScrollFromBottom) <= 0) {
         const scrollOptions = {
@@ -124,7 +126,7 @@ function Main() {
 
       const sectionElements = document.getElementsByClassName('section');
       let activeSection = sectionElements[currSectionIndexRef.current];
-      
+
       // Check if the current section is in view
       let sectionTop = activeSection.offsetTop;
       let sectionBottom = sectionTop + activeSection.offsetHeight;
@@ -218,9 +220,10 @@ function Main() {
   return (
     <div id='main-page-container'>
       <Nav linksComponent={getLinksComponent()}/>
-      <div id='move-section-btns-container'>
-        <button className={isMoveSectionBtnDisabled(-1) ? 'disabled' : ''} id='move-section-up-btn' onClick={() => switchSectionInDirection(-1)}><i className="fa-solid fa-arrow-up"></i></button>
-        <button className={isMoveSectionBtnDisabled(1) ? 'disabled' : ''} id='move-section-down-btn' onClick={() => switchSectionInDirection(1)}><i className="fa-solid fa-arrow-down"></i></button>
+      <Toast />
+      <div id='move-section-btns-container' className='fixed-container'>
+        <button className={'general-btn-1 ' + (isMoveSectionBtnDisabled(-1) ? 'disabled' : '')} id='move-section-up-btn' onClick={() => switchSectionInDirection(-1)}><i className="fa-solid fa-arrow-up"></i></button>
+        <button className={'general-btn-1 ' + (isMoveSectionBtnDisabled(1) ? 'disabled' : '')} id='move-section-down-btn' onClick={() => switchSectionInDirection(1)}><i className="fa-solid fa-arrow-down"></i></button>
       </div>
       <div className='section' id='about-me-section'>
         <AboutMe />
@@ -232,9 +235,7 @@ function Main() {
         <Projects />
       </div>
       <div className='section' id='contact-section'>
-        <h2>Contact</h2>
-        <div id='contact-container'>
-        </div>
+        <Contact />
       </div>
     </div>
   );

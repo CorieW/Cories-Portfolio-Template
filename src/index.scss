@@ -1,0 +1,71 @@
+:root {
+  --primary-color: gold;
+  --intense-background-color: #000;
+  --background-color: #111;
+  --soft-background-color: #222;
+  --intense-text-color: #fff;
+  --text-color: #ddd;
+  --soft-text-color: #bbb;
+  --border-color: #555;
+  --soft-border-color: #333;
+
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body, textarea {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+}
+
+a {
+  color: initial;
+  text-decoration: none;
+}
+
+.general-btn-1 {
+  width: 45px;
+  height: 45px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background-color: var(--intense-text-color);
+  color: var(--background-color);
+  font-size: 24px;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover {
+      background-color: var(--primary-color);
+  }
+
+  &.disabled {
+      background-color: var(--soft-background-color);
+      color: var(--soft-text-color);
+      cursor: not-allowed;
+  }
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.flex-1 {
+  flex: 1;
+}

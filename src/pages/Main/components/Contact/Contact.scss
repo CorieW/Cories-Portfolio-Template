@@ -1,0 +1,142 @@
+#contact-container {
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
+
+    padding: 30px 50px;
+    margin-bottom: 150px;
+
+    border-left: 2px solid white;
+
+    div {
+        h3 {
+            margin-top: 0;
+            margin-bottom: 40px;
+            font-size: 16px;
+            text-transform: uppercase;
+        }
+    }
+
+    .get-in-touch {
+        width: 500px;
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+
+            .required {
+                position: relative;
+                width: 100%;
+
+                span {
+                    position: absolute;
+                    right: 10px;
+                    top: 5px;
+
+                    color: red;
+                }
+
+                input, textarea {
+                    padding-right: 20px;
+                }
+            }
+
+            input, textarea, button {
+                padding: 10px 15px;
+                margin-bottom: 10px;
+                background-color: transparent;
+                box-sizing: border-box;
+
+                border: 1px solid white;
+                border-radius: 10px;
+
+                color: white;
+                font-size: 18px;
+
+                &:focus {
+                    outline: none;
+                }
+            }
+
+            input, textarea {
+                width: 100%;
+
+                transition: border-color 0.5s, color 0.5s, padding-left 0.5s;
+
+                &:focus {
+                    padding-left: 20px;
+                    border-color: gold;
+                    color: gold;
+                }
+
+                &:hover {
+                    border-color: gold;
+                    color: gold;
+                }
+            }
+
+            input {
+                height: 50px;
+            }
+
+            textarea {
+                height: 200px;
+                resize: none;
+            }
+
+            button {
+                width: 50%;
+                height: 40px;
+
+                transition: all 0.5s;
+
+                &:hover, &:focus {
+                    width: 60%;
+                    cursor: pointer;
+
+                    border-color: gold;
+
+                    color: gold;
+                }
+
+                &:disabled {
+                    cursor: not-allowed;
+                    border-color: gray;
+                    color: gray;
+                    width: 50%;
+                }
+            }
+        }
+    }
+
+    .contact-details {
+        display: flex;
+        flex-direction: column;
+
+        .contact-places {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+        }
+
+        .contact-place {
+            margin-bottom: 20px;
+            font-size: 20px;
+
+            span {
+                text-transform: capitalize;
+                font-weight: normal;
+                color: gold;
+            }
+
+            &.socials {
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-end;
+
+                flex: 1;
+            }
+        }
+    }
+}
