@@ -156,7 +156,7 @@ function Skills() {
 
         return (
             <button className='timeline-skill-btn' key={key}>
-                <img src={imageURL} alt={name}/>
+                <img src={imageURL} alt={name} draggable={false}/>
                 {/* <span>{convertAcquiredNumberToString(acquired)}</span> */}
                 <span>{name}</span>
             </button>
