@@ -30,6 +30,7 @@ function Contact() {
             fname: formData.get('fname'),
             sname: formData.get('sname'),
             email: formData.get('email'),
+            title: formData.get('title'),
             message: formData.get('message')
         }
 
@@ -53,9 +54,9 @@ function Contact() {
     }
 
     function validate(data) {
-        const { fname, sname, email, message } = data;
+        const { fname, sname, email, message, title } = data;
 
-        if (!fname || !sname || !email || !message) {
+        if (!fname || !sname || !email || !message || !title) {
             setToast({ type: 'error', message: 'Please fill in all fields' });
             return false;
         }
@@ -100,16 +101,23 @@ function Contact() {
                 <div className='get-in-touch'>
                     <h3>Get In Touch</h3>
                     <form onSubmit={sendEmail}>
-                        <div className='required'>
-                            <input id='fname' name='fname' type='text' placeholder='First name'/>
-                            <span>*</span>
-                        </div>
-                        <div className='required'>
-                            <input id='sname' name='sname' type='text' placeholder='Last name'/>
-                            <span>*</span>
+                        <div className='input-group'>
+                            <div className='required'>
+                                <input id='fname' name='fname' type='text' placeholder='First name'/>
+                                <span>*</span>
+                            </div>
+                            <div className='required'>
+                                <input id='sname' name='sname' type='text' placeholder='Last name'/>
+                                <span>*</span>
+                            </div>
                         </div>
                         <div className='required'>
                             <input id='email' name='email' type='text' placeholder='Email'/>
+                            <span>*</span>
+                        </div>
+                        <br/>
+                        <div className='required'>
+                            <input id='title' name='title' type='text' placeholder='Title'/>
                             <span>*</span>
                         </div>
                         <div className='required'>

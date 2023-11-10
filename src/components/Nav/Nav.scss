@@ -19,6 +19,12 @@
 
     a {
         display: flex;
+
+        transition: all 0.2s;
+
+        &:hover {
+            scale: 1.2;
+        }
     }
 
     #logo {
@@ -46,6 +52,10 @@
 
     #open-mobile-nav-container {
         display: none;
+
+        a {
+            color: white;
+        }
     }
 
     #nav-menu {
@@ -73,10 +83,6 @@
                 a {
                     color: var(--soft-text-color);
 
-                    &:hover {
-                        text-decoration: 2px underline;
-                    }
-
                     &.active {
                         color: var(--primary-color);
                     }
@@ -90,14 +96,20 @@
         opacity: 0;
     }
 
+    // Small Laptop
+    @media (max-width: 1024px) {
+        padding: 0 5%;
+    }
+
     // Tablet
-    @media (max-width: 768px) {
+    @media (max-width: 810px) {
         .open-nav-btn {
             font-size: 25px;
         }
 
         .close-nav-btn {
             font-size: 30px;
+            color: white;
         }
 
         #open-mobile-nav-container {

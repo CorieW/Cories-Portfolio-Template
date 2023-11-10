@@ -22,50 +22,31 @@
                 flex-direction: row-reverse;
             }
 
-            // Very first line stuff
-            &:first-child {
-                padding-left: 100px;
+            &:nth-child(2n + 1) {
+                // Arrow
+                .acquired {
+                    &::before {
+                        content: "";
 
-                .timeline-row-line {
-                    &:first-child {
-                        border-left: none !important;
-
-                        .acquired {
-                            left: 0;
-
-                            background-color: red;
-                        }
+                        position: absolute;
+                        top: calc(50% + 1px);
+                        right: 100%;
+                        transform: translateY(-50%) rotate(-45deg);
                     }
                 }
-            }
-
-            // Very last line stuff
-            &:last-child {
-                padding-right: 100px;
 
                 .timeline-row-line {
-                    &:last-child {
-                        max-width: 200px;
-                        height: 0 !important;
-                        flex: 1;
-                        border-right: none !important;
-
+                    // Very last line (on whole timeline)
+                    &.final {
                         .acquired {
                             left: 100%;
-
-                            background-color: greenyellow;
                         }
                     }
-                }
-            }
 
-            // Row end stuff
-            &:nth-child(2n + 1) {
-                .timeline-row-line {
+                    // Row end stuff
                     &:first-child {
                         height: calc((var(--heightOfRow) / 2));
                         margin: 0 0 0;
-                        margin-left: calc(var(--heightOfRow) / 2);
                         box-sizing: content-box;
 
                         border: none;
@@ -81,7 +62,6 @@
                     &:last-child {
                         height: calc(var(--rowGap) + (var(--heightOfRow) / 2));
                         margin: calc(var(--heightOfRow) / 2) 0 0;
-                        margin-right: calc(var(--heightOfRow) / 2);
                         box-sizing: content-box;
 
                         border: none;
@@ -97,13 +77,31 @@
                 }
             }
 
-            // Row end stuff for reverse
             &:nth-child(2n) {
+                // Arrow
+                .acquired {
+                    &::after {
+                        content: "";
+
+                        position: absolute;
+                        top: calc(50% + 1px);
+                        left: 100%;
+                        transform: translateY(-50%) rotate(135deg);
+                    }
+                }
+
                 .timeline-row-line {
+                    // Very last line (on whole timeline)
+                    &.final {
+                        .acquired {
+                            left: 0%;
+                        }
+                    }
+
+                    // Row end stuff for reverse
                     &:first-child {
                         height: calc((var(--heightOfRow) / 2));
                         margin: 0 0 0;
-                        margin-right: calc(var(--heightOfRow) / 2);
                         box-sizing: content-box;
 
                         border: none;
@@ -119,7 +117,6 @@
                     &:last-child {
                         height: calc(var(--rowGap) + (var(--heightOfRow) / 2));
                         margin: calc(var(--heightOfRow) / 2) 0 0;
-                        margin-left: calc(var(--heightOfRow) / 2);
                         box-sizing: content-box;
 
                         border: none;
@@ -142,11 +139,13 @@
                 align-items: center;
                 width: var(--heightOfRow);
                 height: var(--heightOfRow);
-                background-color: white;
+                background-color: transparent;
                 margin: 0;
 
                 border: none;
                 border-radius: 50%;
+
+                font-family: 'Courier New', Courier, monospace;
 
                 transition: all 0.2s;
 
@@ -154,18 +153,21 @@
                     height: 30px;
                     padding: 20px 0 10px;
                     margin: auto;
+
+                    // contrast against background only if it's not white
+                    filter: invert(1) grayscale(1) contrast(0.5);
+
+                    transition: all 0.2s;
                 }
 
                 span {
                     background-color: var(--background-color);
                     padding: 5px;
 
-                    border: white 2px solid;
                     border-radius: 10px;
 
                     color: var(--text-color);
-                    font-size: 14px;
-                    font-weight: 600;
+                    font-size: 16px;
                     white-space: nowrap;
 
                     transition: all 0.2s;
@@ -173,12 +175,26 @@
 
                 &:hover {
                     cursor: pointer;
-                    background-color: var(--primary-color);
+
+                    img {
+                        filter: invert(0) grayscale(0) contrast(1);
+                    }
 
                     span {
-                        color: black;
-                        background-color: var(--primary-color);
-                        border: 2px solid var(--background-color);
+                        color: gold;
+                    }
+                }
+
+                // on click
+                &:active {
+                    transform: scale(1.4);
+
+                    img {
+                        filter: invert(0) grayscale(0) contrast(1);
+                    }
+
+                    span {
+                        color: gold;
                     }
                 }
             }
@@ -191,6 +207,25 @@
                 margin: auto 0;
                 border: 1px solid white;
 
+                // Very first line (on whole timeline)
+                &.start {
+                    border-left: 0px solid white !important;
+                    border-bottom-left-radius: 0 !important;
+                }
+
+                // Very last line (on whole timeline)
+                &.final {
+                    height: 0 !important;
+                    flex: 1;
+                    border-right: none !important;
+
+                    .acquired {
+                        color: gold;
+                        font-size: 24px;
+                        text-transform: uppercase;
+                    }
+                }
+
                 &:last-child {
                     flex: 0;
                     min-width: 50px;
@@ -202,15 +237,32 @@
                     left: 50%;
                     transform: translate(-50%, -50%);
 
-                    background-color: white;
+                    background-color: var(--background-color);
                     padding: 5px 10px;
+                    margin: auto 0;
 
                     border-radius: 10px;
 
-                    color: black;
                     white-space: nowrap;
+                    color: gold;
                     font-weight: 600;
+                    line-height: 50px;
+
+                    // Arrows
+                    &::before, &::after {
+                        width: 0;
+                        height: 0;
+
+                        border: solid white;
+                        border-width: 0 2px 2px 0;
+                        display: inline-block;
+                        padding: 5px;
+                    }
                 }
+            }
+
+            .edge {
+                flex: 1;
             }
         }
     }

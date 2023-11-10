@@ -5,8 +5,7 @@ import requests from '../../../../requests';
 
 function Skills() {
     const [skills, setSkills] = useState(null);
-
-    const skillsPerRow = 3;
+    const [skillsPerRow, setSkillsPerRow] = useState(3);
 
     let previousAcquired = 0;
 
@@ -20,16 +19,41 @@ function Skills() {
 
             setSkills(orderedSkills);
         })
+
+        setDisplaySettings();
+
+        // On window resize, change how the skills are displayed
+        window.addEventListener('resize', () => {
+            setDisplaySettings();
+        });
+
     }, []);
+
+    function setDisplaySettings() {
+        const skillsContainer = document.getElementById('skills-container');
+
+        if (window.innerWidth < 650) {
+            setSkillsPerRow(1);
+            skillsContainer.style.setProperty(`--rowGap`, '10px');
+        }
+        else if (window.innerWidth < 1024) {
+            setSkillsPerRow(2);
+            skillsContainer.style.setProperty(`--rowGap`, '20px');
+        }
+        else {
+            setSkillsPerRow(3);
+            skillsContainer.style.setProperty(`--rowGap`, '50px');
+        }
+    }
 
     function convertAcquiredNumberToString(acquired) {
         const decimal = acquired % 1;
         const integer = Math.floor(acquired);
 
-        if (decimal === 0) return integer;
-        if (decimal < 0.25) return 'Early ' + integer;
-        if (decimal < 0.5) return 'Mid ' + integer;
-        if (decimal < 0.75) return 'Late ' + integer;
+        if (decimal < 0.01) return integer;
+        if (decimal <= 0.25) return 'Early ' + integer;
+        if (decimal <= 0.5) return 'Mid ' + integer;
+        if (decimal <= 0.75) return 'Late ' + integer;
         return 'End ' + integer;
     }
 
@@ -57,40 +81,42 @@ function Skills() {
             <div className='timeline'>
                 {elements.map((row, index) => {
                     const isEven = index % 2 === 0;
+                    const isFirst = index === 0;
                     const isLast = index === elements.length - 1;
 
-                    return renderSkillsRow(row, !isEven, isLast);
+                    return renderSkillsRow(row, !isEven, isFirst, isLast);
                 })}
             </div>
         )
     }
 
-    function renderSkillsRow(skills, reverse, isLast) {
+    function renderSkillsRow(skills, reverse, isFirst, isLast) {
         return (
             <div className={`timeline-row ${reverse ? 'reverse' : ''}`}>
                 {skills.map((skill, index) => {
                     const isLastSkill = skill === skills[skills.length - 1];
 
                     const acquired = skill.acquired;
-                    const acquiredStr = convertAcquiredNumberToString(skill.acquired);
+                    const acquiredStr = convertAcquiredNumberToString(acquired);
                     const cachedPreviousAcquired = previousAcquired;
 
-                    previousAcquired = acquired;
+                    previousAcquired = acquiredStr;
 
                     if (isLastSkill && isLast) {
                         return (
                             <>
                                 <div className='timeline-row-line'>
-                                    <span className={'acquired ' + (cachedPreviousAcquired === acquired ? 'hidden' : '')}>
+                                    <span className={'acquired ' + (cachedPreviousAcquired === acquiredStr ? 'hidden' : '')}>
                                         { acquiredStr }
                                     </span>
                                 </div>
                                 { renderSkill(skill) }
-                                <div className='timeline-row-line'>
+                                <div className='timeline-row-line final'>
                                     <span className='acquired'>
-                                        Now
+                                        Today
                                     </span>
                                 </div>
+                                <div className='edge'></div>
                             </>
                         )
                     }
@@ -99,7 +125,7 @@ function Skills() {
                         return (
                             <>
                                 <div className='timeline-row-line'>
-                                    <span className={'acquired ' + (cachedPreviousAcquired === acquired ? 'hidden' : '')}>
+                                    <span className={'acquired ' + (cachedPreviousAcquired === acquiredStr ? 'hidden' : '')}>
                                         { acquiredStr }
                                     </span>
                                 </div>
@@ -111,8 +137,9 @@ function Skills() {
 
                     return (
                         <>
-                            <div className='timeline-row-line'>
-                                <span className={'acquired ' + (cachedPreviousAcquired === acquired ? 'hidden' : '')}>
+                            { isFirst && index === 0 ? <div className='edge'></div> : null }
+                            <div className={`timeline-row-line ${isFirst ? 'first' : ''}`}>
+                                <span className={'acquired ' + (cachedPreviousAcquired === acquiredStr ? 'hidden' : '')}>
                                     { acquiredStr }
                                 </span>
                             </div>
