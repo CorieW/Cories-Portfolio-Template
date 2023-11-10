@@ -95,7 +95,7 @@ function Skills() {
             <div className={`timeline-row ${reverse ? 'reverse' : ''}`}>
                 {skills.map((skill, index) => {
                     const isLastSkill = skill === skills[skills.length - 1];
-
+                    const isVeryFirstSkill = skill === skills[0] && isFirst;
                     const acquired = skill.acquired;
                     const acquiredStr = convertAcquiredNumberToString(acquired);
                     const cachedPreviousAcquired = previousAcquired;
@@ -137,8 +137,8 @@ function Skills() {
 
                     return (
                         <>
-                            { isFirst && index === 0 ? <div className='edge'></div> : null }
-                            <div className={`timeline-row-line ${isFirst ? 'first' : ''}`}>
+                            { isVeryFirstSkill && index === 0 ? <div className='edge'></div> : null }
+                            <div className={`timeline-row-line ${isVeryFirstSkill ? 'start' : ''}`}>
                                 <span className={'acquired ' + (cachedPreviousAcquired === acquiredStr ? 'hidden' : '')}>
                                     { acquiredStr }
                                 </span>

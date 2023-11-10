@@ -117,7 +117,7 @@ function Contact() {
                         </div>
                         <br/>
                         <div className='required'>
-                            <input id='title' name='title' type='text' placeholder='Title'/>
+                            <input id='title' name='title' type='text' placeholder='Subject'/>
                             <span>*</span>
                         </div>
                         <div className='required'>

@@ -35,7 +35,7 @@
                     right: 10px;
                     top: 5px;
 
-                    color: red;
+                    color: var(--error-color);
                 }
 
                 input, textarea {
@@ -46,13 +46,13 @@
             input, textarea, button {
                 padding: 10px 15px;
                 margin-bottom: 10px;
-                background-color: transparent;
+                background-color: var(--contrast-background-color);
                 box-sizing: border-box;
 
-                border: 1px solid white;
+                border: none;
                 border-radius: 10px;
 
-                color: white;
+                color: var(--background-color);
                 font-size: 18px;
 
                 &:focus {
@@ -67,13 +67,6 @@
 
                 &:focus {
                     padding-left: 20px;
-                    border-color: gold;
-                    color: gold;
-                }
-
-                &:hover {
-                    border-color: gold;
-                    color: gold;
                 }
             }
             input {
@@ -95,15 +88,14 @@
                     width: 60%;
                     cursor: pointer;
 
-                    border-color: gold;
-
-                    color: gold;
+                    background-color: var(--primary-color);
                 }
 
                 &:disabled {
                     cursor: not-allowed;
-                    border-color: gray;
-                    color: gray;
+                    background-color: var(--contrast-background-color);
+                    border-color: var(--disabled-color);
+                    color: var(--soft-text-color);
                     width: 50%;
                 }
             }
@@ -138,7 +130,7 @@
             span {
                 text-transform: capitalize;
                 font-weight: normal;
-                color: gold;
+                color: var(--primary-color);
             }
 
             &.socials {
