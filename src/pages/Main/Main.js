@@ -6,7 +6,7 @@ import Skills from './components/Skills/Skills';
 import Projects from './components/Projects/Projects';
 import AboutMe from './components/AboutMe/AboutMe';
 import Contact from './components/Contact/Contact';
-import Toast from './components/Toast/Toast';
+import Toast from '../../components/Toast/Toast';
 
 function Main() {
   const [activeSectionIndex, setActiveSectionIndex] = useState(0);
@@ -173,7 +173,7 @@ function Main() {
       e.preventDefault();
       const hash = e.target.hash.substring(1);
       window.history.replaceState(null, null, `#${hash}`);
-  
+
       const event = new CustomEvent('hashReplaced', { detail: { hash } });
       window.dispatchEvent(event);
     }
