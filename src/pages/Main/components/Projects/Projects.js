@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import './styles/Projects.scss';
+import './Projects.scss';
 import requests from '../../../../requests.js';
 
 function Projects() {

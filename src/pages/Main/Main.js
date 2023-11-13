@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import $ from 'jquery';
-import './styles/Main.scss';
+import './Main.scss';
 import Nav from '../../components/Nav/Nav';
 import Skills from './components/Skills/Skills';
 import Projects from './components/Projects/Projects';
