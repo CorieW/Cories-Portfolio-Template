@@ -15,8 +15,6 @@ function Skills() {
                 return a.acquired - b.acquired;
             });
 
-            console.log('orderedSkills', orderedSkills);
-
             setSkills(orderedSkills);
         })
 
@@ -74,8 +72,6 @@ function Skills() {
         });
 
         if (rowElements.length > 0) elements.push(rowElements);
-
-        console.log('elements', elements);
 
         return (
             <div className='timeline'>

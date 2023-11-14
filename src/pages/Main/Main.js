@@ -7,6 +7,7 @@ import Projects from './components/Projects/Projects';
 import AboutMe from './components/AboutMe/AboutMe';
 import Contact from './components/Contact/Contact';
 import Toast from '../../components/Toast/Toast';
+import StarryCanvas from '../../components/StarryCanvas/StarryCanvas';
 
 function Main() {
   const [activeSectionIndex, setActiveSectionIndex] = useState(0);
@@ -221,6 +222,7 @@ function Main() {
     <div id='main-page-container'>
       <Nav linksComponent={getLinksComponent()}/>
       <Toast />
+      <StarryCanvas />
       <div id='move-section-btns-container' className='fixed-container'>
         <button className={'general-btn-1 ' + (isMoveSectionBtnDisabled(-1) ? 'disabled' : '')} id='move-section-up-btn' onClick={() => switchSectionInDirection(-1)}><i className="fa-solid fa-arrow-up"></i></button>
         <button className={'general-btn-1 ' + (isMoveSectionBtnDisabled(1) ? 'disabled' : '')} id='move-section-down-btn' onClick={() => switchSectionInDirection(1)}><i className="fa-solid fa-arrow-down"></i></button>
