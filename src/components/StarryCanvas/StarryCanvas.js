@@ -27,22 +27,22 @@ function StarryCanvas() {
     const maxStarOpacityVelocity = 1;
 
     const minTimeUntilNextShootingStar = 1; // seconds
-    const maxTimeUntilNextShootingStar = 5; // seconds
+    const maxTimeUntilNextShootingStar = 3; // seconds
+
+    const viewportPadding = 10;
 
     useEffect(() => {
         timeUntilNextShootingStar.current = 0;
         shootingStars.current = [];
 
-        // set up paper
         paper.setup(canvasRef.current);
 
-        // set up sky
         setupSky();
 
-        // animation loop
-        const onFrame = () => {
-            sky.current.update(0.01);
+        const onFrame = (e) => {
+            sky.current.update(e.delta);
 
+            // create shooting star when time is right
             if (Date.now() > timeUntilNextShootingStar.current) {
                 let shootingStar = createShootingStar();
                 timeUntilNextShootingStar.current = Date.now() + Math.random() * ((maxTimeUntilNextShootingStar * 1000) - (minTimeUntilNextShootingStar * 1000)) + (minTimeUntilNextShootingStar * 1000);
@@ -52,8 +52,18 @@ function StarryCanvas() {
 
             // update shooting stars
             for (let i = 0; i < shootingStars.current.length; i++) {
-                shootingStars.current[i].update(0.01);
+                shootingStars.current[i].update(e.delta);
+
+                let isOutOfXBounds = shootingStars.current[i].x < -viewportPadding || shootingStars.current[i].x > paper.view.size.width + viewportPadding;
+                let isOutOfYBounds = shootingStars.current[i].y < -viewportPadding || shootingStars.current[i].y > paper.view.size.height + viewportPadding;
+
+                if (isOutOfXBounds || isOutOfYBounds) {
+                    shootingStars.current.splice(i, 1);
+                    i--;
+                }
             }
+
+            console.log(shootingStars.current.length);
 
             drawCanvas();
         }
@@ -62,7 +72,6 @@ function StarryCanvas() {
             setupSky();
         }
 
-        // attach event listeners
         paper.view.onFrame = onFrame;
         paper.view.onResize = onResize;
 
@@ -71,7 +80,6 @@ function StarryCanvas() {
             paper.view.viewSize.height = window.innerHeight;
         });
 
-        // clean up
         return () => {
             paper.view.onFrame = null;
             paper.view.onResize = null;
@@ -119,9 +127,22 @@ function StarryCanvas() {
                 fillColor: color,
                 opacity: opacity
             });
+
+            // draw tail
+            shootingStars2[i].getTailPoints().forEach((point, index) => {
+                const indexDifference = shootingStars2[i].getTailPoints().length - index;
+                const radius2 = radius * (1 - (indexDifference / shootingStars2[i].tailLength));
+                const opacity2 = opacity * (1 - (indexDifference / shootingStars2[i].tailLength));
+
+                new paper.Path.Circle({
+                    center: [point.x, point.y],
+                    radius: radius2,
+                    fillColor: color,
+                    opacity: opacity2
+                });
+            });
         }
 
-        // draw canvas
         paper.view.draw();
     }
 
@@ -148,13 +169,18 @@ function StarryCanvas() {
 
     function createShootingStar() {
         const direction = Math.random() > 0.5 ? 1 : -1;
-        const x = direction == -1 ? paper.view.size.width + 10 : -10;
+        const x = direction == -1 ? paper.view.size.width + viewportPadding : -viewportPadding;
         const y = Math.random() * (paper.view.size.height);
 
-        const opacity = Math.random();
+        const opacity = Math.max(Math.min(Math.random(), 0.5), 0.2);
 
         const velocityYMagnitude = 500;
         const velocityY = ((Math.random() - 0.5) * 2) * velocityYMagnitude;
+
+        const speedIncrease = 0.5;
+        const speed = (Math.random() * speedIncrease) + 1.2;
+
+        const tailLength = Math.random() * 10 + 10;
 
         return new ShootingStar(
             x,
@@ -165,9 +191,10 @@ function StarryCanvas() {
             1,
             1,
             1,
-            direction * 500,
-            velocityY,
+            direction * (500 * speed),
+            velocityY * speed,
             1,
+            tailLength
         );
     }
 
