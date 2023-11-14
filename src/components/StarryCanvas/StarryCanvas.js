@@ -12,7 +12,7 @@ function StarryCanvas() {
     const timeUntilNextShootingStar = useRef(Date.now); // in seconds
     const shootingStars = useRef([]);
 
-    const numStars = 500;
+    const starsPerPixel = 0.0002;
 
     const minStarRadius = 0.2;
     const maxStarRadius = 1;
@@ -36,15 +36,8 @@ function StarryCanvas() {
         // set up paper
         paper.setup(canvasRef.current);
 
-        // set up stars
-        const stars = [];
-        for (let i = 0; i < numStars; i++) {
-            let star = createStar();
-
-            stars.push(star);
-        }
-
-        sky.current = new Sky(stars);
+        // set up sky
+        setupSky();
 
         // animation loop
         const onFrame = () => {
@@ -65,8 +58,18 @@ function StarryCanvas() {
             drawCanvas();
         }
 
+        const onResize = () => {
+            setupSky();
+        }
+
         // attach event listeners
         paper.view.onFrame = onFrame;
+        paper.view.onResize = onResize;
+
+        window.addEventListener('resize', () => {
+            paper.view.viewSize.width = window.innerWidth;
+            paper.view.viewSize.height = window.innerHeight;
+        });
 
         // clean up
         return () => {
@@ -74,6 +77,19 @@ function StarryCanvas() {
             paper.view.onResize = null;
         }
     }, [])
+
+    function setupSky() {
+        // set up stars
+        const stars = [];
+        const numStars = paper.view.size.width * paper.view.size.height * starsPerPixel;
+        for (let i = 0; i < numStars; i++) {
+            let star = createStar();
+
+            stars.push(star);
+        }
+
+        sky.current = new Sky(stars);
+    }
 
     function drawCanvas() {
         // clear canvas
