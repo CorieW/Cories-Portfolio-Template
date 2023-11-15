@@ -12,24 +12,37 @@ function StarryCanvas() {
     const timeUntilNextShootingStar = useRef(Date.now); // in seconds
     const shootingStars = useRef([]);
 
-    const starsPerPixel = 0.0002;
+    const skySettings = {
+        starColor: "white",
+    }
 
-    const minStarRadius = 0.2;
-    const maxStarRadius = 1;
+    const starSettings = {
+        starsPerPixel: 0.0002,
+        minStarRadius: 0.2,
+        maxStarRadius: 1,
+        minMinStarOpacity: 0.1,
+        maxMinStarOpacity: 0.5,
+        minMaxStarOpacity: 0.5,
+        maxMaxStarOpacity: 1,
+        minStarOpacityVelocity: 0.1,
+        maxStarOpacityVelocity: 1
+    }
 
-    const minMinStarOpacity = 0.1;
-    const maxMinStarOpacity = 0.5;
-
-    const minMaxStarOpacity = 0.5;
-    const maxMaxStarOpacity = 1;
-
-    const minStarOpacityVelocity = 0.1;
-    const maxStarOpacityVelocity = 1;
-
-    const minTimeUntilNextShootingStar = 1; // seconds
-    const maxTimeUntilNextShootingStar = 3; // seconds
-
-    const viewportPadding = 10;
+    const shootingStarSettings = {
+        shootingStarScale: 1,
+        minTimeUntilNextShootingStar: 1, // seconds
+        maxTimeUntilNextShootingStar: 3, // seconds
+        minOpacity: 0.2,
+        maxOpacity: 1,
+        maxVelocityX: 500,
+        maxVelocityY: 500,
+        minSpeed: 1.2,
+        maxAdditionalSpeed: 0.5,
+        minDurability: 0.1,
+        maxAdditionalDurability: 0.5,
+        minTailLength: 10,
+        maxAdditionalTailLength: 10
+    }
 
     useEffect(() => {
         timeUntilNextShootingStar.current = 0;
@@ -40,6 +53,8 @@ function StarryCanvas() {
         setupSky();
 
         const onFrame = (e) => {
+            const { minTimeUntilNextShootingStar, maxTimeUntilNextShootingStar } = shootingStarSettings;
+
             sky.current.update(e.delta);
 
             // create shooting star when time is right
@@ -54,10 +69,7 @@ function StarryCanvas() {
             for (let i = 0; i < shootingStars.current.length; i++) {
                 shootingStars.current[i].update(e.delta);
 
-                let isOutOfXBounds = shootingStars.current[i].x < -viewportPadding || shootingStars.current[i].x > paper.view.size.width + viewportPadding;
-                let isOutOfYBounds = shootingStars.current[i].y < -viewportPadding || shootingStars.current[i].y > paper.view.size.height + viewportPadding;
-
-                if (isOutOfXBounds || isOutOfYBounds) {
+                if (shootingStars.current[i].isDead()) {
                     shootingStars.current.splice(i, 1);
                     i--;
                 }
@@ -89,7 +101,7 @@ function StarryCanvas() {
     function setupSky() {
         // set up stars
         const stars = [];
-        const numStars = paper.view.size.width * paper.view.size.height * starsPerPixel;
+        const numStars = paper.view.size.width * paper.view.size.height * starSettings.starsPerPixel;
         for (let i = 0; i < numStars; i++) {
             let star = createStar();
 
@@ -99,54 +111,18 @@ function StarryCanvas() {
         sky.current = new Sky(stars);
     }
 
-    function drawCanvas() {
-        // clear canvas
-        paper.project.activeLayer.removeChildren();
-
-        // draw stars
-        let stars = sky.current.stars;
-        for (let i = 0; i < stars.length; i++) {
-            const { x, y, radius, color, opacity } = stars[i];
-
-            new paper.Path.Circle({
-                center: [x, y],
-                radius: radius,
-                fillColor: color,
-                opacity: opacity
-            });
-        }
-
-        // draw shooting stars
-        let shootingStars2 = shootingStars.current;
-        for (let i = 0; i < shootingStars2.length; i++) {
-            const { x, y, radius, color, opacity } = shootingStars2[i];
-
-            new paper.Path.Circle({
-                center: [x, y],
-                radius: radius,
-                fillColor: color,
-                opacity: opacity
-            });
-
-            // draw tail
-            shootingStars2[i].getTailPoints().forEach((point, index) => {
-                const indexDifference = shootingStars2[i].getTailPoints().length - index;
-                const radius2 = radius * (1 - (indexDifference / shootingStars2[i].tailLength));
-                const opacity2 = opacity * (1 - (indexDifference / shootingStars2[i].tailLength));
-
-                new paper.Path.Circle({
-                    center: [point.x, point.y],
-                    radius: radius2,
-                    fillColor: color,
-                    opacity: opacity2
-                });
-            });
-        }
-
-        paper.view.draw();
-    }
-
     function createStar() {
+        const {
+            minStarRadius,
+            maxStarRadius,
+            minMinStarOpacity,
+            maxMinStarOpacity,
+            minMaxStarOpacity,
+            maxMaxStarOpacity,
+            minStarOpacityVelocity,
+            maxStarOpacityVelocity
+        } = starSettings;
+
         const x = Math.random() * paper.view.size.width;
         const y = Math.random() * paper.view.size.height;
 
@@ -159,7 +135,7 @@ function StarryCanvas() {
             x,
             y,
             Math.random() * (maxStarRadius - minStarRadius) + minStarRadius,
-            "white",
+            skySettings.starColor,
             minStarOpacity,
             minStarOpacity,
             maxStarOpacity,
@@ -168,34 +144,97 @@ function StarryCanvas() {
     }
 
     function createShootingStar() {
+        const {
+            shootingStarScale,
+            minOpacity,
+            maxOpacity,
+            maxVelocityX,
+            maxVelocityY,
+            minSpeed,
+            maxAdditionalSpeed,
+            minDurability,
+            maxAdditionalDurability,
+            minTailLength,
+            maxAdditionalTailLength
+        } = shootingStarSettings;
+
         const direction = Math.random() > 0.5 ? 1 : -1;
-        const x = direction == -1 ? paper.view.size.width + viewportPadding : -viewportPadding;
+
+        const x = Math.random() * (paper.view.size.width);
         const y = Math.random() * (paper.view.size.height);
 
-        const opacity = Math.max(Math.min(Math.random(), 0.5), 0.2);
+        const opacity = Math.max(Math.min(Math.random(), minOpacity), maxOpacity);
 
-        const velocityYMagnitude = 500;
+        const velocityYMagnitude = maxVelocityY;
         const velocityY = ((Math.random() - 0.5) * 2) * velocityYMagnitude;
 
-        const speedIncrease = 0.5;
-        const speed = (Math.random() * speedIncrease) + 1.2;
+        const speedIncrease = maxAdditionalSpeed;
+        const speed = (Math.random() * speedIncrease) + minSpeed;
 
-        const tailLength = Math.random() * 10 + 10;
+        const durability = (Math.random() * maxAdditionalDurability) + minDurability;
+
+        const tailLength = Math.random() * maxAdditionalTailLength + minTailLength;
 
         return new ShootingStar(
             x,
             y,
-            1,
-            "white",
+            shootingStarScale,
+            skySettings.starColor,
             opacity,
-            1,
-            1,
-            1,
-            direction * (500 * speed),
+            direction * (maxVelocityX * speed),
             velocityY * speed,
-            1,
+            durability,
             tailLength
         );
+    }
+
+    function drawCanvas() {
+        // clear canvas
+        paper.project.activeLayer.removeChildren();
+
+        // draw stars
+        drawStars();
+
+        // draw shooting stars
+        drawShootingStars();
+
+        paper.view.draw();
+    }
+
+    function drawStars() {
+        let stars = sky.current.stars;
+        for (let i = 0; i < stars.length; i++) {
+            const { x, y, radius, color, opacity } = stars[i];
+
+            new paper.Path.Circle({
+                center: [x, y],
+                radius: radius,
+                fillColor: color,
+                opacity: opacity
+            });
+        }
+    }
+
+    function drawShootingStars() {
+        let shootingStars2 = shootingStars.current;
+        for (let i = 0; i < shootingStars2.length; i++) {
+            const { x, y, radius, color, opacity } = shootingStars2[i];
+
+            // draw tail
+            shootingStars2[i].getTailPoints().forEach((point, index) => {
+                const indexDifference = shootingStars2[i].getTailPoints().length - index;
+                const radius2 = radius * (1 - (indexDifference / shootingStars2[i].tailLength));
+                const opacity2 = opacity * (1 - (indexDifference / shootingStars2[i].tailLength));
+                const durabilityOpacityMultiplier = shootingStars2[i].getCurrentDurability() / shootingStars2[i].durability;
+
+                new paper.Path.Circle({
+                    center: [point.x, point.y],
+                    radius: radius2,
+                    fillColor: color,
+                    opacity: opacity2 * durabilityOpacityMultiplier
+                });
+            });
+        }
     }
 
     return (
