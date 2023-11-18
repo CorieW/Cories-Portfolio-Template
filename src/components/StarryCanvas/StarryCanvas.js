@@ -75,8 +75,6 @@ function StarryCanvas() {
                 }
             }
 
-            console.log(shootingStars.current.length);
-
             drawCanvas();
         }
 
