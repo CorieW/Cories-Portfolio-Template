@@ -1,3 +1,2 @@
 # Changes
-- Removed unnecessary logging.
-- Other minor fixes.
+- Fixed section in hash not being scrolled to.

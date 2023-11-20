@@ -36,7 +36,7 @@ function Main() {
 
       const aboutMe = await requests.fetchAboutMe();
       const skills = await requests.fetchSkills();
-      const projects = await requests.fetchProjects(true);
+      const projects = await requests.fetchProjects(isProduction);
       const contactInfo = await requests.fetchContactInfo();
       const socialMedias = await requests.fetchSocialMedias();
 
@@ -64,14 +64,12 @@ function Main() {
       return 0;
     }
 
-    let prevScrollY = 0;
-
     // Get the current hash value
     const hashValue = window.location.hash.substring(1);
     // Set the section index to the index of the section with the hash value
     currSectionIndexRef.current = getActiveSectionIndexByHashValue(hashValue);
     setActiveSectionIndex(currSectionIndexRef.current);
-    if (activeSectionIndex !== 0) switchToActiveSection();
+    if (currSectionIndexRef.current !== 0) switchToActiveSection();
 
     // Add event listener to listen for changes in the hash value
     // When the hash value changes, update the active hash value.
@@ -133,8 +131,6 @@ function Main() {
 
         window.scrollTo(scrollOptions);
       }
-
-      prevScrollY = scrollPosition;
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -229,6 +225,7 @@ function Main() {
   }
 
   function switchToActiveSection() {
+    console.log('switching to active section');
     const sectionElements = document.getElementsByClassName('section');
     let activeSection = sectionElements[currSectionIndexRef.current];
     const scrollOptions = {
