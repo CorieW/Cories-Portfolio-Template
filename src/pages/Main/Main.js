@@ -36,7 +36,7 @@ function Main() {
 
       const aboutMe = await requests.fetchAboutMe();
       const skills = await requests.fetchSkills();
-      const projects = await requests.fetchProjects(isProduction);
+      const projects = await requests.fetchProjects(true);
       const contactInfo = await requests.fetchContactInfo();
       const socialMedias = await requests.fetchSocialMedias();
 
@@ -147,8 +147,6 @@ function Main() {
 
       // Get distance from top of the section
       let distanceFromTopOfSection = Math.round(sectionTop - scrollPosition);
-
-      console.log(distanceFromTopOfSection);
 
       // Show nav bar when at top of the section
       if (distanceFromTopOfSection === 0) {

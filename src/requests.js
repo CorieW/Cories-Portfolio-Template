@@ -72,32 +72,40 @@ async function fetchProjects(production = false) {
     const projectsRef = db.collection('general').doc('projects');
     const storageRef = firebase.storage().ref();
 
-    let projects = null;
+    let projects = [];
 
     try {
         const doc = await projectsRef.get();
         const projectsData = doc.data();
 
-        if (projectsData) {
-            const getImageURLPromises = projectsData.data.map(async (project) => {
-                try {
-                    const imageRef = storageRef.child(project.showcaseImgURL);
-                    const url = await imageRef.getDownloadURL();
-                    return { ...project, showcaseImgURL: url };
-                } catch (error) {
-                    console.error('Error retrieving image URL:', error);
-                    return project;
-                }
-            });
+        if (!projectsData) return projects;
 
-            // This will get each project with it's loaded image URL
-            projects = await Promise.all(getImageURLPromises);
+        let neededProjects = [];
+        neededProjects = projectsData.data.map(project => {
+            return {
+                ...project,
+                isTest: project.isTest || false
+            };
+        });
 
-            // Remove projects that are not in production when in production mode
-            if (production) {
-                projects = projects.filter(project => project.isTest === false);
-            }
+        // Remove projects that are not in production when in production mode
+        if (production) {
+            neededProjects = neededProjects.filter(project => project.isTest === false);
         }
+
+        const getImageURLPromises = neededProjects.map(async (project) => {
+            try {
+                const imageRef = storageRef.child(project.showcaseImgURL);
+                const url = await imageRef.getDownloadURL();
+                return { ...project, showcaseImgURL: url };
+            } catch (error) {
+                console.error('Error retrieving image URL:', error);
+                return project;
+            }
+        });
+
+        // This will get each project with it's loaded image URL
+        projects = await Promise.all(getImageURLPromises);
     } catch (error) {
         console.error('Error fetching projects:', error);
     }
