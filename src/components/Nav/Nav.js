@@ -9,7 +9,6 @@ function Nav(props) {
     // Add event listener to listen for changes in the hash value
     // When the hash value changes, close the mobile nav menu
     const handleHashReplaced = (e) => {
-      console.log('hash replaced');
       toggleMobileNav(false);
     };
 
@@ -57,28 +56,30 @@ function Nav(props) {
 
   return (
     <div id='nav-container'>
-      <a href='/'>
+      <a href='/' className='fade-in'>
         <div id='logo'>
           <img src={logo} alt="Logo" />
         </div>
         <h1>Corie Watson</h1>
       </a>
 
-      <div id='open-mobile-nav-container' className='open-nav-btn'>
-        <a onClick={() => toggleMobileNav()}>
-          <span class="fa-solid fa-bars"></span>
-        </a>
-      </div>
-
-      <div id='nav-menu' className=''>
-        <div className='mobile-top'>
-          <a onClick={() => toggleMobileNav()} className='close-nav-btn'>
-            <span class="fa-solid fa-close"></span>
+      <div className={linksComponent ? 'fade-in' : 'hide'}>
+        <div id='open-mobile-nav-container' className='open-nav-btn'>
+          <a onClick={() => toggleMobileNav()}>
+            <span className="fa-solid fa-bars"></span>
           </a>
         </div>
-        <ul>
-          {linksComponent}
-        </ul>
+
+        <div id='nav-menu' className=''>
+          <div className='mobile-top'>
+            <a onClick={() => toggleMobileNav()} className='close-nav-btn'>
+              <span className="fa-solid fa-close"></span>
+            </a>
+          </div>
+          <ul>
+            {linksComponent}
+          </ul>
+        </div>
       </div>
     </div>
   );

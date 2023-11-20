@@ -8,13 +8,54 @@ import AboutMe from './components/AboutMe/AboutMe';
 import Contact from './components/Contact/Contact';
 import Toast from '../../components/Toast/Toast';
 import StarryCanvas from '../../components/StarryCanvas/StarryCanvas';
+import { useStore } from '../../store'
+import requests from '../../requests.js'
+import LoadingScreen from './components/LoadingScreen/LoadingScreen.js';
 
 function Main() {
+  const [isLoaded, setIsLoaded] = useState(false);
   const [activeSectionIndex, setActiveSectionIndex] = useState(0);
-  const sectionHashes = ['about-me-section', 'skills-section', 'projects-section', 'contact-section'];
+  const [sectionHashes, setSectionHashes] = useState([]);
   const currSectionIndexRef = useRef(0);
   const sectionLockedRef = useRef(true);
 
+  const setAboutMe = useStore(state => state.setAboutMe)
+  const setSkills = useStore(state => state.setSkills)
+  const setProjects = useStore(state => state.setProjects)
+  const setContactInfo = useStore(state => state.setContactInfo)
+  const setSocialMedias = useStore(state => state.setSocialMedias)
+
+  const projects = useStore(state => state.projects);
+
+  // Handle loading the data
+  useEffect(() => {
+    loadEverything()
+
+    async function loadEverything() {
+      const isProduction = process.env.NODE_ENV === 'production';
+
+      const aboutMe = await requests.fetchAboutMe();
+      const skills = await requests.fetchSkills();
+      const projects = await requests.fetchProjects(isProduction);
+      const contactInfo = await requests.fetchContactInfo();
+      const socialMedias = await requests.fetchSocialMedias();
+
+      setAboutMe(aboutMe)
+      setSkills(skills)
+      setProjects(projects)
+      setContactInfo(contactInfo)
+      setSocialMedias(socialMedias)
+
+      setIsLoaded(true);
+      setRegularSectionHashes(projects.length !== 0)
+    }
+
+    function setRegularSectionHashes(withProjects) {
+      setSectionHashes(['about-me-section', 'skills-section', withProjects ? 'projects-section' : null, 'contact-section'].filter(Boolean));
+    }
+  }, [])
+
+  // Handle sections
   useEffect(() => {
     const getActiveSectionIndexByHashValue = (hashValue) => {
       for (let i = 0; i < sectionHashes.length; i++) {
@@ -107,6 +148,8 @@ function Main() {
       // Get distance from top of the section
       let distanceFromTopOfSection = Math.round(sectionTop - scrollPosition);
 
+      console.log(distanceFromTopOfSection);
+
       // Show nav bar when at top of the section
       if (distanceFromTopOfSection === 0) {
         document.getElementById('nav-container').classList.remove('hidden');
@@ -156,14 +199,14 @@ function Main() {
       window.removeEventListener('touchmove', moveSection);
       window.removeEventListener('wheel', moveSection);
     };
-  }, []);
+  }, [sectionHashes]);
 
   function getLinksComponent() {
     return (
       <>
         {getLinkComponentFor('about-me-section', 'About Me')}
         {getLinkComponentFor('skills-section', 'Skills')}
-        {getLinkComponentFor('projects-section', 'Projects')}
+        {projects.length === 0 ? null : getLinkComponentFor('projects-section', 'Projects')}
         {getLinkComponentFor('contact-section', 'Contact')}
       </>
     )
@@ -218,26 +261,39 @@ function Main() {
     return false;
   }
 
-  return (
-    <div id='main-page-container'>
-      <Nav linksComponent={getLinksComponent()}/>
-      <Toast />
-      <StarryCanvas />
-      <div id='move-section-btns-container' className='fixed-container'>
-        <button className={'general-btn-1 ' + (isMoveSectionBtnDisabled(-1) ? 'disabled' : '')} id='move-section-up-btn' onClick={() => switchSectionInDirection(-1)}><i className="fa-solid fa-arrow-up"></i></button>
-        <button className={'general-btn-1 ' + (isMoveSectionBtnDisabled(1) ? 'disabled' : '')} id='move-section-down-btn' onClick={() => switchSectionInDirection(1)}><i className="fa-solid fa-arrow-down"></i></button>
-      </div>
-      <div className='section' id='about-me-section'>
-        <AboutMe />
-      </div>
-      <div className='section' id='skills-section'>
-        <Skills />
-      </div>
+  function getProjectsSection() {
+    return (
       <div className='section' id='projects-section'>
         <Projects />
       </div>
-      <div className='section' id='contact-section'>
-        <Contact />
+    )
+  }
+
+  return (
+    <div id='main-page-container'>
+      <Toast />
+      <StarryCanvas />
+      <Nav linksComponent={sectionHashes.length === 0 ? null : getLinksComponent() }/>
+
+      <div className={isLoaded ? 'fade-out-display-none' : 'fade-in-500ms'}>
+        <LoadingScreen />
+      </div>
+
+      <div id='sections' className={isLoaded ? 'fade-in-500ms' : 'hide'}>
+        <div id='move-section-btns-container' className='fixed-container'>
+          <button className={'general-btn-1 ' + (isMoveSectionBtnDisabled(-1) ? 'disabled' : '')} id='move-section-up-btn' onClick={() => switchSectionInDirection(-1)}><i className="fa-solid fa-arrow-up"></i></button>
+          <button className={'general-btn-1 ' + (isMoveSectionBtnDisabled(1) ? 'disabled' : '')} id='move-section-down-btn' onClick={() => switchSectionInDirection(1)}><i className="fa-solid fa-arrow-down"></i></button>
+        </div>
+        <div className='section' id='about-me-section'>
+          <AboutMe />
+        </div>
+        <div className='section' id='skills-section'>
+          <Skills />
+        </div>
+        {projects.length === 0 ? null : getProjectsSection()}
+        <div className='section' id='contact-section'>
+          <Contact />
+        </div>
       </div>
     </div>
   );

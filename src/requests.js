@@ -4,7 +4,7 @@ async function fetchAboutMe() {
     const db = firebase.firestore();
     const aboutMeRef = db.collection('general').doc('about-me');
 
-    let profileImgUrl = '';
+    let profileImgURL = '';
     let headerText = '';
     let infoText = '';
 
@@ -15,60 +15,23 @@ async function fetchAboutMe() {
         if (aboutMe) {
             headerText = aboutMe.header;
             infoText = aboutMe.desc;
-            const storeProfileImgPath = aboutMe.profileImgPath;
 
             const storageRef = firebase.storage().ref();
-            const profileImgRef = storageRef.child(storeProfileImgPath);
-            profileImgUrl = await profileImgRef.getDownloadURL();
+            const profileImgRef = storageRef.child(aboutMe.profileImgURL);
+            profileImgURL = await profileImgRef.getDownloadURL();
         }
     } catch (error) {
         console.error('Error fetching about me:', error);
     }
 
     return {
-        profileImgUrl,
+        profileImgURL,
         headerText,
         infoText
     };
 }
 
 async function fetchSkills() {
-    const db = firebase.firestore();
-    const skillsRef = db.collection('skills').orderBy('priority', 'desc');
-    const storageRef = firebase.storage().ref();
-
-    const skillsCategories = [];
-
-    try {
-        const querySnapshot = await skillsRef.get();
-
-        for (const doc of querySnapshot.docs) {
-            const skillsCategory = doc.data();
-            const getImageURLPromises = skillsCategory.skills.map(async (skill) => {
-                try {
-                    const imageRef = storageRef.child(skill.imageURL);
-                    const url = await imageRef.getDownloadURL();
-                    // If skill is not writable, create a new object
-                    return { ...skill, imageURL: url };
-                } catch (error) {
-                    console.error('Error retrieving image URL:', error);
-                    return skill; // Return the original skill if there's an error
-                }
-            });
-
-            skillsCategory.skills = await Promise.all(getImageURLPromises);
-            skillsCategories.push(skillsCategory);
-        }
-    } catch (error) {
-        console.error('Error fetching skills:', error);
-    }
-
-    return {
-        skillsCategories
-    };
-}
-
-async function fetchSkills2() {
     const db = firebase.firestore();
     const skillsRef = db.collection('general').doc('skills');
     const storageRef = firebase.storage().ref();
@@ -84,16 +47,15 @@ async function fetchSkills2() {
                 try {
                     const imageRef = storageRef.child(skill.imageURL);
                     const url = await imageRef.getDownloadURL();
-                    // If skill is not writable, create a new object
                     return { ...skill, imageURL: url };
                 } catch (error) {
                     console.error('Error retrieving image URL:', error);
-                    return skill; // Return the original skill if there's an error
+                    return skill;
                 }
             });
 
+            // This will get each skill with it's loaded image URL
             skills = await Promise.all(getImageURLPromises);
-            console.log('skills', skills);
         }
     } catch (error) {
         console.error('Error fetching skills:', error);
@@ -102,25 +64,45 @@ async function fetchSkills2() {
     return skills;
 }
 
-async function fetchProjects() {
+/**
+ * @param {boolean} production - If true, only fetch projects that are meant for production
+ */
+async function fetchProjects(production = false) {
     const db = firebase.firestore();
-    const projectsRef = db.collection('projects');
+    const projectsRef = db.collection('general').doc('projects');
+    const storageRef = firebase.storage().ref();
 
-    const projects = [];
+    let projects = null;
 
     try {
-        const querySnapshot = await projectsRef.get();
+        const doc = await projectsRef.get();
+        const projectsData = doc.data();
 
-        querySnapshot.forEach((doc) => {
-            projects.push(doc.data());
-        });
+        if (projectsData) {
+            const getImageURLPromises = projectsData.data.map(async (project) => {
+                try {
+                    const imageRef = storageRef.child(project.showcaseImgURL);
+                    const url = await imageRef.getDownloadURL();
+                    return { ...project, showcaseImgURL: url };
+                } catch (error) {
+                    console.error('Error retrieving image URL:', error);
+                    return project;
+                }
+            });
+
+            // This will get each project with it's loaded image URL
+            projects = await Promise.all(getImageURLPromises);
+
+            // Remove projects that are not in production when in production mode
+            if (production) {
+                projects = projects.filter(project => project.isTest === false);
+            }
+        }
     } catch (error) {
         console.error('Error fetching projects:', error);
     }
 
-    return {
-        projects
-    };
+    return projects
 }
 
 async function fetchContactInfo() {
@@ -134,7 +116,7 @@ async function fetchContactInfo() {
         const contact = doc.data();
 
         if (contact) {
-            data = contact;
+            data = contact.info;
         }
     } catch (error) {
         console.error('Error fetching contact info:', error);
@@ -165,7 +147,7 @@ async function fetchSocialMedias() {
 
 export default {
     fetchAboutMe,
-    fetchSkills2,
+    fetchSkills,
     fetchProjects,
     fetchContactInfo,
     fetchSocialMedias

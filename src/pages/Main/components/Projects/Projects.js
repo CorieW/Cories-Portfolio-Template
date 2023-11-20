@@ -1,30 +1,16 @@
 import React, {useState, useEffect, useRef} from 'react';
 import './Projects.scss';
-import requests from '../../../../requests.js';
+import { useStore } from '../../../../store'
 
 function Projects() {
-    const [projects, setProjects] = useState([]);
+    const projects = useStore(state => state.projects);
+
     const [slideIndex, setSlideIndex] = useState(null);
     const [nextSlideTimeout, setNextSlideTimeout] = useState(null);
 
     useEffect(() => {
-        requests.fetchProjects().then((data) => {
-            setProjects(data.projects);
-        });
-    }, []);
-
-    useEffect(() => {
-        // When projects are fetched, set the slideshow's background color
-        // to match the first project's background color
-        const slideshow = document.getElementById('projects-slideshow');
-        const project = projects[slideIndex];
-
-        if (project) {
-            slideshow.style.backgroundColor = project.bgColor;
-        }
-
         setSlideIndex(0);
-    }, [projects]);
+    }, []);
 
     useEffect(() => {
         if (typeof slideIndex !== 'number') return;
@@ -50,7 +36,7 @@ function Projects() {
 
             return (
                 <li className={className} key={i}>
-                    <img src={project.showcaseImg} alt={project.title} className='project-showcase-img' />
+                    <img src={project.showcaseImgURL} alt={project.title} className='project-showcase-img' />
                 </li>
             )
         });

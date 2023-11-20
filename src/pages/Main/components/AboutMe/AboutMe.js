@@ -1,26 +1,28 @@
 import './AboutMe.scss';
 import { useState, useEffect } from 'react';
-import requests from '../../../../requests.js';
 import SocialMedias from '../SocialMedias/SocialMedias.js';
+import { useStore } from '../../../../store'
 
 function AboutMe() {
-    const [profileImgUrl, setProfileImgUrl] = useState('');
+    const aboutMe = useStore(state => state.aboutMe);
+
+    const [profileImgURL, setProfileImgURL] = useState('');
     const [headerText, setHeaderText] = useState('');
     const [infoText, setInfoText] = useState('');
 
     useEffect(() => {
-        requests.fetchAboutMe().then((data) => {
-            setProfileImgUrl(data.profileImgUrl);
-            setHeaderText(data.headerText);
-            setInfoText(data.infoText);
-        });
-    }, []);
+        if (aboutMe) {
+            setHeaderText(aboutMe.headerText);
+            setInfoText(aboutMe.infoText);
+            setProfileImgURL(aboutMe.profileImgURL);
+        }
+    }, [aboutMe]);
 
     return (
         <div id='about-me-container'>
             <div id='upper-container'>
                 <div id='img-container'>
-                    <img src={profileImgUrl} alt='Profile image' />
+                    <img src={profileImgURL} alt='Profile image' />
                 </div>
                 <h2 dangerouslySetInnerHTML={{__html: headerText}}></h2>
             </div>

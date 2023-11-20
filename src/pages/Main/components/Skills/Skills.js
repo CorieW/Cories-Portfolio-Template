@@ -1,23 +1,15 @@
 import React, {useState, useEffect} from 'react';
 import './Skills.scss';
-import Loading from '../Loading/Loading';
-import requests from '../../../../requests';
+import { useStore } from '../../../../store'
 
 function Skills() {
-    const [skills, setSkills] = useState(null);
+    const skills = useStore(state => state.skills);
+
     const [skillsPerRow, setSkillsPerRow] = useState(3);
 
     let previousAcquired = 0;
 
     useEffect(() => {
-        requests.fetchSkills2().then((data) => {
-            const orderedSkills = data.sort((a, b) => {
-                return a.acquired - b.acquired;
-            });
-
-            setSkills(orderedSkills);
-        })
-
         setDisplaySettings();
 
         // On window resize, change how the skills are displayed
@@ -25,6 +17,11 @@ function Skills() {
             setDisplaySettings();
         });
 
+        return () => {
+            window.removeEventListener('resize', () => {
+                setDisplaySettings();
+            });
+        }
     }, []);
 
     function setDisplaySettings() {
@@ -80,15 +77,15 @@ function Skills() {
                     const isFirst = index === 0;
                     const isLast = index === elements.length - 1;
 
-                    return renderSkillsRow(row, !isEven, isFirst, isLast);
+                    return renderSkillsRow(row, !isEven, isFirst, isLast, index);
                 })}
             </div>
         )
     }
 
-    function renderSkillsRow(skills, reverse, isFirst, isLast) {
+    function renderSkillsRow(skills, reverse, isFirst, isLast, key) {
         return (
-            <div className={`timeline-row ${reverse ? 'reverse' : ''}`}>
+            <div className={`timeline-row ${reverse ? 'reverse' : ''}`} key={key}>
                 {skills.map((skill, index) => {
                     const isLastSkill = skill === skills[skills.length - 1];
                     const isVeryFirstSkill = skill === skills[0] && isFirst;
@@ -159,11 +156,6 @@ function Skills() {
         )
     }
 
-    if (!skills) return (
-        <div id='skills-container'>
-            <Loading />
-        </div>
-    )
     return (
         <div id='skills-container'>
             <h2>Skills</h2>

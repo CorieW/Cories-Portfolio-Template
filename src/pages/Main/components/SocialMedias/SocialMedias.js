@@ -1,18 +1,10 @@
 import React, { useState } from 'react'
 import { useEffect } from 'react'
-import requests from '../../../../requests'
 import './SocialMedias.scss'
+import { useStore } from '../../../../store'
 
 function SocialMedias() {
-    const [socialMedias, setSocialMedias] = useState([])
-
-    useEffect(() => {
-        requests.fetchSocialMedias().then((socialMedias) => {
-            setSocialMedias(socialMedias)
-        }).catch((error) => {
-            console.log(error)
-        })
-    }, [])
+    const socialMedias = useStore(state => state.socialMedias)
 
     function renderSocialMedias() {
         return (

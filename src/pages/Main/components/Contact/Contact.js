@@ -1,23 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import './Contact.scss'
-import requests from '../../../../requests'
 import axios from 'axios'
 import { useStore } from '../../../../store'
 import SocialMedias from '../SocialMedias/SocialMedias'
 
 function Contact() {
+    const contactInfo = useStore((state) => state.contactInfo);
     const setToast = useStore((state) => state.setToast);
 
-    const [contactInfo, setContactInfo] = useState(null);
     const [sending, setSending] = useState(false);
-
-    useEffect(() => {
-        requests.fetchContactInfo().then((data) => {
-            if (data.info) {
-                setContactInfo(data.info);
-            }
-        }
-    )}, []);
 
     function sendEmail(e) {
         e.preventDefault();
@@ -77,17 +68,17 @@ function Contact() {
         // order based on priority
 
         return (
-            contactPlaces.map((contactPlace) => {
+            contactPlaces.map((contactPlace, key) => {
                 return (
-                    renderContactPlace(contactPlace)
+                    renderContactPlace(contactPlace, key)
                 )
             }
         ))
     }
 
-    function renderContactPlace(contactPlace) {
+    function renderContactPlace(contactPlace, key) {
         return (
-            <div className='contact-place'>
+            <div className='contact-place' key={key}>
                 <span>{contactPlace.header}</span><br/>
                 {contactPlace.data}
             </div>

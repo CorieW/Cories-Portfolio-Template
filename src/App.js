@@ -5,7 +5,6 @@ import Main from './pages/Main/Main';
 function App() {
   return (
     <div id='app-container'>
-      {/* <LoadingScreen /> */}
       <BrowserRouter>
         <Routes>
           <Route path='*' element={<Main />} />
