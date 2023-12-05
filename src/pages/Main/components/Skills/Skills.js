@@ -53,11 +53,17 @@ function Skills() {
     }
 
     function renderSkillsTimeline() {
-        const elements = [];
+        // Order skills by acquired date
+        const orderedSkills = [...skills].sort((a, b) => {
+            if (a.acquired < b.acquired) return -1;
+            if (a.acquired > b.acquired) return 1;
+            return 0;
+        });
 
+        const elements = [];
         let rowElements = [];
 
-        skills.forEach((skill, index) => {
+        orderedSkills.forEach((skill, index) => {
             const isRowEnd = (index + 1) % skillsPerRow === 0;
 
             rowElements.push(skill);
