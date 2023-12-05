@@ -1,2 +1,3 @@
 # Changes
-- Fixed skills ordering
+- Improvements to scrolling code for readability.
+- Fixed bug with inaccurate scrolling to sections with Chrome.

@@ -55,7 +55,6 @@ function Main() {
     }
   }, [])
 
-  // Handle sections
   useEffect(() => {
     const getActiveSectionIndexByHashValue = (hashValue) => {
       for (let i = 0; i < sectionHashes.length; i++) {
@@ -71,20 +70,50 @@ function Main() {
     setActiveSectionIndex(currSectionIndexRef.current);
     if (currSectionIndexRef.current !== 0) switchToActiveSection();
 
-    // Add event listener to listen for changes in the hash value
-    // When the hash value changes, update the active hash value.
-    const handleHashReplaced = (e) => {
-      // Get the updated hash value
-      const updatedHashValue = window.location.hash.substring(1);
-      // Set the section index to the index of the section with the updated hash value
-      currSectionIndexRef.current = getActiveSectionIndexByHashValue(updatedHashValue);
-      // Scroll to the active section
+    // Handles moving to the next or previous section
+    // when the user scrolls past or before the current section
+    const moveSection = (e) => {
+      if (!sectionLockedRef.current) {
+        e.preventDefault();
+        // Interrupted scroll, continue scrolling to the active section
+        switchToActiveSection();
+        return;
+      }
+
+      const sectionElements = document.getElementsByClassName('section');
+      let activeSection = sectionElements[currSectionIndexRef.current];
+
+      // Check if the current section is in view
+      let sectionTop = activeSection.offsetTop;
+      let sectionBottom = sectionTop + activeSection.offsetHeight;
+      let remainingScrollFromTop = window.scrollY - sectionTop;
+      let remainingScrollFromBottom = sectionBottom - (window.scrollY + window.innerHeight);
+
+      const scrollDownReady = Math.round(remainingScrollFromBottom) <= 0;
+      const scrollUpReady = Math.round(remainingScrollFromTop) <= 0;
+      const isScrollingDown = e.deltaY > 0;
+      const isScrollingUp = e.deltaY < 0;
+      const isLastSection = currSectionIndexRef.current === sectionElements.length + 1;
+      const isFirstSection = currSectionIndexRef.current === 0;
+
+      if (scrollDownReady && isScrollingDown && !isLastSection) {
+        // Move to the next section
+        currSectionIndexRef.current += 1;
+        e.preventDefault();
+      } else if (scrollUpReady && isScrollingUp && !isFirstSection) {
+        // Move to the previous section
+        currSectionIndexRef.current -= 1;
+        e.preventDefault();
+      } else return;
+
       switchToActiveSection();
-    };
+    }
 
-    window.addEventListener('hashReplaced', handleHashReplaced);
+    window.addEventListener('touchmove', moveSection, { passive: false });
+    window.addEventListener('wheel', moveSection, { passive: false });
 
-    const handleScroll = (e) => {
+    // Handles locking and unlocking the user to/from the current section
+    const trackScroll = (e) => {
       const scrollPosition = window.scrollY;
       const bottomPostionOfView = window.scrollY + window.innerHeight;
 
@@ -133,19 +162,13 @@ function Main() {
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', trackScroll);
 
     const handleNavOnScroll = () => {
-      const scrollPosition = window.scrollY;
-      const sectionElements = document.getElementsByClassName('section');
-      let activeSection = sectionElements[currSectionIndexRef.current];
-      let sectionTop = activeSection.offsetTop;
-
-      // Get distance from top of the section
-      let distanceFromTopOfSection = Math.round(sectionTop - scrollPosition);
+      const nextSectionDist = distanceFromNextSection();
 
       // Show nav bar when at top of the section
-      if (distanceFromTopOfSection === 0) {
+      if (nextSectionDist === 0) {
         document.getElementById('nav-container').classList.remove('hidden');
       } else {
         document.getElementById('nav-container').classList.add('hidden');
@@ -154,44 +177,39 @@ function Main() {
 
     window.addEventListener('scroll', handleNavOnScroll);
 
-    const moveSection = (e) => {
-      if (!sectionLockedRef.current) {
-        e.preventDefault();
-        // Interrupted scroll, continue scrolling to the active section
-        switchToActiveSection();
-        return;
-      }
-
-      const sectionElements = document.getElementsByClassName('section');
-      let activeSection = sectionElements[currSectionIndexRef.current];
-
-      // Check if the current section is in view
-      let sectionTop = activeSection.offsetTop;
-      let sectionBottom = sectionTop + activeSection.offsetHeight;
-      let remainingScrollFromTop = window.scrollY - sectionTop;
-      let remainingScrollFromBottom = sectionBottom - (window.scrollY + window.innerHeight);
-
-      const scrollDownReady = Math.round(remainingScrollFromBottom) <= 0;
-      const scrollUpReady = Math.round(remainingScrollFromTop) <= 0;
-
-      if (scrollDownReady && e.deltaY > 0 && sectionElements.length !== currSectionIndexRef.current + 1) currSectionIndexRef.current += 1;
-      else if (scrollUpReady && e.deltaY < 0 && currSectionIndexRef.current !== 0) currSectionIndexRef.current -= 1;
-      else return
-
+    // Add event listener to listen for changes in the hash value
+    // When the hash value changes, update the active hash value.
+    const handleHashReplaced = (e) => {
+      // Get the updated hash value
+      const updatedHashValue = window.location.hash.substring(1);
+      // Set the section index to the index of the section with the updated hash value
+      currSectionIndexRef.current = getActiveSectionIndexByHashValue(updatedHashValue);
+      // Scroll to the active section
       switchToActiveSection();
+    };
+
+    window.addEventListener('hashReplaced', handleHashReplaced);
+
+    function distanceFromTopOfSection(section) {
+      const scrollPosition = window.scrollY;
+      const sectionTop = section.offsetTop;
+      return Math.round(sectionTop - scrollPosition);
     }
 
-    window.addEventListener('touchmove', moveSection, { passive: false });
-    window.addEventListener('wheel', moveSection, { passive: false });
+    function distanceFromNextSection() {
+      const sectionElements = document.getElementsByClassName('section');
+      const nextSection = sectionElements[currSectionIndexRef.current];
+      return distanceFromTopOfSection(nextSection);
+    }
 
     // Clean up the event listener on component unmount
     return () => {
       // window.removeEventListener('load', handleLoad);
-      window.removeEventListener('hashReplaced', handleHashReplaced);
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('scroll', handleNavOnScroll);
       window.removeEventListener('touchmove', moveSection);
       window.removeEventListener('wheel', moveSection);
+      window.removeEventListener('scroll', trackScroll);
+      window.removeEventListener('scroll', handleNavOnScroll);
+      window.removeEventListener('hashReplaced', handleHashReplaced);
     };
   }, [sectionHashes]);
 
