@@ -1,4 +1,4 @@
-import IStar from "./IStar";
+import IStar from './IStar';
 
 export default class Star implements IStar {
     x: number;
@@ -10,7 +10,16 @@ export default class Star implements IStar {
     private maxOpacity: number;
     private opacityVelocity: number;
 
-    constructor(x: number, y: number, radius: number, color: string, opacity: number, minOpacity: number, maxOpacity: number, opacityVelocity: number) {
+    constructor(
+        x: number,
+        y: number,
+        radius: number,
+        color: string,
+        opacity: number,
+        minOpacity: number,
+        maxOpacity: number,
+        opacityVelocity: number
+    ) {
         this.x = x;
         this.y = y;
         this.radius = radius;

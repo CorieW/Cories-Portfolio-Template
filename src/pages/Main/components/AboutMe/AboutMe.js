@@ -1,10 +1,10 @@
 import './AboutMe.scss';
 import { useState, useEffect } from 'react';
 import SocialMedias from '../SocialMedias/SocialMedias.js';
-import { useStore } from '../../../../store'
+import { useStore } from '../../../../store';
 
 function AboutMe() {
-    const aboutMe = useStore(state => state.aboutMe);
+    const aboutMe = useStore((state) => state.aboutMe);
 
     const [profileImgURL, setProfileImgURL] = useState('');
     const [headerText, setHeaderText] = useState('');
@@ -24,14 +24,14 @@ function AboutMe() {
                 <div id='img-container'>
                     <img src={profileImgURL} alt='Profile image' />
                 </div>
-                <h2 dangerouslySetInnerHTML={{__html: headerText}}></h2>
+                <h2 dangerouslySetInnerHTML={{ __html: headerText }}></h2>
             </div>
             <div id='info-container'>
-                <p dangerouslySetInnerHTML={{__html: infoText}}></p>
+                <p dangerouslySetInnerHTML={{ __html: infoText }}></p>
                 <SocialMedias />
             </div>
         </div>
-    )
+    );
 }
 
 export default AboutMe;

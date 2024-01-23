@@ -26,7 +26,7 @@
                 // Arrow
                 .acquired {
                     &::before {
-                        content: "";
+                        content: '';
 
                         position: absolute;
                         top: calc(50% + 1px);
@@ -81,7 +81,7 @@
                 // Arrow
                 .acquired {
                     &::after {
-                        content: "";
+                        content: '';
 
                         position: absolute;
                         top: calc(50% + 1px);
@@ -201,7 +201,7 @@
                     border-bottom-left-radius: 0 !important;
 
                     &::before {
-                        content: "";
+                        content: '';
 
                         position: absolute;
                         top: calc(50%);
@@ -250,7 +250,8 @@
                     line-height: 50px;
 
                     // Arrows
-                    &::before, &::after {
+                    &::before,
+                    &::after {
                         width: 0;
                         height: 0;
 

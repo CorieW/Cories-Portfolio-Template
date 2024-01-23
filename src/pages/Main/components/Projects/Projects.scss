@@ -59,7 +59,9 @@
             left: -100vw;
             right: -100vw;
 
-            box-shadow: inset 0 -100px 100px 0 var(--background-color), inset -0px 100px 100px 0 var(--background-color);
+            box-shadow:
+                inset 0 -100px 100px 0 var(--background-color),
+                inset -0px 100px 100px 0 var(--background-color);
         }
     }
 

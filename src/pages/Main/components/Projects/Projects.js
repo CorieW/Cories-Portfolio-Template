@@ -1,9 +1,9 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Projects.scss';
-import { useStore } from '../../../../store'
+import { useStore } from '../../../../store';
 
 function Projects() {
-    const projects = useStore(state => state.projects);
+    const projects = useStore((state) => state.projects);
 
     const [slideIndex, setSlideIndex] = useState(null);
     const [nextSlideTimeout, setNextSlideTimeout] = useState(null);
@@ -25,9 +25,11 @@ function Projects() {
             slideshow.style.backgroundColor = project.bgColor;
         }
 
-        setNextSlideTimeout(setTimeout(() => {
-            setSlideIndex((slideIndex + 1) % projects.length);
-        }, 5000));
+        setNextSlideTimeout(
+            setTimeout(() => {
+                setSlideIndex((slideIndex + 1) % projects.length);
+            }, 5000)
+        );
     }, [slideIndex, projects]);
 
     function displayProjects() {
@@ -36,9 +38,13 @@ function Projects() {
 
             return (
                 <li className={className} key={i}>
-                    <img src={project.showcaseImgURL} alt={project.title} className='project-showcase-img' />
+                    <img
+                        src={project.showcaseImgURL}
+                        alt={project.title}
+                        className='project-showcase-img'
+                    />
                 </li>
-            )
+            );
         });
     }
 
@@ -47,11 +53,14 @@ function Projects() {
     function displayIndicators() {
         return projects.map((project, i) => {
             return (
-                <a className={ 'slide-indicator' + (i == slideIndex ? ' active' : '') }
-                    onClick={ () => setSlideIndex(i) }
-                    key={i}>
-                </a>
-            )
+                <a
+                    className={
+                        'slide-indicator' + (i == slideIndex ? ' active' : '')
+                    }
+                    onClick={() => setSlideIndex(i)}
+                    key={i}
+                ></a>
+            );
         });
     }
 
@@ -60,14 +69,12 @@ function Projects() {
             <ul className='slide-list'>
                 <div className='encompassing-shadow-box'></div>
 
-                { displayProjects() }
+                {displayProjects()}
             </ul>
 
-            <ul className='slide-indicators'>
-                { displayIndicators() }
-            </ul>
+            <ul className='slide-indicators'>{displayIndicators()}</ul>
         </div>
-    )
+    );
 }
 
 export default Projects;

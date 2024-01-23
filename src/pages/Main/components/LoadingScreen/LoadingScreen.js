@@ -1,12 +1,14 @@
-import React from 'react'
-import './LoadingScreen.scss'
+import React from 'react';
+import './LoadingScreen.scss';
 
 function LoadingScreen() {
-  return (
-    <div id='loading-screen'>
-      <h2><i className="fa-solid fa-spinner fa-spin"></i></h2>
-    </div>
-  )
+    return (
+        <div id='loading-screen'>
+            <h2>
+                <i className='fa-solid fa-spinner fa-spin'></i>
+            </h2>
+        </div>
+    );
 }
 
-export default LoadingScreen
+export default LoadingScreen;

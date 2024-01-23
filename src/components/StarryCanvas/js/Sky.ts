@@ -1,4 +1,4 @@
-import Star from "./Star";
+import Star from './Star';
 
 export default class Sky {
     stars: Star[];

@@ -1,9 +1,9 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import './Skills.scss';
-import { useStore } from '../../../../store'
+import { useStore } from '../../../../store';
 
 function Skills() {
-    const skills = useStore(state => state.skills);
+    const skills = useStore((state) => state.skills);
 
     const [skillsPerRow, setSkillsPerRow] = useState(3);
 
@@ -21,7 +21,7 @@ function Skills() {
             window.removeEventListener('resize', () => {
                 setDisplaySettings();
             });
-        }
+        };
     }, []);
 
     function setDisplaySettings() {
@@ -30,12 +30,10 @@ function Skills() {
         if (window.innerWidth < 650) {
             setSkillsPerRow(1);
             skillsContainer.style.setProperty(`--rowGap`, '10px');
-        }
-        else if (window.innerWidth < 1024) {
+        } else if (window.innerWidth < 1024) {
             setSkillsPerRow(2);
             skillsContainer.style.setProperty(`--rowGap`, '20px');
-        }
-        else {
+        } else {
             setSkillsPerRow(3);
             skillsContainer.style.setProperty(`--rowGap`, '50px');
         }
@@ -83,15 +81,24 @@ function Skills() {
                     const isFirst = index === 0;
                     const isLast = index === elements.length - 1;
 
-                    return renderSkillsRow(row, !isEven, isFirst, isLast, index);
+                    return renderSkillsRow(
+                        row,
+                        !isEven,
+                        isFirst,
+                        isLast,
+                        index
+                    );
                 })}
             </div>
-        )
+        );
     }
 
     function renderSkillsRow(skills, reverse, isFirst, isLast, key) {
         return (
-            <div className={`timeline-row ${reverse ? 'reverse' : ''}`} key={key}>
+            <div
+                className={`timeline-row ${reverse ? 'reverse' : ''}`}
+                key={key}
+            >
                 {skills.map((skill, index) => {
                     const isLastSkill = skill === skills[skills.length - 1];
                     const isVeryFirstSkill = skill === skills[0] && isFirst;
@@ -105,61 +112,86 @@ function Skills() {
                         return (
                             <>
                                 <div className='timeline-row-line'>
-                                    <span className={'acquired ' + (cachedPreviousAcquired === acquiredStr ? 'hidden' : '')}>
-                                        { acquiredStr }
+                                    <span
+                                        className={
+                                            'acquired ' +
+                                            (cachedPreviousAcquired ===
+                                            acquiredStr
+                                                ? 'hidden'
+                                                : '')
+                                        }
+                                    >
+                                        {acquiredStr}
                                     </span>
                                 </div>
-                                { renderSkill(skill) }
+                                {renderSkill(skill)}
                                 <div className='timeline-row-line final'>
-                                    <span className='acquired'>
-                                        Today
-                                    </span>
+                                    <span className='acquired'>Today</span>
                                 </div>
                                 <div className='edge'></div>
                             </>
-                        )
+                        );
                     }
 
                     if (isLastSkill) {
                         return (
                             <>
                                 <div className='timeline-row-line'>
-                                    <span className={'acquired ' + (cachedPreviousAcquired === acquiredStr ? 'hidden' : '')}>
-                                        { acquiredStr }
+                                    <span
+                                        className={
+                                            'acquired ' +
+                                            (cachedPreviousAcquired ===
+                                            acquiredStr
+                                                ? 'hidden'
+                                                : '')
+                                        }
+                                    >
+                                        {acquiredStr}
                                     </span>
                                 </div>
-                                { renderSkill(skill) }
+                                {renderSkill(skill)}
                                 <div className='timeline-row-line'></div>
                             </>
-                        )
+                        );
                     }
 
                     return (
                         <>
-                            { isVeryFirstSkill && index === 0 ? <div className='edge'></div> : null }
-                            <div className={`timeline-row-line ${isVeryFirstSkill ? 'start' : ''}`}>
-                                <span className={'acquired ' + (cachedPreviousAcquired === acquiredStr ? 'hidden' : '')}>
-                                    { acquiredStr }
+                            {isVeryFirstSkill && index === 0 ? (
+                                <div className='edge'></div>
+                            ) : null}
+                            <div
+                                className={`timeline-row-line ${isVeryFirstSkill ? 'start' : ''}`}
+                            >
+                                <span
+                                    className={
+                                        'acquired ' +
+                                        (cachedPreviousAcquired === acquiredStr
+                                            ? 'hidden'
+                                            : '')
+                                    }
+                                >
+                                    {acquiredStr}
                                 </span>
                             </div>
-                            { renderSkill(skill) }
+                            {renderSkill(skill)}
                         </>
-                    )
+                    );
                 })}
             </div>
-        )
+        );
     }
 
     function renderSkill(skill, key) {
-        const {name, imageURL} = skill;
+        const { name, imageURL } = skill;
 
         return (
             <button className='timeline-skill-btn' key={key}>
-                <img src={imageURL} alt={name} draggable={false}/>
+                <img src={imageURL} alt={name} draggable={false} />
                 {/* <span>{convertAcquiredNumberToString(acquired)}</span> */}
                 <span>{name}</span>
             </button>
-        )
+        );
     }
 
     return (
@@ -167,7 +199,7 @@ function Skills() {
             <h2>Skills</h2>
             {renderSkillsTimeline()}
         </div>
-    )
+    );
 }
 
 export default Skills;

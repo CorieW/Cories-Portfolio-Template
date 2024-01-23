@@ -7,9 +7,19 @@ export default class ShootingStar extends Star {
     public tailLength: number;
 
     private currentDurability: number = 0;
-    private tailPoints: Array<{ x: number, y: number }>;
+    private tailPoints: Array<{ x: number; y: number }>;
 
-    constructor(x: number, y: number, radius: number, color: string, opacity: number, velocityX: number, velocityY: number, durability: number, tailLength: number) {
+    constructor(
+        x: number,
+        y: number,
+        radius: number,
+        color: string,
+        opacity: number,
+        velocityX: number,
+        velocityY: number,
+        durability: number,
+        tailLength: number
+    ) {
         super(x, y, radius, color, opacity, 1, 1, 1);
         this.velocityX = velocityX;
         this.velocityY = velocityY;
@@ -45,7 +55,7 @@ export default class ShootingStar extends Star {
         return this.currentDurability;
     }
 
-    public getTailPoints(): Array<{ x: number, y: number }> {
+    public getTailPoints(): Array<{ x: number; y: number }> {
         return this.tailPoints;
     }
 

@@ -27,7 +27,7 @@ async function fetchAboutMe() {
     return {
         profileImgURL,
         headerText,
-        infoText
+        infoText,
     };
 }
 
@@ -81,16 +81,18 @@ async function fetchProjects(production = false) {
         if (!projectsData) return projects;
 
         let neededProjects = [];
-        neededProjects = projectsData.data.map(project => {
+        neededProjects = projectsData.data.map((project) => {
             return {
                 ...project,
-                isTest: project.isTest || false
+                isTest: project.isTest || false,
             };
         });
 
         // Remove projects that are not in production when in production mode
         if (production) {
-            neededProjects = neededProjects.filter(project => project.isTest === false);
+            neededProjects = neededProjects.filter(
+                (project) => project.isTest === false
+            );
         }
 
         const getImageURLPromises = neededProjects.map(async (project) => {
@@ -110,7 +112,7 @@ async function fetchProjects(production = false) {
         console.error('Error fetching projects:', error);
     }
 
-    return projects
+    return projects;
 }
 
 async function fetchContactInfo() {
@@ -158,5 +160,5 @@ export default {
     fetchSkills,
     fetchProjects,
     fetchContactInfo,
-    fetchSocialMedias
+    fetchSocialMedias,
 };
