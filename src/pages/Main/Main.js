@@ -107,6 +107,12 @@ function Main() {
             const isFirstSection = currSectionIndexRef.current === 0;
 
             if (scrollDownReady && isScrollingDown && !isLastSection) {
+                // Current section is the last section
+                if (currSectionIndexRef.current === sectionElements.length - 1) {
+                    e.preventDefault();
+                    return;
+                }
+
                 // Move to the next section
                 currSectionIndexRef.current += 1;
                 e.preventDefault();
@@ -272,7 +278,6 @@ function Main() {
     }
 
     function switchToActiveSection() {
-        console.log('switching to active section');
         const sectionElements = document.getElementsByClassName('section');
         let activeSection = sectionElements[currSectionIndexRef.current];
         const scrollOptions = {

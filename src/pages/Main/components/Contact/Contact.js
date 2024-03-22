@@ -50,7 +50,7 @@ function Contact() {
                 }
             })
             .catch((error) => {
-                console.log(error);
+                setToast({ type: 'error', message: 'Failed to send message' });
             })
             .finally(() => {
                 setSending(false);
