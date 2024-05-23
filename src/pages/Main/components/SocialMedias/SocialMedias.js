@@ -3,8 +3,11 @@ import { useEffect } from 'react';
 import './SocialMedias.scss';
 import { useStore } from '../../../../store';
 
-function SocialMedias() {
+function SocialMedias(props) {
+    const displayNames = props.displayNames || false;
+
     const socialMedias = useStore((state) => state.socialMedias);
+    console.log(socialMedias);
 
     function renderSocialMedias() {
         return (
@@ -16,9 +19,10 @@ function SocialMedias() {
                             target='_blank'
                             rel='noreferrer'
                             aria-label={socialMedia.title}
-                        >
-                            {renderIcon(socialMedia)}
-                        </a>
+                        ></a>
+                        <p>
+                            {renderIcon(socialMedia)} { displayNames ? <span className='social-media-title'>{socialMedia.title}</span> : null }
+                        </p>
                     </button>
                 ))}
             </>

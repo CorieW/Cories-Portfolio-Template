@@ -52,13 +52,18 @@ a {
 
     transition: all 0.3s;
 
+    & * {
+        color: var(--background-color);
+        font-size: 24px;
+        font-weight: 600;
+    }
+
     &:hover {
         background-color: var(--primary-color);
     }
 
     &.disabled {
         background-color: var(--disabled-color);
-        color: var(--soft-text-color);
         cursor: not-allowed;
     }
 }

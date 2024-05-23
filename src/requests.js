@@ -1,5 +1,18 @@
 import firebase from './firebase.js';
 
+async function fetchImageFromStorage(imageURL) {
+    const storageRef = firebase.storage().ref();
+    const imageRef = storageRef.child(imageURL);
+
+    try {
+        const url = await imageRef.getDownloadURL();
+        return url;
+    } catch (error) {
+        console.error('Error fetching image from storage:', error);
+        return null;
+    }
+}
+
 async function fetchAboutMe() {
     const db = firebase.firestore();
     const aboutMeRef = db.collection('general').doc('about-me');
@@ -15,10 +28,7 @@ async function fetchAboutMe() {
         if (aboutMe) {
             headerText = aboutMe.header;
             infoText = aboutMe.desc;
-
-            const storageRef = firebase.storage().ref();
-            const profileImgRef = storageRef.child(aboutMe.profileImgURL);
-            profileImgURL = await profileImgRef.getDownloadURL();
+            profileImgURL = await fetchImageFromStorage(aboutMe.profileImgURL);
         }
     } catch (error) {
         console.error('Error fetching about me:', error);
@@ -34,7 +44,6 @@ async function fetchAboutMe() {
 async function fetchSkills() {
     const db = firebase.firestore();
     const skillsRef = db.collection('general').doc('skills');
-    const storageRef = firebase.storage().ref();
 
     let skills = [];
 
@@ -45,8 +54,7 @@ async function fetchSkills() {
         if (skillsData) {
             const getImageURLPromises = skillsData.data.map(async (skill) => {
                 try {
-                    const imageRef = storageRef.child(skill.imageURL);
-                    const url = await imageRef.getDownloadURL();
+                    const url = await fetchImageFromStorage(skill.imageURL);
                     return { ...skill, imageURL: url };
                 } catch (error) {
                     console.error('Error retrieving image URL:', error);
@@ -70,7 +78,6 @@ async function fetchSkills() {
 async function fetchProjects(production = false) {
     const db = firebase.firestore();
     const projectsRef = db.collection('general').doc('projects');
-    const storageRef = firebase.storage().ref();
 
     let projects = [];
 
@@ -97,8 +104,7 @@ async function fetchProjects(production = false) {
 
         const getImageURLPromises = neededProjects.map(async (project) => {
             try {
-                const imageRef = storageRef.child(project.showcaseImgURL);
-                const url = await imageRef.getDownloadURL();
+                const url = await fetchImageFromStorage(project.showcaseImgURL);
                 return { ...project, showcaseImgURL: url };
             } catch (error) {
                 console.error('Error retrieving image URL:', error);

@@ -28,7 +28,7 @@ function AboutMe() {
             </div>
             <div id='info-container'>
                 <p dangerouslySetInnerHTML={{ __html: infoText }}></p>
-                <SocialMedias />
+                <SocialMedias displayNames={true} />
             </div>
         </div>
     );
