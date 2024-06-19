@@ -7,7 +7,6 @@ function SocialMedias(props) {
     const displayNames = props.displayNames || false;
 
     const socialMedias = useStore((state) => state.socialMedias);
-    console.log(socialMedias);
 
     function renderSocialMedias() {
         return (

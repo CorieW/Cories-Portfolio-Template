@@ -1,2 +1,3 @@
 # Changes
-- Projects now display iframes for custom content.
+- Removal of logging.
+- Other minor changes to projects showcase.

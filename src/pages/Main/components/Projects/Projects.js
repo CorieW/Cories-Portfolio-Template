@@ -40,9 +40,8 @@ function Projects() {
                 <li className={className} key={i}>
                     <iframe
                         src={project.url}
-                        title={project.title}
+                        title={project.title + ' Project Showcase'}
                         className='project-showcase-iframe'
-                        frameborder='0'
                     ></iframe>
                 </li>
             );
