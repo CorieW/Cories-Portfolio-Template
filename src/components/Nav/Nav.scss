@@ -23,8 +23,10 @@
 
         transition: all 0.2s;
 
-        &:hover {
-            scale: 1.2;
+        &:hover:not(.active) {
+            // text-decoration: underline 2px;
+            color: var(--primary-color) !important;
+            opacity: 0.5;
         }
     }
 
