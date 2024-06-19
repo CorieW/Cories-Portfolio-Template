@@ -102,18 +102,7 @@ async function fetchProjects(production = false) {
             );
         }
 
-        const getImageURLPromises = neededProjects.map(async (project) => {
-            try {
-                const url = await fetchImageFromStorage(project.showcaseImgURL);
-                return { ...project, showcaseImgURL: url };
-            } catch (error) {
-                console.error('Error retrieving image URL:', error);
-                return project;
-            }
-        });
-
-        // This will get each project with it's loaded image URL
-        projects = await Promise.all(getImageURLPromises);
+        projects = neededProjects;
     } catch (error) {
         console.error('Error fetching projects:', error);
     }

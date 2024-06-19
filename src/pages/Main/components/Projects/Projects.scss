@@ -34,17 +34,14 @@
 
             transition: opacity 1s ease-in-out;
 
-            .project-showcase-img {
-                // Fit
-                width: 80%;
+            .project-showcase-iframe {
+                position: absolute;
+                width: 100%;
                 height: 80%;
-
-                // Replace white background with transparent
                 background-color: transparent;
 
-                // Disable interaction
-                user-select: none;
-                pointer-events: none;
+                // Prevent scrolling
+
             }
 
             &.active {

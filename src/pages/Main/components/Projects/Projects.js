@@ -38,11 +38,12 @@ function Projects() {
 
             return (
                 <li className={className} key={i}>
-                    <img
-                        src={project.showcaseImgURL}
-                        alt={project.title}
-                        className='project-showcase-img'
-                    />
+                    <iframe
+                        src={project.url}
+                        title={project.title}
+                        className='project-showcase-iframe'
+                        frameborder='0'
+                    ></iframe>
                 </li>
             );
         });
