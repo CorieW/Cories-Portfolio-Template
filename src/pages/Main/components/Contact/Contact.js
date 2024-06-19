@@ -102,7 +102,6 @@ function Contact() {
             <h2>Contact</h2>
             <div id='contact-container'>
                 <div className='get-in-touch'>
-                    <h3>Get In Touch</h3>
                     <form onSubmit={sendEmail}>
                         <div className='input-group'>
                             <div className='required'>
@@ -155,7 +154,6 @@ function Contact() {
                     </form>
                 </div>
                 <div className='contact-details'>
-                    <h3>Contact Details</h3>
                     <div className='contact-places'>
                         {renderContactPlaces()}
                         <div className='contact-place socials'>
