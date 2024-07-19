@@ -52,4 +52,4 @@ See the [Examples](examples) folder for information on how to use this package.
 - [Live Example](https://coriewatson.me)
 
 # Contributions
-Contributions are welcome! Check the [Todo](#todo) section for ideas on what to contribute. Also, check the [Issues]() tab for issues that need to be resolved.
+Contributions are welcome! Check the [Todo](#todo) section for ideas on what to contribute. Also, check the [Issues](issues) tab for issues that need to be resolved.
