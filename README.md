@@ -1,7 +1,7 @@
 # Information
 This is a modern and unique portfolio template that supports customization.
 
-# Usage
+# Setup
 
 ## Installation
 Install through npm:
@@ -9,7 +9,7 @@ Install through npm:
 npm i cories-portfolio-template
 ```
 
-## Setup
+## Usage
 See the [Examples](examples) folder for information on how to use this package.
 
 # Latest Commit Changes
