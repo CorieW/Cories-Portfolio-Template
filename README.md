@@ -10,7 +10,7 @@ npm i cories-portfolio-template
 ```
 
 ## Usage
-See the [Examples]() examples folder for information on how to use this package.
+See the [Examples](examples) examples folder for information on how to use this package.
 
 # Latest Commit Changes
 - Converted the project to TypeScript
@@ -48,7 +48,7 @@ See the [Examples]() examples folder for information on how to use this package.
     - Map accessibility labels to different languages
 
 # Examples
-- [Example 1]()
+- [Example 1](examples/example1)
 - [Corie Watson's Portfolio](https://coriewatson.me)
 
 # Contributions
