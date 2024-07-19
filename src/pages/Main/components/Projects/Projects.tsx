@@ -5,15 +5,20 @@ import {
     IProject,
 } from '../../../../ts/IProject';
 import Slideshow from '../../../../components/Slideshow/Slideshow';
+import IProjectsSlideshowSettings from '../../../../ts/IProjectsSlideshowSettings';
 
 type Props = {
+    settings?: IProjectsSlideshowSettings | null;
     projects: IProject[];
 };
 
 function Projects(props: Props) {
-    const { projects } = props;
+    const { settings, projects } = props;
 
-    const internalProjectShowcaseJSX = (showcase: IInternalProjectShowcase, index: number) => {
+    const internalProjectShowcaseJSX = (
+        showcase: IInternalProjectShowcase,
+        index: number
+    ) => {
         return (
             <div className='internal-project-showcase' key={index}>
                 {showcase.component}
@@ -21,7 +26,10 @@ function Projects(props: Props) {
         );
     };
 
-    const externalProjectShowcaseJSX = (showcase: IExternalProjectShowcase, index: number) => {
+    const externalProjectShowcaseJSX = (
+        showcase: IExternalProjectShowcase,
+        index: number
+    ) => {
         return (
             <iframe
                 src={showcase.url}
@@ -58,7 +66,11 @@ function Projects(props: Props) {
 
     return (
         <div id='projects-container'>
-            <Slideshow slides={getSlides()} />
+            <Slideshow
+                slides={getSlides()}
+                autoTransition={settings?.autoTransition}
+                transitionTime={settings?.transitionTime}
+            />
         </div>
     );
 }

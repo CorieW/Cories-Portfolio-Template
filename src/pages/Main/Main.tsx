@@ -13,13 +13,15 @@ import useStore from '../../ts/store';
 import VerticalSectionsSlideshow, {
     ISection,
 } from '../../components/VerticalSectionsSlideshow/VerticalSectionsSlideshow';
+import ISettings from '../../ts/ISettings';
 
 type Props = {
+    settings: ISettings | null;
     loadFunc: () => Promise<IPortfolio>;
 };
 
 function Main(props: Props) {
-    const { loadFunc } = props;
+    const { settings, loadFunc } = props;
 
     const [portfolio, setPortfolio] = useState<IPortfolio | null>(null);
 
@@ -80,7 +82,7 @@ function Main(props: Props) {
             skills.length !== 0
         );
         const projectSectionJSX: JSX.Element | null = getSectionJSX(
-            <Projects projects={projects} />,
+            <Projects projects={projects} settings={settings?.projectsSlideshow} />,
             'projects',
             projects.length !== 0
         );

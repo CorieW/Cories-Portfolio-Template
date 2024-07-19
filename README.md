@@ -13,16 +13,10 @@ npm i cories-portfolio-template
 See the [Examples]() examples folder for information on how to use this package.
 
 # Latest Commit Changes
-- Converted the project to TypeScript
-- No longer using Create React App, instead using Vite
-- Added ability to move sections by pressing 'up' and 'down' arrows
-- Added 'Timeline' component, used in 'Skills' section
-- Added 'ContactForm' component, used in 'Contact' section
-- Added 'VerticalSectionsSlideshow' component, used for scrolling through sections
-- Added 'Slideshow' component, used in 'Projects' section
-- Added moving to different sections with up and down arrows
-- Responsiveness improvements
-- Many other changes
+- Improved responsiveness
+- Added slideshow customization
+    - Toggle auto-transition
+    - Custom auto-transition time
 
 # Todo
 - More color customization
@@ -34,9 +28,6 @@ See the [Examples]() examples folder for information on how to use this package.
     - Custom star color
 - Timeline customization
     - Custom items per row per resolution setting
-- Slideshow customization
-    - Toggle auto-transition
-    - Custom auto-transition time
 - Sections customization
     - Custom section order
     - Toggle auto-transition between sections

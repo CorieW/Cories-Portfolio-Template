@@ -7,13 +7,16 @@ export interface ISlide {
 }
 
 type Props = {
+    autoTransition?: boolean;
+    transitionTime?: number | null;
     slides: ISlide[];
 };
 
 function Slideshow(props: Props) {
-    const { slides } = props;
+    const { autoTransition, transitionTime, slides } = props;
 
     const slideshowRef = useRef<HTMLDivElement>(null);
+
     const [slideIndex, setSlideIndex] = useState<number | null>(null);
     const [nextSlideTimeout, setNextSlideTimeout] =
         useState<NodeJS.Timeout | null>(null);
@@ -23,6 +26,9 @@ function Slideshow(props: Props) {
     }, []);
 
     useEffect(() => {
+        // If autoTransition is false, do not automatically transition slides
+        if (!autoTransition) return;
+
         if (typeof slideIndex !== 'number') return;
         if (nextSlideTimeout) clearTimeout(nextSlideTimeout);
 
@@ -40,7 +46,7 @@ function Slideshow(props: Props) {
         setNextSlideTimeout(
             setTimeout(() => {
                 setSlideIndex((slideIndex + 1) % slides.length);
-            }, 10000)
+            }, transitionTime || 7500)
         );
     }, [slideIndex, slides]);
 
