@@ -1,7 +1,7 @@
 # Information
 This is a modern and unique portfolio template that supports customization.
 
-# Usage
+# Setup
 
 ## Installation
 Install through npm:
@@ -10,7 +10,7 @@ npm i cories-portfolio-template
 ```
 
 ## Usage
-See the [Examples]() examples folder for information on how to use this package.
+See the [Examples](examples) folder for information on how to use this package.
 
 # Latest Commit Changes
 - Improved responsiveness
@@ -39,8 +39,8 @@ See the [Examples]() examples folder for information on how to use this package.
     - Map accessibility labels to different languages
 
 # Examples
-- [Example 1]()
-- [Corie Watson's Portfolio](https://coriewatson.me)
+- [Example 1](examples/example1)
+- [Live Example](https://coriewatson.me)
 
 # Contributions
-Contributions are welcome! Check the [Todo](#todo) section for ideas on what to contribute. Also, check the [Issues]() tab for issues that need to be resolved.
+Contributions are welcome! Check the [Todo](#todo) section for ideas on what to contribute. Also, check the [Issues](https://github.com/CorieW/Cories-Portfolio-Template/issues) tab for issues that need to be resolved.
