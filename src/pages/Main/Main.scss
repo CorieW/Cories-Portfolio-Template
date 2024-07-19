@@ -1,50 +1,31 @@
 #main-page-container {
     box-sizing: border-box;
 
-    .fixed-container {
-        position: fixed;
-        z-index: 99;
-        bottom: 50px;
+    #sections {
+        .section {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 100px 15%;
+            box-sizing: border-box;
 
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
+            overflow-y: hidden;
 
-    #move-section-btns-container {
-        right: 10px;
+            & > div {
+                min-height: 50vh;
+                margin: 0 auto;
+            }
 
-        button {
-            width: 65px;
-            height: 65px;
-        }
-    }
-
-    .section {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        min-height: 100vh;
-        margin: 0;
-        padding: 100px 15%;
-        box-sizing: border-box;
-
-        // border-bottom: 1px solid var(--contrast-background-color);
-
-        overflow-y: hidden;
-
-        & > div {
-            min-height: 50vh;
-            margin: 0 auto;
-        }
-
-        h2 {
-            margin: 0 0 50px;
-            color: var(--intense-text-color);
-            text-align: center;
-            font-size: 60px;
-            font-weight: normal;
+            h2 {
+                margin: 0 0 50px;
+                color: var(--intense-text-color);
+                text-align: center;
+                font-size: 60px;
+                font-weight: normal;
+            }
         }
     }
 

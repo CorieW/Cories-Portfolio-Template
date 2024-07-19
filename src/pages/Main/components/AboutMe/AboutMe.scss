@@ -2,10 +2,10 @@
     width: min-content;
     max-width: 100%;
 
-    #upper-container {
+    >.upper-container {
         display: flex;
 
-        #img-container {
+        >.profile-img-container {
             display: flex;
             justify-content: center;
             width: 300px;
@@ -16,7 +16,7 @@
 
             border-radius: 50%;
 
-            img {
+            >img {
                 flex: 1;
                 background-color: var(--soft-background-color);
                 object-fit: cover;
@@ -26,20 +26,21 @@
             }
         }
 
-        h2 {
+        >h1 {
             width: max-content;
             align-self: center;
             margin: 0;
 
             text-align: left;
             font-size: 70px;
+            font-weight: normal;
         }
     }
 
-    #info-container {
+    >.profile-info-container {
         flex: 1;
 
-        p {
+        >p {
             text-align: justify;
             color: var(--soft-text-color);
             font-size: 30px;
@@ -48,19 +49,19 @@
 
     // Large laptop
     @media (max-width: 1440px) {
-        #upper-container {
-            #img-container {
+        >.upper-container {
+            >.profile-img-container {
                 min-width: 250px;
                 width: 250px;
             }
 
-            h2 {
+            >h1 {
                 font-size: 65px;
             }
         }
 
-        #info-container {
-            p {
+        >.profile-info-container {
+            >p {
                 font-size: 30px;
             }
         }
@@ -68,19 +69,19 @@
 
     // Small laptop
     @media (max-width: 1024px) {
-        #upper-container {
-            #img-container {
+        >.upper-container {
+            >.profile-img-container {
                 min-width: 250px;
                 width: 250px;
             }
 
-            h2 {
+            >h1 {
                 font-size: 5.3vw;
             }
         }
 
-        #info-container {
-            p {
+        >.profile-info-container {
+            >p {
                 font-size: 25px;
             }
         }
@@ -88,25 +89,25 @@
 
     // Tablet
     @media (max-width: 768px) {
-        #upper-container {
+        >.upper-container {
             flex-direction: column;
             align-items: center;
 
-            #img-container {
+            >.profile-img-container {
                 min-width: 250px;
                 width: 250px;
                 margin-right: 0;
                 margin-bottom: 20px;
             }
 
-            h2 {
+            >h1 {
                 text-align: center;
                 font-size: 50px;
             }
         }
 
-        #info-container {
-            p {
+        >.profile-info-container {
+            >p {
                 text-align: center;
                 font-size: 25px;
             }
@@ -115,22 +116,22 @@
 
     // Large phone
     @media (max-width: 425px) {
-        #upper-container {
-            #img-container {
+        >.upper-container {
+            >.profile-img-container {
                 min-width: 80%;
                 width: 80%;
                 margin-right: 0;
                 margin-bottom: 20px;
             }
 
-            h2 {
+            >h1 {
                 text-align: center;
                 font-size: 35px;
             }
         }
 
-        #info-container {
-            p {
+        >.profile-info-container {
+            >p {
                 text-align: center;
                 font-size: 20px;
             }

@@ -19,106 +19,6 @@
     .get-in-touch {
         width: 500px;
         max-width: 500px;
-        // margin: 0 auto;
-
-        form {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-
-            .required {
-                position: relative;
-                width: 100%;
-
-                span {
-                    position: absolute;
-                    right: 10px;
-                    top: 5px;
-
-                    color: var(--error-color);
-                }
-
-                input,
-                textarea {
-                    padding-right: 20px;
-                }
-            }
-
-            input,
-            textarea,
-            button {
-                padding: 10px 15px;
-                margin-bottom: 10px;
-                background-color: var(--contrast-background-color);
-                box-sizing: border-box;
-
-                border: none;
-                border-radius: 15px;
-
-                color: var(--background-color);
-                font-size: 18px;
-
-                &:focus {
-                    outline: none;
-                }
-            }
-
-            input,
-            textarea {
-                width: 100%;
-
-                transition:
-                    border-color 0.5s,
-                    color 0.5s,
-                    padding-left 0.5s;
-
-                &:focus {
-                    padding-left: 20px;
-                }
-            }
-            input {
-                height: 50px;
-            }
-
-            textarea {
-                height: 200px;
-                resize: none;
-            }
-
-            button {
-                width: 50%;
-                height: 40px;
-
-                transition: all 0.5s;
-
-                &:hover,
-                &:focus {
-                    width: 60%;
-                    cursor: pointer;
-
-                    background-color: var(--primary-color);
-                }
-
-                &:disabled {
-                    cursor: not-allowed;
-                    background-color: var(--contrast-background-color);
-                    border-color: var(--disabled-color);
-                    color: var(--soft-text-color);
-                    width: 50%;
-                }
-            }
-
-            br {
-                margin-top: 30px;
-            }
-
-            .input-group {
-                display: flex;
-                flex-direction: row;
-                gap: 10px;
-                width: 100%;
-            }
-        }
     }
 
     .contact-details {
@@ -138,7 +38,7 @@
             span {
                 text-transform: capitalize;
                 font-weight: normal;
-                color: var(--primary-color);
+                color: var(--theme-color);
             }
 
             &.socials {

@@ -25,7 +25,7 @@
 
         &:hover:not(.active) {
             // text-decoration: underline 2px;
-            color: var(--primary-color) !important;
+            color: var(--theme-color) !important;
             opacity: 0.5;
         }
     }
@@ -41,6 +41,9 @@
             width: 100%;
             height: 100%;
             object-fit: contain;
+
+            // When the image is not loaded, the alt text will not be shown
+            color: transparent;
         }
     }
 
@@ -87,7 +90,7 @@
                     color: var(--soft-text-color);
 
                     &.active {
-                        color: var(--primary-color);
+                        color: var(--theme-color);
                     }
                 }
             }
@@ -130,7 +133,7 @@
             width: 300px;
             padding-top: 0px;
             background-color: var(--background-color);
-            box-shadow: -5px 0 5px -5px var(--soft-border-color);
+            box-shadow: -5px 0 5px -5px var(--border-color);
 
             transform: translateX(100%);
             transition: transform 0.2s ease-in-out;

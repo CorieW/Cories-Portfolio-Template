@@ -1,101 +1,19 @@
-#projects-slideshow {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-
-    background-color: transparent;
-    overflow: hidden;
-
-    transition: background-color 1s ease-in-out;
-
-    .slide-list {
-        position: relative;
-        display: flex;
-        flex-direction: row;
-        margin: 0;
-        padding: 0;
-
-        .slide {
-            position: absolute;
-            min-width: 100%;
-            height: 100vh;
-            min-height: fit-content;
-            padding: 0;
-
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-
-            box-sizing: border-box;
-            opacity: 0;
-
-            transition: opacity 1s ease-in-out;
-
-            .project-showcase-iframe {
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                background-color: transparent;
-                border: none;
-            }
-
-            &.active {
-                opacity: 1;
-            }
-        }
-
-        .encompassing-shadow-box {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: -100vw;
-            right: -100vw;
-
-            box-shadow:
-                inset 0 -100px 100px 0 var(--background-color),
-                inset -0px 100px 100px 0 var(--background-color);
-        }
+#projects-container {
+    .project-showcase-iframe {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: transparent;
+        border: none;
     }
 
-    .slide-indicators {
-        position: absolute;
-        bottom: 30px;
-        left: 0;
-        right: 0;
-
+    .internal-project-showcase {
+        position: relative;
         display: flex;
         justify-content: center;
         align-items: center;
-
-        a {
-            display: inline-block;
-            margin: 0 10px;
-            width: 25px;
-            height: 25px;
-            border-radius: 50%;
-            background-color: var(--soft-border-color);
-            cursor: default;
-
-            box-shadow: 0 0 5px 0 var(--soft-border-color);
-
-            transition: background-color 0.2s ease-in-out;
-
-            &.active {
-                background-color: var(--primary-color);
-
-                &:hover {
-                    background-color: var(--primary-color);
-                    cursor: default;
-                }
-            }
-
-            &:hover {
-                background-color: white;
-                cursor: pointer;
-            }
-        }
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
     }
 }

@@ -1,17 +1,18 @@
 .social-medias {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: center;
     gap: 10px;
 
-    button {
+    >.social-media-btn {
         position: relative;
 
         width: auto;
         padding: 0 15px;
         border-radius: 15px;
 
-        a {
+        >a {
             position: absolute;
             top: 0;
             left: 0;
@@ -19,26 +20,26 @@
             height: 100%;
         }
 
-        p {
+        >p {
             display: flex;
             align-items: center;
             justify-content: center;
 
             margin: 0;
             height: 100%;
-        }
-    }
 
-    .social-media-title {
-        padding-left: 10px;
-        font-weight: normal;
+            >.social-media-title {
+                padding-left: 10px;
+                font-weight: normal;
+            }
+        }
     }
 }
 
 // Between phone and tablet
 @media (max-width: 568px) {
     .social-medias {
-        button p span {
+        >button p span {
             display: none;
         }
     }
