@@ -49,7 +49,7 @@ See the [Examples](examples) folder for information on how to use this package.
 
 # Examples
 - [Example 1](examples/example1)
-- [Corie Watson's Portfolio](https://coriewatson.me)
+- [Live Example](https://coriewatson.me)
 
 # Contributions
 Contributions are welcome! Check the [Todo](#todo) section for ideas on what to contribute. Also, check the [Issues]() tab for issues that need to be resolved.
