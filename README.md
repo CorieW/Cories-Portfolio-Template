@@ -12,7 +12,7 @@ npm i cories-portfolio-template
 ## Usage
 See the [Examples](examples) folder for information on how to use this package.
 
-# Latest Commit Changes
+# Update Changes
 - Improved responsiveness
 - Added slideshow customization
     - Toggle auto-transition
