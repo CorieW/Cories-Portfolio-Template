@@ -1,8 +1,8 @@
 import './Skills.scss';
 import Timeline, {
     ITimelineItem,
-} from '../../../../components/Timeline/Timeline';
-import ISkill from '../../../../ts/ISkill';
+} from '../../../../Timeline/Timeline';
+import ISkill from '../../../../../ts/ISkill';
 
 type Props = {
     skills: ISkill[];

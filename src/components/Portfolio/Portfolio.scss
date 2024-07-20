@@ -92,7 +92,7 @@ a {
 
     &.disabled {
         background-color: var(--disabled-color);
-        cursor: not-allowed;
+        cursor: auto;
     }
 }
 

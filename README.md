@@ -17,6 +17,8 @@ See the [Examples](examples) folder for information on how to use this package.
 - Added slideshow customization
     - Toggle auto-transition
     - Custom auto-transition time
+- No longer require FontAwesome for icons
+- Other minor tweaks
 
 # Todo
 - More color customization

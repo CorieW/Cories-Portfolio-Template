@@ -1,19 +1,19 @@
 import { useState, useEffect } from 'react';
 import './Main.scss';
-import Nav, { INavLink } from '../../components/Nav/Nav';
+import Nav, { INavLink } from '../../Nav/Nav';
 import Skills from './components/Skills/Skills';
 import Projects from './components/Projects/Projects';
 import AboutMe from './components/AboutMe/AboutMe';
 import Contact from './components/Contact/Contact';
-import Toast from '../../components/Toast/Toast';
-import StarryCanvas from '../../components/StarryCanvas/StarryCanvas';
+import Toast from '../../Toast/Toast';
+import StarryCanvas from '../../StarryCanvas/StarryCanvas';
 import LoadingScreen from './components/LoadingScreen/LoadingScreen';
-import IPortfolio from '../../ts/IPortfolio';
-import useStore from '../../ts/store';
+import IPortfolio from '../../../ts/IPortfolio';
+import useStore from '../../../ts/store';
 import VerticalSectionsSlideshow, {
     ISection,
-} from '../../components/VerticalSectionsSlideshow/VerticalSectionsSlideshow';
-import ISettings from '../../ts/ISettings';
+} from '../../VerticalSectionsSlideshow/VerticalSectionsSlideshow';
+import ISettings from '../../../ts/ISettings';
 
 type Props = {
     settings: ISettings | null;
@@ -134,10 +134,6 @@ function Main(props: Props) {
                 links={getLinks()}
             />
 
-            <div className='fade-out-display-none'>
-                <LoadingScreen />
-            </div>
-
             <div id='sections' className='fade-in-500ms'>
                 <VerticalSectionsSlideshow sections={getSections(portfolio)} />
             </div>
@@ -148,7 +144,8 @@ function Main(props: Props) {
         <div id='main-page-container'>
             <Toast setToast={setToast} toast={toast} />
             <StarryCanvas />
-            { portfolio !== null ? dynamicContentJSX(portfolio) : <LoadingScreen /> }
+            <LoadingScreen enabled={portfolio === null} />
+            { portfolio !== null ? dynamicContentJSX(portfolio) : null }
         </div>
     );
 }

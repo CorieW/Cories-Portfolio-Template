@@ -26,9 +26,6 @@ function Slideshow(props: Props) {
     }, []);
 
     useEffect(() => {
-        // If autoTransition is false, do not automatically transition slides
-        if (!autoTransition) return;
-
         if (typeof slideIndex !== 'number') return;
         if (nextSlideTimeout) clearTimeout(nextSlideTimeout);
 
@@ -42,6 +39,9 @@ function Slideshow(props: Props) {
         if (slide) {
             slideshow.style.backgroundColor = slide.backgroundColor;
         }
+
+        // If autoTransition is false, do not automatically transition slides
+        if (!autoTransition) return;
 
         setNextSlideTimeout(
             setTimeout(() => {

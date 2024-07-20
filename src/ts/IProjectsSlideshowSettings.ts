@@ -1,4 +1,4 @@
-export default interface IProjectsSlideshow {
+export default interface IProjectsSlideshowSettings {
     autoTransition?: boolean;
     transitionTime?: number | null;
 }

@@ -1,5 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import './VerticalSectionsSlideshow.scss';
+import arrowUp from '../../assets/arrow-up.svg';
+import arrowDown from '../../assets/arrow-down.svg';
+import CorrectedSVG from '../CorrectedSVG/CorrectedSVG';
 
 export interface ISection {
     hash: string;
@@ -301,7 +304,7 @@ function VerticalSectionsSlideshow(props: Props) {
                     }
                     onClick={() => switchSectionInDirection('up')}
                 >
-                    <i className='fa-solid fa-arrow-up'></i>
+                    <CorrectedSVG src={arrowUp} />
                 </button>
                 <button
                     className={
@@ -310,7 +313,7 @@ function VerticalSectionsSlideshow(props: Props) {
                     }
                     onClick={() => switchSectionInDirection('down')}
                 >
-                    <i className='fa-solid fa-arrow-down'></i>
+                    <CorrectedSVG src={arrowDown} />
                 </button>
             </div>
             <div className='sections-container'>

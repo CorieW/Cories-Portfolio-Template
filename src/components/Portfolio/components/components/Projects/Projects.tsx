@@ -3,9 +3,9 @@ import {
     IExternalProjectShowcase,
     IInternalProjectShowcase,
     IProject,
-} from '../../../../ts/IProject';
-import Slideshow from '../../../../components/Slideshow/Slideshow';
-import IProjectsSlideshowSettings from '../../../../ts/IProjectsSlideshowSettings';
+} from '../../../../../ts/IProject';
+import Slideshow from '../../../../Slideshow/Slideshow';
+import IProjectsSlideshowSettings from '../../../../../ts/IProjectsSlideshowSettings';
 
 type Props = {
     settings?: IProjectsSlideshowSettings | null;
@@ -57,6 +57,7 @@ function Projects(props: Props) {
 
     function getSlides() {
         return projects.map((project, index) => {
+            console.log(project.showcase.backgroundColor);
             return {
                 element: projectJSX(project, index),
                 backgroundColor: project.showcase.backgroundColor,

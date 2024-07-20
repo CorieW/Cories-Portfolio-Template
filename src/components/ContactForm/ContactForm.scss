@@ -77,7 +77,7 @@
         }
 
         &:disabled {
-            cursor: not-allowed;
+            cursor:auto;
             background-color: var(--contrast-background-color);
             border-color: var(--disabled-color);
             color: var(--soft-text-color);

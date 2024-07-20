@@ -17,6 +17,11 @@
         button {
             width: 65px;
             height: 65px;
+
+            svg {
+                width: 20px;
+                fill: var(--background-color);
+            }
         }
     }
 }

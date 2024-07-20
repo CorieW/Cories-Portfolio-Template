@@ -1,7 +1,7 @@
 import './AboutMe.scss';
 import SocialMedias from '../SocialMedias/SocialMedias.js';
-import IAboutMe from '../../../../ts/IAboutMe.js';
-import ISocialMedia from '../../../../ts/ISocialMedia.js';
+import IAboutMe from '../../../../../ts/IAboutMe.js';
+import ISocialMedia from '../../../../../ts/ISocialMedia.js';
 
 type Props = {
     aboutMe: IAboutMe;
