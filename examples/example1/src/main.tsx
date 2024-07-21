@@ -67,14 +67,12 @@ const loadFunc = async (): Promise<IPortfolio> => {
         {
             showcase: {
                 title: 'Project 1',
-                backgroundColor: 'transparent',
                 url: 'https://simpleworldgen.com/'
             }
         },
         {
             showcase: {
                 title: 'Project 2',
-                backgroundColor: '#000000',
                 component: (
                     <div>
                         <h2 style={{ margin: '0' }}>
