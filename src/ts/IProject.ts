@@ -6,7 +6,6 @@ export interface IProject {
 
 interface IProjectShowcase {
     title: string;
-    backgroundColor: string;
 }
 
 export interface IInternalProjectShowcase extends IProjectShowcase {

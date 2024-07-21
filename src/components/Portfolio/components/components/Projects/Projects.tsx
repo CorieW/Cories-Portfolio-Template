@@ -57,10 +57,8 @@ function Projects(props: Props) {
 
     function getSlides() {
         return projects.map((project, index) => {
-            console.log(project.showcase.backgroundColor);
             return {
-                element: projectJSX(project, index),
-                backgroundColor: project.showcase.backgroundColor,
+                element: projectJSX(project, index)
             };
         });
     }

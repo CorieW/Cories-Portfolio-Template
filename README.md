@@ -10,7 +10,7 @@ npm i cories-portfolio-template
 ```
 
 ## Usage
-See the [Examples](examples) folder for information on how to use this package.
+See the [Examples](https://github.com/CorieW/Cories-Portfolio-Template/examples) folder for information on how to use this package.
 
 # Update Changes
 - Improved responsiveness
@@ -41,7 +41,7 @@ See the [Examples](examples) folder for information on how to use this package.
     - Map accessibility labels to different languages
 
 # Examples
-- [Example 1](examples/example1)
+- [Example 1](https://github.com/CorieW/Cories-Portfolio-Template/examples/example1)
 - [Live Example](https://coriewatson.me)
 
 # Contributions
