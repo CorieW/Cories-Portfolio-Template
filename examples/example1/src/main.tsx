@@ -152,18 +152,19 @@ const loadFunc = async (): Promise<IPortfolio> => {
     return data;
 };
 
-// Custom styling
-const styling = {
-    themeColor: 'lime',
-    backgroundColor: 'black',
-    contrastColor: null, // Use default
-    disabledColor: null, // Use default
-    textColor: null, // Use default
-    softTextColor: null, // Use default
-    borderColor: null, // Use default
-    errorColor: null // Use default
+const settings = {
+    styling: {
+        themeColor: 'lime',
+        backgroundColor: 'black',
+        contrastColor: null, // Use default
+        disabledColor: null, // Use default
+        textColor: null, // Use default
+        softTextColor: null, // Use default
+        borderColor: null, // Use default
+        errorColor: null // Use default
+    }
 }
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-    <Portfolio styling={styling} loadFunc={loadFunc} />
+    <Portfolio settings={settings} loadFunc={loadFunc} />
 );
