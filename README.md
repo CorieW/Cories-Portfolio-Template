@@ -39,6 +39,7 @@ See the [Examples](https://github.com/CorieW/Cories-Portfolio-Template/examples)
     - Map navigation labels to different languages
     - Map contact form labels to different languages
     - Map accessibility labels to different languages
+- [Fix bug when switching between slides before transition ends](https://gyazo.com/fa7bd3119b568bcdf85a01c27a39165c)
 
 # Examples
 - [Example 1](https://github.com/CorieW/Cories-Portfolio-Template/examples/example1)
