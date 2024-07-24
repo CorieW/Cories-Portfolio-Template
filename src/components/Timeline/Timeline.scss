@@ -187,6 +187,23 @@
                         color: var(--theme-color);
                     }
                 }
+
+                // Phone
+                @media (max-width: 500px) {
+                    align-items: center;
+                    justify-content: center;
+
+                    span {
+                        opacity: 0;
+                        transition: all 0.2s;
+                    }
+
+                    &:hover {
+                        span {
+                            opacity: 1;
+                        }
+                    }
+                }
             }
 
             >.timeline-row-line {
@@ -202,13 +219,14 @@
                     border-left: 0px solid var(--contrast-background-color) !important;
                     border-bottom-left-radius: 0 !important;
 
+                    // Start point
                     &::before {
                         content: '';
 
                         position: absolute;
                         top: calc(50%);
                         left: 0%;
-                        transform: translateY(-50%) rotate(135deg);
+                        transform: translateY(-50%) rotate(45deg);
 
                         width: 10px;
                         height: 10px;
@@ -226,6 +244,27 @@
                         color: var(--theme-color);
                         font-size: 24px;
                         text-transform: uppercase;
+                    }
+
+                    // Phone
+                    @media (max-width: 650px) {
+                        // End point
+                        &::after {
+                            content: '';
+
+                            position: absolute;
+                            top: 50%;
+                            right: 0%;
+                            transform: translateY(-50%) rotate(45deg);
+
+                            width: 10px;
+                            height: 10px;
+                            background-color: var(--contrast-background-color);
+                        }
+
+                        .acquired {
+                            display: none;
+                        }
                     }
                 }
 
@@ -262,12 +301,37 @@
                         display: inline-block;
                         padding: 5px;
                     }
+
+                    @media (max-width: 500px) {
+                        .year-point {
+                            display: none;
+                        }
+                    }
+
+                    // Very small phone
+                    @media (max-width: 260px) {
+                        font-size: 12px;
+                    }
                 }
             }
 
             >.edge {
                 flex: 1;
+
+                @media (max-width: 1050px) {
+                    display: none;
+                }
             }
         }
+    }
+
+    // Phone
+    @media (max-width: 650px) {
+        --heightOfRow: 60px;
+    }
+
+    // Very small phone
+    @media (max-width: 260px) {
+        --heightOfRow: 40px;
     }
 }

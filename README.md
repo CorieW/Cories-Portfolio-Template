@@ -13,12 +13,7 @@ npm i cories-portfolio-template
 See the [Examples](https://github.com/CorieW/Cories-Portfolio-Template/examples) folder for information on how to use this package.
 
 # Update Changes
-- Improved responsiveness
-- Added slideshow customization
-    - Toggle auto-transition
-    - Custom auto-transition time
-- No longer require FontAwesome for icons
-- Other minor tweaks
+- Improved timeline responsiveness
 
 # Todo
 - More color customization
