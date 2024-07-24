@@ -3,7 +3,6 @@
     flex-direction: row;
     justify-content: center;
     gap: 50px;
-
     padding: 0;
     margin-bottom: 150px;
 
@@ -45,28 +44,43 @@
                 display: flex;
                 flex-direction: column;
                 justify-content: flex-end;
-
                 flex: 1;
             }
         }
-    }
 
-    // Small laptop
-    @media (max-width: 1024px) {
-        .contact-details {
+        // Small laptop
+        @media (max-width: 1024px) {
             .contact-places .contact-place {
                 font-size: 18px !important;
             }
         }
+
+        // Tablet
+        @media (max-width: 768px) {
+            margin-top: 30px;
+
+            .contact-places .contact-place {
+                font-size: 18px !important;
+            }
+        }
+
+        // Tablet and smaller
+        @media (max-width: 500px) {
+            margin-top: 20px;
+
+            .contact-places .contact-place {
+                margin-bottom: 10px;
+                font-size: 16px !important;
+            }
+        }
     }
 
-    // Tablet - Large phone
+    // Tablet
     @media (max-width: 768px) {
         margin-bottom: 0;
         flex-direction: column;
         align-items: center;
         gap: 0;
-
         padding: 0;
 
         text-align: center;
@@ -79,14 +93,6 @@
 
         .get-in-touch {
             width: 100%;
-        }
-
-        .contact-details {
-            margin-top: 30px;
-
-            .contact-places .contact-place {
-                font-size: 18px !important;
-            }
         }
     }
 }

@@ -188,7 +188,7 @@
                     }
                 }
 
-                // Phone
+                // Tablet and smaller
                 @media (max-width: 500px) {
                     align-items: center;
                     justify-content: center;
@@ -302,6 +302,7 @@
                         padding: 5px;
                     }
 
+                    // Tablet and smaller
                     @media (max-width: 500px) {
                         .year-point {
                             display: none;

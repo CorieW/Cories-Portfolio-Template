@@ -38,6 +38,12 @@
         &:focus {
             outline: none;
         }
+
+        // Tablet and smaller
+        @media (max-width: 500px) {
+            padding: 10px;
+            font-size: 16px;
+        }
     }
 
     input,
@@ -52,6 +58,12 @@
         &:focus {
             padding-left: 20px;
         }
+
+        @media (max-width: 500px) {
+            &:focus {
+                padding-left: 15px;
+            }
+        }
     }
     input {
         height: 50px;
@@ -60,6 +72,10 @@
     textarea {
         height: 200px;
         resize: none;
+
+        @media (max-width: 500px) {
+            height: 150px;
+        }
     }
 
     button {
@@ -83,10 +99,20 @@
             color: var(--soft-text-color);
             width: 50%;
         }
+
+        // Tablet and smaller
+        @media (max-width: 768px) {
+            width: 100% !important;
+        }
     }
 
     br {
         margin-top: 30px;
+
+        // Tablet and smaller
+        @media (max-width: 500px) {
+            margin-top: 20px;
+        }
     }
 
     .input-group {
@@ -94,12 +120,5 @@
         flex-direction: row;
         gap: 10px;
         width: 100%;
-    }
-
-    // Tablet and smaller
-    @media (max-width: 500px) {
-        button {
-            width: 100% !important;
-        }
     }
 }
