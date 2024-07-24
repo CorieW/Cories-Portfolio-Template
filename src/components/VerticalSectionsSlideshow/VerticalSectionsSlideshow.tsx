@@ -155,15 +155,15 @@ function VerticalSectionsSlideshow(props: Props) {
             if (Math.round(remainingScrollFromBottom) <= 0) {
                 const scrollOptions: ScrollToOptions = {
                     top: sectionBottom - window.innerHeight,
-                    behavior: 'auto',
+                    behavior: 'smooth',
                 };
 
                 window.scrollTo(scrollOptions);
             }
-            if (Math.round(remainingScrollFromTop) <= 0) {
+            else if (Math.round(remainingScrollFromTop) <= 0) {
                 const scrollOptions: ScrollToOptions = {
                     top: sectionTop,
-                    behavior: 'auto',
+                    behavior: 'smooth',
                 };
 
                 window.scrollTo(scrollOptions);
