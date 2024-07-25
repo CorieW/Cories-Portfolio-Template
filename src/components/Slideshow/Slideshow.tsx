@@ -3,7 +3,6 @@ import './Slideshow.scss';
 
 export interface ISlide {
     element: JSX.Element;
-    backgroundColor: string;
 }
 
 type Props = {
@@ -32,13 +31,8 @@ function Slideshow(props: Props) {
         // When the slide index changes, update slideshow's background color
         // to match the slide's background color
         const slideshow = slideshowRef.current;
-        const slide = slides[slideIndex];
 
         if (!slideshow) return;
-
-        if (slide) {
-            slideshow.style.backgroundColor = slide.backgroundColor;
-        }
 
         // If autoTransition is false, do not automatically transition slides
         if (!autoTransition) return;

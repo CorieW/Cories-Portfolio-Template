@@ -10,15 +10,14 @@ npm i cories-portfolio-template
 ```
 
 ## Usage
-See the [Examples](examples) folder for information on how to use this package.
+See the [Examples](https://github.com/CorieW/Cories-Portfolio-Template/examples) folder for information on how to use this package.
 
 # Update Changes
-- Improved responsiveness
-- Added slideshow customization
-    - Toggle auto-transition
-    - Custom auto-transition time
-- No longer require FontAwesome for icons
-- Other minor tweaks
+- Improvements to scrolling
+- Can no longer see scroll bar, as it is causes a vector for bugs
+- Improved timeline responsiveness
+- Improved responsiveness of contact form
+- Other minor improvements
 
 # Todo
 - More color customization
@@ -39,9 +38,10 @@ See the [Examples](examples) folder for information on how to use this package.
     - Map navigation labels to different languages
     - Map contact form labels to different languages
     - Map accessibility labels to different languages
+- [Fix bug when switching between slides before transition ends](https://gyazo.com/fa7bd3119b568bcdf85a01c27a39165c)
 
 # Examples
-- [Example 1](examples/example1)
+- [Example 1](https://github.com/CorieW/Cories-Portfolio-Template/examples/example1)
 - [Live Example](https://coriewatson.me)
 
 # Contributions

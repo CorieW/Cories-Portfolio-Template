@@ -2,6 +2,9 @@
     box-sizing: border-box;
 
     #sections {
+        max-width: 100vw;
+        max-height: 100vh;
+
         .section {
             position: relative;
             display: flex;

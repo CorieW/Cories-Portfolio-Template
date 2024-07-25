@@ -32,6 +32,8 @@ function VerticalSectionsSlideshow(props: Props) {
     }, []);
 
     useEffect(() => {
+        const slideShowElement = slideShowRef.current as HTMLElement;
+
         const getActiveSectionIndexByHashValue = (hashValue: string) => {
             for (let i = 0; i < sectionHashes.length; i++) {
                 if (sectionHashes[i] === hashValue) return i;
@@ -50,16 +52,14 @@ function VerticalSectionsSlideshow(props: Props) {
         // Handles moving to the next or previous section
         // when the user scrolls past or before the current section
         const moveSection = (e: TouchEvent | WheelEvent) => {
-            const slideShowElement: HTMLElement =
-                slideShowRef.current as HTMLElement;
-            if (!slideShowElement) return;
-
-            if (!sectionLockedRef.current) {
+            if (!slideShowElement) {
                 e.preventDefault();
                 // Interrupted scroll, continue scrolling to the active section
                 switchToActiveSection();
                 return;
             }
+
+            if (!slideShowElement) return;
 
             const deltaY =
                 e instanceof WheelEvent ? e.deltaY : e.touches[0].clientY;
@@ -73,9 +73,9 @@ function VerticalSectionsSlideshow(props: Props) {
             // Check if the current section is in view
             let sectionTop = activeSection.offsetTop;
             let sectionBottom = sectionTop + activeSection.offsetHeight;
-            let remainingScrollFromTop = window.scrollY - sectionTop;
+            let remainingScrollFromTop = slideShowElement.scrollTop - sectionTop;
             let remainingScrollFromBottom =
-                sectionBottom - (window.scrollY + window.innerHeight);
+                sectionBottom - (slideShowElement.scrollTop + slideShowElement.clientHeight);
 
             const scrollDownReady = Math.round(remainingScrollFromBottom) <= 0;
             const scrollUpReady = Math.round(remainingScrollFromTop) <= 0;
@@ -109,12 +109,10 @@ function VerticalSectionsSlideshow(props: Props) {
 
         // Handles locking and unlocking the user to/from the current section
         const trackScroll = () => {
-            const slideShowElement: HTMLElement =
-                slideShowRef.current as HTMLElement;
             if (!slideShowElement) return;
 
-            const scrollPosition = window.scrollY;
-            const bottomPostionOfView = window.scrollY + window.innerHeight;
+            const scrollPosition = slideShowElement.scrollTop;
+            const bottomPostionOfView = slideShowElement.scrollTop + slideShowElement.clientHeight;
 
             const sectionElements: HTMLCollectionOf<Element> =
                 slideShowElement.getElementsByClassName('section');
@@ -154,19 +152,19 @@ function VerticalSectionsSlideshow(props: Props) {
             // Lock the user to the current section if they scroll past the top or bottom of the section
             if (Math.round(remainingScrollFromBottom) <= 0) {
                 const scrollOptions: ScrollToOptions = {
-                    top: sectionBottom - window.innerHeight,
-                    behavior: 'auto',
+                    top: sectionBottom - slideShowElement.clientHeight,
+                    behavior: 'smooth',
                 };
 
-                window.scrollTo(scrollOptions);
+                slideShowElement.scrollTo(scrollOptions);
             }
-            if (Math.round(remainingScrollFromTop) <= 0) {
+            else if (Math.round(remainingScrollFromTop) <= 0) {
                 const scrollOptions: ScrollToOptions = {
                     top: sectionTop,
-                    behavior: 'auto',
+                    behavior: 'smooth',
                 };
 
-                window.scrollTo(scrollOptions);
+                slideShowElement.scrollTo(scrollOptions);
             }
         };
 
@@ -197,15 +195,13 @@ function VerticalSectionsSlideshow(props: Props) {
         };
 
         function distanceFromTopOfSection(sectionContainer: HTMLElement) {
-            const scrollPosition = window.scrollY;
+            const scrollPosition = slideShowElement.scrollTop;
             const sectionTop = sectionContainer.offsetTop;
             return Math.round(sectionTop - scrollPosition);
         }
 
         function distanceFromNextSection() {
-            const slideShowElement: HTMLElement =
-                slideShowRef.current as HTMLElement;
-            if (!slideShowElement) return 0;
+            if (slideShowElement == null) return 0;
 
             const sectionElements: HTMLCollectionOf<Element> =
                 slideShowElement.getElementsByClassName('section');
@@ -215,16 +211,16 @@ function VerticalSectionsSlideshow(props: Props) {
             return distanceFromTopOfSection(nextSection);
         }
 
-        document.addEventListener('wheel', moveSection, { passive: false });
-        document.addEventListener('scroll', trackScroll);
-        document.addEventListener('scroll', handleNavOnScroll);
+        slideShowElement.addEventListener('wheel', moveSection, { passive: false });
+        slideShowElement.addEventListener('scroll', trackScroll);
+        slideShowElement.addEventListener('scroll', handleNavOnScroll);
         window.addEventListener('hashReplaced', handleHashReplaced);
 
         // Clean up the event listener on component unmount
         return () => {
-            document.removeEventListener('wheel', moveSection);
-            document.removeEventListener('scroll', trackScroll);
-            document.removeEventListener('scroll', handleNavOnScroll);
+            slideShowElement.removeEventListener('wheel', moveSection);
+            slideShowElement.removeEventListener('scroll', trackScroll);
+            slideShowElement.removeEventListener('scroll', handleNavOnScroll);
             window.removeEventListener('hashReplaced', handleHashReplaced);
         };
     }, [sectionHashes]);
@@ -261,7 +257,7 @@ function VerticalSectionsSlideshow(props: Props) {
         // Disable the section lock
         sectionLockedRef.current = false;
         // Scroll to the active section
-        window.scrollTo(scrollOptions);
+        slideShowRef.current?.scrollTo(scrollOptions);
     }
 
     function switchSectionInDirection(direction: 'up' | 'down') {
@@ -296,31 +292,31 @@ function VerticalSectionsSlideshow(props: Props) {
             className={`vertical-sections-slideshow-container fade-in-500ms`}
             ref={slideShowRef}
         >
-            <div className='move-section-btns-container'>
-                <button
-                    className={
-                        'move-section-up-btn general-btn-1 ' +
-                        (isMoveSectionBtnDisabled('up') ? 'disabled' : '')
-                    }
-                    onClick={() => switchSectionInDirection('up')}
-                >
-                    <CorrectedSVG src={arrowUp} />
-                </button>
-                <button
-                    className={
-                        'move-section-down-btn general-btn-1 ' +
-                        (isMoveSectionBtnDisabled('down') ? 'disabled' : '')
-                    }
-                    onClick={() => switchSectionInDirection('down')}
-                >
-                    <CorrectedSVG src={arrowDown} />
-                </button>
-            </div>
-            <div className='sections-container'>
-                {sections.map((section, index) => (
-                    <div key={index}>{section.component}</div>
-                ))}
-            </div>
+                <div className='move-section-btns-container'>
+                    <button
+                        className={
+                            'move-section-up-btn general-btn-1 ' +
+                            (isMoveSectionBtnDisabled('up') ? 'disabled' : '')
+                        }
+                        onClick={() => switchSectionInDirection('up')}
+                    >
+                        <CorrectedSVG src={arrowUp} />
+                    </button>
+                    <button
+                        className={
+                            'move-section-down-btn general-btn-1 ' +
+                            (isMoveSectionBtnDisabled('down') ? 'disabled' : '')
+                        }
+                        onClick={() => switchSectionInDirection('down')}
+                    >
+                        <CorrectedSVG src={arrowDown} />
+                    </button>
+                </div>
+                <div className='sections-container'>
+                    {sections.map((section, index) => (
+                        <div key={index}>{section.component}</div>
+                    ))}
+                </div>
         </div>
     );
 }

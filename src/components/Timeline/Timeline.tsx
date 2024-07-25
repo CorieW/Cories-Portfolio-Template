@@ -38,10 +38,10 @@ function Timeline(props: Props) {
         const itemsContainer = itemsContainerRef.current;
         if (!itemsContainer) return;
 
-        if (window.innerWidth < 850) {
+        if (window.innerWidth <= 700) {
             setItemsPerRow(1);
             itemsContainer.style.setProperty(`--rowGap`, '10px');
-        } else if (window.innerWidth < 1250) {
+        } else if (window.innerWidth <= 1250) {
             setItemsPerRow(2);
             itemsContainer.style.setProperty(`--rowGap`, '20px');
         } else {
@@ -54,11 +54,11 @@ function Timeline(props: Props) {
         const decimal = acquired % 1;
         const year = Math.floor(acquired);
 
-        if (decimal < 0.01) return year.toString();
-        if (decimal <= 0.33) return 'Early ' + year;
-        if (decimal <= 0.66) return 'Mid ' + year;
-        if (decimal <= 1) return 'Late ' + year;
-        else return year.toString();
+        if (decimal < 0.01) return `${year.toString()}`;
+        if (decimal <= 0.33) return `<span class='year-point'>Early </span>${year}`;
+        if (decimal <= 0.66) return `<span class='year-point'>Mid </span>${year}`;
+        if (decimal <= 1) return `<span class='year-point'>Late </span>${year}`;
+        else return `${year.toString()}`;
     }
 
     function renderItemsTimeline() {
@@ -131,37 +131,14 @@ function Timeline(props: Props) {
                                                 ? 'hidden'
                                                 : '')
                                         }
-                                    >
-                                        {acquiredStr}
-                                    </span>
+                                        dangerouslySetInnerHTML={{__html: acquiredStr}}
+                                    />
                                 </div>
                                 {renderItem(item, index)}
                                 <div className='timeline-row-line final'>
                                     <span className='acquired'>Today</span>
                                 </div>
                                 <div className='edge'></div>
-                            </>
-                        );
-                    }
-
-                    if (isLastItem) {
-                        return (
-                            <>
-                                <div className='timeline-row-line'>
-                                    <span
-                                        className={
-                                            'acquired ' +
-                                            (cachedPreviousAcquiredStr ===
-                                            acquiredStr
-                                                ? 'hidden'
-                                                : '')
-                                        }
-                                    >
-                                        {acquiredStr}
-                                    </span>
-                                </div>
-                                {renderItem(item, index)}
-                                <div className='timeline-row-line'></div>
                             </>
                         );
                     }
@@ -181,11 +158,11 @@ function Timeline(props: Props) {
                                             ? 'hidden'
                                             : '')
                                     }
-                                >
-                                    {acquiredStr}
-                                </span>
+                                    dangerouslySetInnerHTML={{__html: acquiredStr}}
+                                />
                             </div>
                             {renderItem(item, index)}
+                            {isLastItem ? (<div className='timeline-row-line'></div>) : null}
                         </>
                     );
                 })}
