@@ -13,7 +13,11 @@ npm i cories-portfolio-template
 See the [Examples](https://github.com/CorieW/Cories-Portfolio-Template/examples) folder for information on how to use this package.
 
 # Update Changes
+- Improvements to scrolling
+- Can no longer see scroll bar, as it is causes a vector for bugs
 - Improved timeline responsiveness
+- Improved responsiveness of contact form
+- Other minor improvements
 
 # Todo
 - More color customization
