@@ -10,7 +10,7 @@ npm i cories-portfolio-template
 ```
 
 ## Usage
-See the [Examples](https://github.com/CorieW/Cories-Portfolio-Template/examples) folder for information on how to use this package.
+See the [Examples](https://github.com/CorieW/Cories-Portfolio-Template/tree/master/examples) folder for information on how to use this package.
 
 # Update Changes
 - Improvements to scrolling
@@ -41,8 +41,8 @@ See the [Examples](https://github.com/CorieW/Cories-Portfolio-Template/examples)
 - [Fix bug when switching between slides before transition ends](https://gyazo.com/fa7bd3119b568bcdf85a01c27a39165c)
 
 # Examples
-- [Example 1](https://github.com/CorieW/Cories-Portfolio-Template/examples/example1)
+- [Example 1](https://github.com/CorieW/Cories-Portfolio-Template/tree/master/examples/example1)
 - [Live Example](https://coriewatson.me)
 
 # Contributions
-Contributions are welcome! Check the [Todo](#todo) section for ideas on what to contribute. Also, check the [Issues](https://github.com/CorieW/Cories-Portfolio-Template/issues) tab for issues that need to be resolved.
+Contributions are welcome! Check the [Todo](#todo) section for ideas on what to contribute.
