@@ -74,15 +74,17 @@ function Nav(props: Props) {
         const handleLinkClick = (
             e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
         ) => {
-            // When clicking on a link, replace the hash value in the URL
-
             e.preventDefault();
 
             if (!e.target) return;
             const target = e.target as HTMLAnchorElement;
 
+            // When clicking on a link, replace the hash value in the URL
             const hash = target.hash.substring(1);
             window.history.replaceState(null, '', `#${hash}`);
+
+            // Close the mobile nav menu once link is clicked
+            toggleMobileNav(false);
 
             const event = new CustomEvent('hashReplaced', { detail: { hash } });
             window.dispatchEvent(event);
