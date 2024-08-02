@@ -64,6 +64,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        pointer-events: none;
 
         a {
             display: inline-block;
@@ -73,6 +74,7 @@
             border-radius: 50%;
             background-color: var(--border-color);
             cursor: default;
+            pointer-events: all;
 
             box-shadow: 0 0 5px 0 var(--border-color);
 
