@@ -38,7 +38,7 @@ function Projects(props: Props) {
                     className='project-showcase-iframe'
                     key={index}
                 ></iframe>
-                <div className='iframe-overlay' onScroll={(e) => console.log("s")}></div>
+                <div className='iframe-overlay'></div>
             </>
         );
     };
