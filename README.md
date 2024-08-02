@@ -39,6 +39,9 @@ See the [Examples](https://github.com/CorieW/Cories-Portfolio-Template/examples)
     - Map contact form labels to different languages
     - Map accessibility labels to different languages
 - [Fix bug when switching between slides before transition ends](https://gyazo.com/fa7bd3119b568bcdf85a01c27a39165c)
+- Custom about me section
+    - Can modify description text using a custom component
+    - Override default format by allowing a custom component to be used for the section
 
 # Examples
 - [Example 1](https://github.com/CorieW/Cories-Portfolio-Template/examples/example1)
