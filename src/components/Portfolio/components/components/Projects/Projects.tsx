@@ -31,12 +31,15 @@ function Projects(props: Props) {
         index: number
     ) => {
         return (
-            <iframe
-                src={showcase.url}
-                title={showcase.title + ' Project Showcase'}
-                className='project-showcase-iframe'
-                key={index}
-            ></iframe>
+            <>
+                <iframe
+                    src={showcase.url}
+                    title={showcase.title + ' Project Showcase'}
+                    className='project-showcase-iframe'
+                    key={index}
+                ></iframe>
+                <div className='iframe-overlay'></div>
+            </>
         );
     };
 

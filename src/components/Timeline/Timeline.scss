@@ -76,6 +76,16 @@
                             left: 100%;
                         }
                     }
+
+                    &.final {
+                        // Phone
+                        @media (max-width: 650px) {
+                            // End point
+                            &::after {
+                                right: 0%;
+                            }
+                        }
+                    }
                 }
             }
 
@@ -130,6 +140,16 @@
                         >.acquired {
                             top: 30%;
                             left: 0%;
+                        }
+                    }
+
+                    &.final {
+                        // Phone
+                        @media (max-width: 650px) {
+                            // End point
+                            &::after {
+                                left: 0%;
+                            }
                         }
                     }
                 }
@@ -254,7 +274,6 @@
 
                             position: absolute;
                             top: 50%;
-                            right: 0%;
                             transform: translateY(-50%) rotate(45deg);
 
                             width: 10px;

@@ -34,13 +34,6 @@ function VerticalSectionsSlideshow(props: Props) {
     useEffect(() => {
         const slideShowElement = slideShowRef.current as HTMLElement;
 
-        const getActiveSectionIndexByHashValue = (hashValue: string) => {
-            for (let i = 0; i < sectionHashes.length; i++) {
-                if (sectionHashes[i] === hashValue) return i;
-            }
-            return 0;
-        };
-
         // Get the current hash value
         const hashValue = window.location.hash.substring(1);
         // Set the section index to the index of the section with the hash value
@@ -52,119 +45,78 @@ function VerticalSectionsSlideshow(props: Props) {
         // Handles moving to the next or previous section
         // when the user scrolls past or before the current section
         const moveSection = (e: TouchEvent | WheelEvent) => {
-            if (!slideShowElement) {
+            if (!slideShowElement) return;
+
+            // If section is not locked (because scrolling to it already), prevent default
+            if (!sectionLockedRef.current) {
                 e.preventDefault();
-                // Interrupted scroll, continue scrolling to the active section
+                // Continue scrolling to the active section
                 switchToActiveSection();
                 return;
             }
 
-            if (!slideShowElement) return;
-
-            const deltaY =
-                e instanceof WheelEvent ? e.deltaY : e.touches[0].clientY;
-
-            const sectionElements: HTMLCollectionOf<Element> =
-                slideShowElement.getElementsByClassName('section');
-            let activeSection: HTMLElement = sectionElements[
-                currSectionIndexRef.current
-            ] as HTMLElement;
-
-            // Check if the current section is in view
-            let sectionTop = activeSection.offsetTop;
-            let sectionBottom = sectionTop + activeSection.offsetHeight;
-            let remainingScrollFromTop = slideShowElement.scrollTop - sectionTop;
-            let remainingScrollFromBottom =
-                sectionBottom - (slideShowElement.scrollTop + slideShowElement.clientHeight);
-
-            const scrollDownReady = Math.round(remainingScrollFromBottom) <= 0;
-            const scrollUpReady = Math.round(remainingScrollFromTop) <= 0;
+            const deltaY = e instanceof WheelEvent ? e.deltaY : e.touches[0].clientY;
             const isScrollingDown = deltaY > 0;
             const isScrollingUp = deltaY < 0;
-            const isLastSection =
-                currSectionIndexRef.current === sectionElements.length + 1;
-            const isFirstSection = currSectionIndexRef.current === 0;
-
-            if (scrollDownReady && isScrollingDown && !isLastSection) {
-                // Current section is the last section
-                if (
-                    currSectionIndexRef.current ===
-                    sectionElements.length - 1
-                ) {
-                    e.preventDefault();
-                    return;
-                }
-
+            if (canMoveSectionDown() && isScrollingDown) {
                 // Move to the next section
                 currSectionIndexRef.current += 1;
                 e.preventDefault();
-            } else if (scrollUpReady && isScrollingUp && !isFirstSection) {
+                switchToActiveSection();
+            } else if (canMoveSectionUp() && isScrollingUp) {
                 // Move to the previous section
                 currSectionIndexRef.current -= 1;
                 e.preventDefault();
-            } else return;
+                switchToActiveSection();
+            }
 
-            switchToActiveSection();
+            function canMoveSectionDown() {
+                const activeSection: HTMLElement = getActiveSection();
+                const remainingScrollFromBottom = distanceFromBottomOfSection(activeSection);
+                const scrollDownReady = Math.round(remainingScrollFromBottom) <= 0;
+                const isLastSection = currSectionIndexRef.current === sectionHashes.length - 1;
+                return scrollDownReady && !isLastSection;
+            }
+
+            function canMoveSectionUp() {
+                const activeSection: HTMLElement = getActiveSection();
+                const remainingScrollFromTop = distanceFromTopOfSection(activeSection);
+                const scrollUpReady = Math.round(remainingScrollFromTop) <= 0;
+                const isFirstSection = currSectionIndexRef.current === 0;
+                return scrollUpReady && !isFirstSection;
+            }
         };
 
         // Handles locking and unlocking the user to/from the current section
         const trackScroll = () => {
             if (!slideShowElement) return;
 
-            const scrollPosition = slideShowElement.scrollTop;
-            const bottomPostionOfView = slideShowElement.scrollTop + slideShowElement.clientHeight;
-
-            const sectionElements: HTMLCollectionOf<Element> =
-                slideShowElement.getElementsByClassName('section');
-            let activeSection: HTMLElement = sectionElements[
-                currSectionIndexRef.current
-            ] as HTMLElement;
-
-            let sectionTop = activeSection.offsetTop;
-            let sectionBottom = sectionTop + activeSection.offsetHeight;
-
-            // Get the distance from the top of the section and the bottom of the currently selected section
-            let remainingScrollFromBottom = sectionBottom - bottomPostionOfView;
-            let remainingScrollFromTop = scrollPosition - sectionTop;
-
             // Currently section is not locked, meaning the user is scrolling to a section
-            if (!sectionLockedRef.current) {
-                // Section is in view, lock the section
+            if (!isSectionLocked()) handleSectionSwitching();
+            // Section is locked, meaning the user is scrolling within a section, clamp the user to the section
+            else clampToSection(getActiveSection());
+
+            function handleSectionSwitching() {
+                let activeSection: HTMLElement = getActiveSection()
+                let remainingScrollFromTop = distanceFromTopOfSection(activeSection);
+
+                // If the user scrolls past the top of the section, unlock the section
                 if (Math.round(remainingScrollFromTop) === 0) {
-                    // Lock the user to the current section
                     sectionLockedRef.current = true;
-                    // Now that the section is locked, update the active section index
-                    setActiveSectionIndex(currSectionIndexRef.current);
-                    // Update the hash value in the URL to that of the active section
-                    const hash =
-                        sectionElements[currSectionIndexRef.current].id;
-                    window.history.replaceState(null, '', `#${hash}`);
-                    const event = new CustomEvent('sectionChanged', {
-                        detail: { hash },
-                    });
-                    window.dispatchEvent(event);
+                    triggerSectionChange();
                 }
-
-                // Otherwise, don't do anything, continue to wait for the section to be in view
-                return;
             }
 
-            // Lock the user to the current section if they scroll past the top or bottom of the section
-            if (Math.round(remainingScrollFromBottom) <= 0) {
-                const scrollOptions: ScrollToOptions = {
-                    top: sectionBottom - slideShowElement.clientHeight,
-                    behavior: 'smooth',
-                };
+            function triggerSectionChange() {
+                setActiveSectionIndex(currSectionIndexRef.current);
 
-                slideShowElement.scrollTo(scrollOptions);
-            }
-            else if (Math.round(remainingScrollFromTop) <= 0) {
-                const scrollOptions: ScrollToOptions = {
-                    top: sectionTop,
-                    behavior: 'smooth',
-                };
-
-                slideShowElement.scrollTo(scrollOptions);
+                // Update the hash value in the URL to that of the active section
+                const hash = sectionHashes[currSectionIndexRef.current];
+                window.history.replaceState(null, '', `#${hash}`);
+                const event = new CustomEvent('sectionChanged', {
+                    detail: { hash },
+                });
+                window.dispatchEvent(event);
             }
         };
 
@@ -194,10 +146,60 @@ function VerticalSectionsSlideshow(props: Props) {
             switchToActiveSection();
         };
 
-        function distanceFromTopOfSection(sectionContainer: HTMLElement) {
+        function clampToSection(section: HTMLElement) {
+            let sectionTop = section.offsetTop;
+            let sectionBottom = sectionTop + section.offsetHeight;
+
+            // Get the distance from the top of the section and the bottom of the currently selected section
+            let remainingScrollFromBottom = distanceFromBottomOfSection(section);
+            let remainingScrollFromTop = distanceFromTopOfSection(section);
+
+            // Lock the user to the current section if they scroll past the top or bottom of the section
+            if (Math.round(remainingScrollFromBottom) <= 0) {
+                const scrollOptions: ScrollToOptions = {
+                    top: sectionBottom - slideShowElement.clientHeight,
+                    behavior: 'smooth',
+                };
+
+                slideShowElement.scrollTo(scrollOptions);
+            }
+            else if (Math.round(remainingScrollFromTop) <= 0) {
+                const scrollOptions: ScrollToOptions = {
+                    top: sectionTop,
+                    behavior: 'smooth',
+                };
+
+                slideShowElement.scrollTo(scrollOptions);
+            }
+        }
+
+        function getActiveSection(): HTMLElement {
+            const sectionElements: HTMLCollectionOf<Element> =
+                slideShowElement.getElementsByClassName('section');
+            return sectionElements[currSectionIndexRef.current] as HTMLElement;
+        }
+
+        function getActiveSectionIndexByHashValue(hashValue: string) {
+            for (let i = 0; i < sectionHashes.length; i++) {
+                if (sectionHashes[i] === hashValue) return i;
+            }
+            return 0;
+        }
+
+        function isSectionLocked() {
+            return sectionLockedRef.current;
+        }
+
+        function distanceFromTopOfSection(sectionContainer: HTMLElement): number {
             const scrollPosition = slideShowElement.scrollTop;
             const sectionTop = sectionContainer.offsetTop;
-            return Math.round(sectionTop - scrollPosition);
+            return scrollPosition - sectionTop;
+        }
+
+        function distanceFromBottomOfSection(sectionContainer: HTMLElement): number {
+            const sectionBottom = sectionContainer.offsetTop + sectionContainer.offsetHeight;
+            const bottomPostionOfView = slideShowElement.scrollTop + slideShowElement.clientHeight;
+            return sectionBottom - bottomPostionOfView;
         }
 
         function distanceFromNextSection() {
