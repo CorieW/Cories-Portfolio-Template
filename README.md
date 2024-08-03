@@ -10,7 +10,7 @@ npm i cories-portfolio-template
 ```
 
 ## Usage
-See the [Examples](https://github.com/CorieW/Cories-Portfolio-Template/examples) folder for information on how to use this package.
+See the [Examples](https://github.com/CorieW/Cories-Portfolio-Template/tree/master/examples) folder for information on how to use this package.
 
 # Update Changes
 - Improved scrolling
@@ -42,8 +42,8 @@ See the [Examples](https://github.com/CorieW/Cories-Portfolio-Template/examples)
     - Override default format by allowing a custom component to be used for the section
 
 # Examples
-- [Example 1](https://github.com/CorieW/Cories-Portfolio-Template/examples/example1)
+- [Example 1](https://master--luminous-dango-5cec72.netlify.app/) [(source code)](https://github.com/CorieW/Cories-Portfolio-Template/tree/master/examples/example1)
 - [Live Example](https://coriewatson.me)
 
 # Contributions
-Contributions are welcome! Check the [Todo](#todo) section for ideas on what to contribute. Also, check the [Issues](https://github.com/CorieW/Cories-Portfolio-Template/issues) tab for issues that need to be resolved.
+Contributions are welcome! Check the [Todo](#todo) section for ideas on what to contribute.
