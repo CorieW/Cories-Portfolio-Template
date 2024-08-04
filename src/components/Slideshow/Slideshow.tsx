@@ -9,6 +9,7 @@ export interface ISlide {
 }
 
 type Props = {
+    arrowKeysEnabled?: boolean;
     autoTransition?: boolean;
     transitionTime?: number | null;
     slides: ISlide[];
@@ -16,6 +17,7 @@ type Props = {
 
 function Slideshow(props: Props) {
     const {
+        arrowKeysEnabled = true,
         autoTransition = true,
         transitionTime,
         slides
@@ -51,6 +53,25 @@ function Slideshow(props: Props) {
             }, transitionTime || 5000)
         );
     }, [slideIndex, slides]);
+
+    // Handle arrow key navigation
+    useEffect(() => {
+        function handleKeyDown(e: KeyboardEvent) {
+            if (e.key === 'ArrowLeft') {
+                changeSlideIndex(slideIndex - 1);
+            } else if (e.key === 'ArrowRight') {
+                changeSlideIndex(slideIndex + 1);
+            }
+        }
+
+        if (arrowKeysEnabled) {
+            document.addEventListener('keydown', handleKeyDown);
+        }
+
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [slideIndex]);
 
     function changeSlideIndex(newIndex: number) {
         const moddedIndex = (newIndex + slides.length) % slides.length;

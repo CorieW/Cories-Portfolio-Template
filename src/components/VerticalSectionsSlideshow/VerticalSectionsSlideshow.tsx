@@ -11,6 +11,7 @@ export interface ISection {
 
 type Props = {
     sections: ISection[];
+    onSectionChange?: (hash: string, index: number) => void;
 };
 
 function VerticalSectionsSlideshow(props: Props) {
@@ -263,30 +264,19 @@ function VerticalSectionsSlideshow(props: Props) {
     }
 
     function switchSectionInDirection(direction: 'up' | 'down') {
-        // Can't move down if at the bottom
-        if (
-            direction === 'down' &&
-            activeSectionIndex === sectionHashes.length - 1
-        )
-            return;
-        // Can't move up if at the top
-        if (direction === 'up' && activeSectionIndex === 0) return;
+        if (isMoveSectionBtnDisabled(direction)) return;
 
-        currSectionIndexRef.current =
-            activeSectionIndex + (direction === 'down' ? 1 : -1);
+        const directionNum = direction === 'up' ? -1 : 1;
+        const newIndex = activeSectionIndex + directionNum;
+
+        currSectionIndexRef.current = newIndex;
         switchToActiveSection();
     }
 
     function isMoveSectionBtnDisabled(direction: 'up' | 'down') {
-        // Can't move down if at the bottom
-        if (
-            direction === 'down' &&
-            activeSectionIndex === sectionHashes.length - 1
-        )
-            return true;
-        // Can't move up if at the top
-        if (direction === 'up' && activeSectionIndex === 0) return true;
-        return false;
+        const directionNum = direction === 'up' ? -1 : 1;
+        const newIndex = activeSectionIndex + directionNum;
+        return newIndex < 0 || newIndex >= sectionHashes.length;
     }
 
     return (

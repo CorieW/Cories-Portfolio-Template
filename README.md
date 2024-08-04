@@ -13,9 +13,8 @@ npm i cories-portfolio-template
 See the [Examples](https://github.com/CorieW/Cories-Portfolio-Template/tree/master/examples) folder for information on how to use this package.
 
 # Update Changes
-- Improved scrolling
-- Timeline end point now works for both odd and even rows
-- Code improvements
+- Improvements to slideshow
+- Applied more consistent styling
 
 # Todo
 - More color customization
