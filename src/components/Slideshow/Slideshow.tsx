@@ -1,5 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import './Slideshow.scss';
+import CorrectedSVG from '../CorrectedSVG/CorrectedSVG';
+import leftArrow from '../../assets/arrow-left.svg';
+import rightArrow from '../../assets/arrow-right.svg';
 
 export interface ISlide {
     element: JSX.Element;
@@ -16,7 +19,7 @@ function Slideshow(props: Props) {
 
     const slideshowRef = useRef<HTMLDivElement>(null);
 
-    const [slideIndex, setSlideIndex] = useState<number | null>(null);
+    const [slideIndex, setSlideIndex] = useState<number>(0);
     const [nextSlideTimeout, setNextSlideTimeout] =
         useState<NodeJS.Timeout | null>(null);
 
@@ -58,13 +61,13 @@ function Slideshow(props: Props) {
 
     const displayIndicatorsJSX = slides.map((_, i) => {
         return (
-            <a
+            <button
                 className={
                     'slide-indicator' + (i == slideIndex ? ' active' : '')
                 }
                 onClick={() => setSlideIndex(i)}
                 key={i}
-            ></a>
+            ></button>
         );
     });
 
@@ -74,7 +77,21 @@ function Slideshow(props: Props) {
                 <div className='encompassing-shadow-box'></div>
                 {displaySlides()}
             </ul>
-            <ul className='slide-indicators'>{displayIndicatorsJSX}</ul>
+            <ul className='slide-indicators'>
+                <button 
+                    className='slide-indicator move-btn'
+                    onClick={() => setSlideIndex((slideIndex - 1 + slides.length) % slides.length)}
+                >
+                    <CorrectedSVG src={leftArrow} />
+                </button>
+                {displayIndicatorsJSX}
+                <button 
+                    className='slide-indicator move-btn'
+                    onClick={() => setSlideIndex((slideIndex + 1) % slides.length)}
+                >
+                    <CorrectedSVG src={rightArrow} />
+                </button>
+            </ul>
         </div>
     );
 }
