@@ -15,10 +15,15 @@ type Props = {
 };
 
 function Slideshow(props: Props) {
-    const { autoTransition, transitionTime, slides } = props;
+    const {
+        autoTransition = true,
+        transitionTime,
+        slides
+    } = props;
 
     const slideshowRef = useRef<HTMLDivElement>(null);
 
+    const [autoTransitionEnabled, setAutoTransitionEnabled] = useState<boolean>(autoTransition);
     const [slideIndex, setSlideIndex] = useState<number>(0);
     const [nextSlideTimeout, setNextSlideTimeout] =
         useState<NodeJS.Timeout | null>(null);
@@ -38,14 +43,21 @@ function Slideshow(props: Props) {
         if (!slideshow) return;
 
         // If autoTransition is false, do not automatically transition slides
-        if (!autoTransition) return;
+        if (!autoTransitionEnabled) return;
 
         setNextSlideTimeout(
             setTimeout(() => {
                 setSlideIndex((slideIndex + 1) % slides.length);
-            }, transitionTime || 7500)
+            }, transitionTime || 5000)
         );
     }, [slideIndex, slides]);
+
+    function changeSlideIndex(newIndex: number) {
+        const moddedIndex = (newIndex + slides.length) % slides.length;
+        setSlideIndex(moddedIndex);
+        // Turn off auto transition when the user manually changes slides
+        setAutoTransitionEnabled(false);
+    }
 
     function displaySlides() {
         return slides.map((slide, i) => {
@@ -65,7 +77,7 @@ function Slideshow(props: Props) {
                 className={
                     'slide-indicator' + (i == slideIndex ? ' active' : '')
                 }
-                onClick={() => setSlideIndex(i)}
+                onClick={() => changeSlideIndex(i)}
                 key={i}
             ></button>
         );
@@ -78,16 +90,16 @@ function Slideshow(props: Props) {
                 {displaySlides()}
             </ul>
             <ul className='slide-indicators'>
-                <button 
+                <button
                     className='slide-indicator move-btn'
-                    onClick={() => setSlideIndex((slideIndex - 1 + slides.length) % slides.length)}
+                    onClick={() => changeSlideIndex(slideIndex - 1)}
                 >
                     <CorrectedSVG src={leftArrow} />
                 </button>
                 {displayIndicatorsJSX}
-                <button 
+                <button
                     className='slide-indicator move-btn'
-                    onClick={() => setSlideIndex((slideIndex + 1) % slides.length)}
+                    onClick={() => changeSlideIndex(slideIndex + 1)}
                 >
                     <CorrectedSVG src={rightArrow} />
                 </button>
