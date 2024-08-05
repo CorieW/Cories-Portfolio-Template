@@ -24,6 +24,9 @@ function Main(props: Props) {
     const { settings, loadFunc } = props;
 
     const [portfolio, setPortfolio] = useState<IPortfolio | null>(null);
+    const [sections, setSections] = useState<ISection[]>([]);
+    const [sectionHashes, setSectionHashes] = useState<string[]>([]);
+    const [sectionIndex, setSectionIndex] = useState(0);
 
     const { setToast, toast } = useStore();
 
@@ -31,8 +34,34 @@ function Main(props: Props) {
     useEffect(() => {
         loadFunc().then((data) => {
             setPortfolio(data);
+            setSections(getSections(data));
         });
     }, []);
+
+    useEffect(() => {
+        // Get the current hash value
+        const hashValue = window.location.hash.substring(1);
+        // Set the section index to the index of the section with the hash value
+        setSectionIndex(getSectionIndexByHashValue(hashValue));
+
+        // Add event listener to listen for changes in the hash value
+        // When the hash value changes, update the active hash value.
+        const handleHashReplaced = () => {
+            // Get the updated hash value
+            const updatedHashValue = window.location.hash.substring(1);
+            // Set the section index to the index of the section with the updated hash value
+            setSectionIndex(getSectionIndexByHashValue(updatedHashValue));
+        };
+
+        function getSectionIndexByHashValue(hashValue: string): number {
+            return sectionHashes.indexOf(hashValue);
+        }
+
+        window.addEventListener('hashReplaced', handleHashReplaced);
+        return () => {
+            window.removeEventListener('hashReplaced', handleHashReplaced);
+        };
+    }, [sectionHashes]);
 
     function getLinks(): INavLink[] {
         if (!portfolio) return [];
@@ -99,12 +128,6 @@ function Main(props: Props) {
                       true
                   );
 
-        const hashes: string[] = [
-            'about-me-section',
-            'skills-section',
-            'projects-section',
-            'contact-section',
-        ];
         const sectionJSXs = [
             aboutMeJSX,
             skillSectionJSX,
@@ -112,16 +135,27 @@ function Main(props: Props) {
             contactSectionJSX,
         ];
 
+        const hashes: string[] = [
+            'about-me-section',
+            'skills-section',
+            'projects-section',
+            'contact-section',
+        ];
+
         const sections: ISection[] = [];
+        const usedHashes: string[] = [];
         for (let i = 0; i < sectionJSXs.length; i++) {
             const sectionJSX = sectionJSXs[i];
             if (sectionJSX === null) continue;
 
+            usedHashes.push(hashes[i]);
+
             sections.push({
-                hash: hashes[i],
                 component: sectionJSX,
             });
         }
+
+        setSectionHashes(usedHashes);
         return sections;
     }
 
@@ -135,7 +169,28 @@ function Main(props: Props) {
             />
 
             <div id='sections' className='fade-in-500ms'>
-                <VerticalSectionsSlideshow sections={getSections(portfolio)} />
+                <VerticalSectionsSlideshow
+                    sections={sections}
+                    sectionIndex={sectionIndex}
+                    onSectionIndexChange={(index) => {
+                        // Update the hash value in the URL to that of the active section
+                        const hash = sectionHashes[index];
+                        window.history.replaceState(null, '', `#${hash}`);
+                        const event = new CustomEvent('sectionChanged', {
+                            detail: { hash },
+                        });
+                        window.dispatchEvent(event);
+                    }}
+                    distanceFromTopOfSection={(distance) => {
+                        console.log('distanceFromTopOfSection', distance);
+                        // Hide the nav bar when the user is changing sections
+                        const navContainer = document.getElementById('nav-container');
+                        if (!navContainer) return;
+
+                        if (distance !== 0) navContainer.classList.add('hidden');
+                        else navContainer.classList.remove('hidden');
+                    }}
+                />
             </div>
         </>
     )
