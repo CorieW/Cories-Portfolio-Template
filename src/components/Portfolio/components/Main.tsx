@@ -187,6 +187,7 @@ function Main(props: Props) {
                     }}
                     arrowKeysEnabled={settings?.general?.arrowKeysEnabled}
                     mouseWheelEnabled={settings?.general?.mouseWheelEnabled}
+                    touchSwipeEnabled={settings?.general?.touchSwipeEnabled}
                     visibleMovementArrows={settings?.general?.visibleMovementArrows}
                     movementMode={settings?.general?.movementMode}
                     minSectionInterval={settings?.general?.minSectionInterval}

@@ -16,6 +16,7 @@ type Props = {
 
     arrowKeysEnabled?: boolean;
     mouseWheelEnabled?: boolean;
+    touchSwipeEnabled?: boolean;
     visibleMovementArrows?: boolean;
     movementMode?: 'instant' | 'smooth';
     minSectionInterval?: number;
@@ -30,6 +31,7 @@ function VerticalSectionsSlideshow(props: Props) {
 
         arrowKeysEnabled = true,
         mouseWheelEnabled = true,
+        touchSwipeEnabled = true,
         visibleMovementArrows = true,
         movementMode = 'smooth',
         minSectionInterval = 200,
@@ -145,6 +147,40 @@ function VerticalSectionsSlideshow(props: Props) {
 
         return () => {
             slideShowRef.current?.removeEventListener('wheel', wheelHandler);
+        };
+    }, [sectionIndex]);
+
+    // Handle touch swipe navigation
+    useEffect(() => {
+        if (!touchSwipeEnabled) return;
+
+        let topDistance = -1;
+        let bottomDistance = -1;
+        let touchStartY: number;
+        let touchEndY: number;
+
+        const touchStartHandler = (e: TouchEvent) => {
+            touchStartY = e.touches[0].clientY;
+            topDistance = distanceFromTopOfSection(getActiveSection());
+            bottomDistance = distanceFromBottomOfSection(getActiveSection());
+        };
+
+        const touchEndHandler = (e: TouchEvent) => {
+            touchEndY = e.changedTouches[0].clientY;
+
+            if (touchStartY < touchEndY && topDistance == 0) {
+                switchSectionInDirection('up');
+            } else if (touchStartY > touchEndY && bottomDistance == 0) {
+                switchSectionInDirection('down');
+            }
+        };
+
+        slideShowRef.current?.addEventListener('touchstart', touchStartHandler);
+        slideShowRef.current?.addEventListener('touchend', touchEndHandler);
+
+        return () => {
+            slideShowRef.current?.removeEventListener('touchstart', touchStartHandler);
+            slideShowRef.current?.removeEventListener('touchend', touchEndHandler);
         };
     }, [sectionIndex]);
 
