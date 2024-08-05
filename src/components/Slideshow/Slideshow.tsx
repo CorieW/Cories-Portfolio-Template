@@ -1,22 +1,35 @@
 import { useState, useEffect, useRef } from 'react';
 import './Slideshow.scss';
+import CorrectedSVG from '../CorrectedSVG/CorrectedSVG';
+import leftArrow from '../../assets/arrow-left.svg';
+import rightArrow from '../../assets/arrow-right.svg';
 
 export interface ISlide {
     element: JSX.Element;
 }
 
 type Props = {
+    arrowKeysEnabled?: boolean;
     autoTransition?: boolean;
     transitionTime?: number | null;
     slides: ISlide[];
 };
 
 function Slideshow(props: Props) {
-    const { autoTransition, transitionTime, slides } = props;
+    const SLIDE_TRANSITION_DELAY = 200; // ms
+
+    const {
+        arrowKeysEnabled = true,
+        autoTransition = true,
+        transitionTime,
+        slides
+    } = props;
 
     const slideshowRef = useRef<HTMLDivElement>(null);
 
-    const [slideIndex, setSlideIndex] = useState<number | null>(null);
+    const [autoTransitionEnabled, setAutoTransitionEnabled] = useState<boolean>(autoTransition);
+    const [slideIndex, setSlideIndex] = useState<number>(0);
+    const [prevSlideChangeTime, setPrevSlideChangeTime] = useState<number>(0); // Used to prevent accidental double swipes
     const [nextSlideTimeout, setNextSlideTimeout] =
         useState<NodeJS.Timeout | null>(null);
 
@@ -24,6 +37,7 @@ function Slideshow(props: Props) {
         setSlideIndex(0);
     }, []);
 
+    // Auto transition slides
     useEffect(() => {
         if (typeof slideIndex !== 'number') return;
         if (nextSlideTimeout) clearTimeout(nextSlideTimeout);
@@ -35,14 +49,45 @@ function Slideshow(props: Props) {
         if (!slideshow) return;
 
         // If autoTransition is false, do not automatically transition slides
-        if (!autoTransition) return;
+        if (!autoTransitionEnabled) return;
 
         setNextSlideTimeout(
             setTimeout(() => {
-                setSlideIndex((slideIndex + 1) % slides.length);
-            }, transitionTime || 7500)
+                changeSlideIndex(slideIndex + 1, false);
+            }, transitionTime || 5000)
         );
-    }, [slideIndex, slides]);
+    }, [slideIndex, slides, autoTransition, autoTransitionEnabled]);
+
+    // Handle arrow key navigation
+    useEffect(() => {
+        function handleKeyDown(e: KeyboardEvent) {
+            if (e.key === 'ArrowLeft') {
+                changeSlideIndex(slideIndex - 1);
+            } else if (e.key === 'ArrowRight') {
+                changeSlideIndex(slideIndex + 1);
+            }
+        }
+
+        if (arrowKeysEnabled) {
+            document.addEventListener('keydown', handleKeyDown);
+        }
+
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [slideIndex, arrowKeysEnabled]);
+
+    function changeSlideIndex(newIndex: number, manual = true) {
+        if (window.performance.now() - prevSlideChangeTime < SLIDE_TRANSITION_DELAY) {
+            return;
+        }
+
+        const moddedIndex = (newIndex + slides.length) % slides.length;
+        setSlideIndex(moddedIndex);
+        setPrevSlideChangeTime(window.performance.now());
+        // Turn off auto transition when the user manually changes slides
+        if (manual) setAutoTransitionEnabled(false);
+    }
 
     function displaySlides() {
         return slides.map((slide, i) => {
@@ -58,13 +103,13 @@ function Slideshow(props: Props) {
 
     const displayIndicatorsJSX = slides.map((_, i) => {
         return (
-            <a
+            <button
                 className={
                     'slide-indicator' + (i == slideIndex ? ' active' : '')
                 }
-                onClick={() => setSlideIndex(i)}
+                onClick={() => changeSlideIndex(i)}
                 key={i}
-            ></a>
+            ></button>
         );
     });
 
@@ -74,7 +119,21 @@ function Slideshow(props: Props) {
                 <div className='encompassing-shadow-box'></div>
                 {displaySlides()}
             </ul>
-            <ul className='slide-indicators'>{displayIndicatorsJSX}</ul>
+            <ul className='slide-indicators'>
+                <button
+                    className='slide-indicator move-btn'
+                    onClick={() => changeSlideIndex(slideIndex - 1)}
+                >
+                    <CorrectedSVG src={leftArrow} />
+                </button>
+                {displayIndicatorsJSX}
+                <button
+                    className='slide-indicator move-btn'
+                    onClick={() => changeSlideIndex(slideIndex + 1)}
+                >
+                    <CorrectedSVG src={rightArrow} />
+                </button>
+            </ul>
         </div>
     );
 }

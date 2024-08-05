@@ -6,6 +6,8 @@ import {
 } from '../../../../../ts/IProject';
 import Slideshow from '../../../../Slideshow/Slideshow';
 import IProjectsSlideshowSettings from '../../../../../ts/IProjectsSlideshowSettings';
+import store from '../../../../../ts/store';
+import { SectionEnum } from '../../../../../ts/SectionEnum';
 
 type Props = {
     settings?: IProjectsSlideshowSettings | null;
@@ -14,6 +16,7 @@ type Props = {
 
 function Projects(props: Props) {
     const { settings, projects } = props;
+    const { activeSectionIndex, getIndexOfHash } = store();
 
     const internalProjectShowcaseJSX = (
         showcase: IInternalProjectShowcase,
@@ -70,6 +73,7 @@ function Projects(props: Props) {
         <div id='projects-container'>
             <Slideshow
                 slides={getSlides()}
+                arrowKeysEnabled={getIndexOfHash(SectionEnum.PROJECTS) === activeSectionIndex && settings?.arrowKeysEnabled}
                 autoTransition={settings?.autoTransition}
                 transitionTime={settings?.transitionTime}
             />

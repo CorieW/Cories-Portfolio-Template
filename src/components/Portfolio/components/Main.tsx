@@ -14,6 +14,7 @@ import VerticalSectionsSlideshow, {
     ISection,
 } from '../../VerticalSectionsSlideshow/VerticalSectionsSlideshow';
 import ISettings from '../../../ts/ISettings';
+import { SectionEnum } from '../../../ts/SectionEnum';
 
 type Props = {
     settings: ISettings | null;
@@ -24,31 +25,54 @@ function Main(props: Props) {
     const { settings, loadFunc } = props;
 
     const [portfolio, setPortfolio] = useState<IPortfolio | null>(null);
+    const [sections, setSections] = useState<ISection[]>([]);
 
-    const { setToast, toast } = useStore();
+    const { activeSectionIndex, setActiveSectionIndex, sectionHashes, setSectionHashes, getIndexOfHash, setToast, toast } = useStore();
 
     // Handle loading the data
     useEffect(() => {
         loadFunc().then((data) => {
             setPortfolio(data);
+            setSections(getSections(data));
         });
     }, []);
+
+    useEffect(() => {
+        // Get the current hash value
+        const hashValue = window.location.hash.substring(1);
+        // Set the section index to the index of the section with the hash value
+        setActiveSectionIndex(getIndexOfHash(hashValue));
+
+        // Add event listener to listen for changes in the hash value
+        // When the hash value changes, update the active hash value.
+        const handleHashReplaced = () => {
+            // Get the updated hash value
+            const updatedHashValue = window.location.hash.substring(1);
+            // Set the section index to the index of the section with the updated hash value
+            setActiveSectionIndex(getIndexOfHash(updatedHashValue));
+        };
+
+        window.addEventListener('hashReplaced', handleHashReplaced);
+        return () => {
+            window.removeEventListener('hashReplaced', handleHashReplaced);
+        };
+    }, [sectionHashes]);
 
     function getLinks(): INavLink[] {
         if (!portfolio) return [];
 
-        const aboutMeLink = { name: 'About Me', hashValue: 'about-me-section' };
+        const aboutMeLink = { name: 'About Me', hashValue: SectionEnum.ABOUT_ME };
         const skillsLink =
             portfolio.skills !== null && portfolio.skills.length > 0
-                ? { name: 'Skills', hashValue: 'skills-section' }
+                ? { name: 'Skills', hashValue: SectionEnum.SKILLS }
                 : null;
         const projectsLink =
             portfolio.projects !== null && portfolio.projects.length > 0
-                ? { name: 'Projects', hashValue: 'projects-section' }
+                ? { name: 'Projects', hashValue: SectionEnum.PROJECTS }
                 : null;
         const contactLink =
             portfolio.contactForm !== null
-                ? { name: 'Contact', hashValue: 'contact-section' }
+                ? { name: 'Contact', hashValue: SectionEnum.CONTACT }
                 : null;
 
         const links = [aboutMeLink, skillsLink, projectsLink, contactLink];
@@ -99,12 +123,6 @@ function Main(props: Props) {
                       true
                   );
 
-        const hashes: string[] = [
-            'about-me-section',
-            'skills-section',
-            'projects-section',
-            'contact-section',
-        ];
         const sectionJSXs = [
             aboutMeJSX,
             skillSectionJSX,
@@ -112,16 +130,27 @@ function Main(props: Props) {
             contactSectionJSX,
         ];
 
+        const hashes: SectionEnum[] = [
+            SectionEnum.ABOUT_ME,
+            SectionEnum.SKILLS,
+            SectionEnum.PROJECTS,
+            SectionEnum.CONTACT,
+        ];
+
         const sections: ISection[] = [];
+        const usedHashes: SectionEnum[] = [];
         for (let i = 0; i < sectionJSXs.length; i++) {
             const sectionJSX = sectionJSXs[i];
             if (sectionJSX === null) continue;
 
+            usedHashes.push(hashes[i]);
+
             sections.push({
-                hash: hashes[i],
                 component: sectionJSX,
             });
         }
+
+        setSectionHashes(usedHashes);
         return sections;
     }
 
@@ -135,7 +164,28 @@ function Main(props: Props) {
             />
 
             <div id='sections' className='fade-in-500ms'>
-                <VerticalSectionsSlideshow sections={getSections(portfolio)} />
+                <VerticalSectionsSlideshow
+                    sections={sections}
+                    sectionIndex={activeSectionIndex}
+                    onSectionIndexChange={(index) => {
+                        // Update the hash value in the URL to that of the active section
+                        const hash = sectionHashes[index];
+                        window.history.replaceState(null, '', `#${hash}`);
+                        const event = new CustomEvent('sectionChanged', {
+                            detail: { hash },
+                        });
+                        window.dispatchEvent(event);
+                        setActiveSectionIndex(index);
+                    }}
+                    distanceFromTopOfSection={(distance) => {
+                        // Hide the nav bar when the user is changing sections
+                        const navContainer = document.getElementById('nav-container');
+                        if (!navContainer) return;
+
+                        if (distance !== 0) navContainer.classList.add('hidden');
+                        else navContainer.classList.remove('hidden');
+                    }}
+                />
             </div>
         </>
     )
