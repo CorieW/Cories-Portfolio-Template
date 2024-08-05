@@ -13,6 +13,12 @@ type Props = {
     sectionIndex?: number;
     onSectionIndexChange?: (index: number) => void;
     distanceFromTopOfSection?: (distance: number) => void;
+
+    arrowKeysEnabled?: boolean;
+    mouseWheelEnabled?: boolean;
+    visibleMovementArrows?: boolean;
+    movementMode?: 'instant' | 'smooth';
+    minSectionInterval?: number;
 };
 
 function VerticalSectionsSlideshow(props: Props) {
@@ -20,10 +26,17 @@ function VerticalSectionsSlideshow(props: Props) {
         sections,
         sectionIndex: passSectionIndex = 0,
         onSectionIndexChange = () => {},
-        distanceFromTopOfSection: passDistanceFromTopOfSection = () => {}
+        distanceFromTopOfSection: passDistanceFromTopOfSection = () => {},
+
+        arrowKeysEnabled = true,
+        mouseWheelEnabled = true,
+        visibleMovementArrows = true,
+        movementMode = 'smooth',
+        minSectionInterval = 200,
     } = props;
 
     const [sectionIndex, setSectionIndex] = useState(0);
+    const [lastSectionChangeTime, setLastSectionChangeTime] = useState(0);
     const slideShowRef = useRef<HTMLDivElement>(null);
 
     // Handle section index changes
@@ -54,7 +67,7 @@ function VerticalSectionsSlideshow(props: Props) {
                 if (Math.round(remainingScrollFromBottom) <= 0) {
                     const scrollOptions: ScrollToOptions = {
                         top: sectionBottom - slideShowElement.clientHeight,
-                        behavior: 'smooth',
+                        behavior: movementMode,
                     };
 
                     slideShowElement.scrollTo(scrollOptions);
@@ -62,7 +75,7 @@ function VerticalSectionsSlideshow(props: Props) {
                 else if (Math.round(remainingScrollFromTop) <= 0) {
                     const scrollOptions: ScrollToOptions = {
                         top: sectionTop,
-                        behavior: 'smooth',
+                        behavior: movementMode,
                     };
 
                     slideShowElement.scrollTo(scrollOptions);
@@ -77,7 +90,7 @@ function VerticalSectionsSlideshow(props: Props) {
         };
     }, [sectionIndex]);
 
-    // Handle section index changes and arrow key navigation
+    // Handle section index changes
     useEffect(() => {
         // Scroll to the active section when the section index changes
         const sectionElements: HTMLCollectionOf<Element> =
@@ -85,13 +98,17 @@ function VerticalSectionsSlideshow(props: Props) {
         let activeSection: HTMLElement = sectionElements[sectionIndex] as HTMLElement;
         const scrollOptions: ScrollToOptions = {
             top: activeSection.offsetTop,
-            behavior: 'smooth',
+            behavior: movementMode,
         };
 
         // Scroll to the active section
         slideShowRef.current?.scrollTo(scrollOptions);
+    }, [sectionIndex]);
 
-        // Handle arrow key navigation
+    // Handle arrow key navigation
+    useEffect(() => {
+        if (!arrowKeysEnabled) return
+
         const keyDownHandler = (e: KeyboardEvent) => {
             if (e.key === 'ArrowDown') {
                 e.preventDefault();
@@ -106,6 +123,28 @@ function VerticalSectionsSlideshow(props: Props) {
 
         return () => {
             document.removeEventListener('keydown', keyDownHandler);
+        };
+    }, [sectionIndex]);
+
+    // Handle mouse wheel navigation
+    useEffect(() => {
+        if (!mouseWheelEnabled) return;
+
+        const wheelHandler = (e: WheelEvent) => {
+            const topDistance = distanceFromTopOfSection(getActiveSection());
+            const bottomDistance = distanceFromBottomOfSection(getActiveSection());
+
+            if (e.deltaY > 0 && bottomDistance <= 0) {
+                switchSectionInDirection('down');
+            } else if (e.deltaY < 0 && topDistance <= 0) {
+                switchSectionInDirection('up');
+            }
+        };
+
+        slideShowRef.current?.addEventListener('wheel', wheelHandler);
+
+        return () => {
+            slideShowRef.current?.removeEventListener('wheel', wheelHandler);
         };
     }, [sectionIndex]);
 
@@ -131,8 +170,11 @@ function VerticalSectionsSlideshow(props: Props) {
     }
 
     function switchSectionToIndex(index: number) {
+        if (window.performance.now() - lastSectionChangeTime < minSectionInterval) return;
+
         if (index < 0 || index >= sections.length) return;
         setSectionIndex(index);
+        setLastSectionChangeTime(window.performance.now());
         onSectionIndexChange(index);
     }
 
@@ -151,36 +193,40 @@ function VerticalSectionsSlideshow(props: Props) {
         return newIndex < 0 || newIndex >= sections.length;
     }
 
+    const movementArrowsJSX = visibleMovementArrows ? (
+        <div className='move-section-btns-container'>
+            <button
+                className={
+                    'move-section-up-btn general-btn-1 ' +
+                    (isMoveSectionBtnDisabled('up') ? 'disabled' : '')
+                }
+                onClick={() => switchSectionInDirection('up')}
+            >
+                <CorrectedSVG src={arrowUp} />
+            </button>
+            <button
+                className={
+                    'move-section-down-btn general-btn-1 ' +
+                    (isMoveSectionBtnDisabled('down') ? 'disabled' : '')
+                }
+                onClick={() => switchSectionInDirection('down')}
+            >
+                <CorrectedSVG src={arrowDown} />
+            </button>
+        </div>
+    ) : null;
+
     return (
         <div
             className={`vertical-sections-slideshow-container fade-in-500ms`}
             ref={slideShowRef}
         >
-                <div className='move-section-btns-container'>
-                    <button
-                        className={
-                            'move-section-up-btn general-btn-1 ' +
-                            (isMoveSectionBtnDisabled('up') ? 'disabled' : '')
-                        }
-                        onClick={() => switchSectionInDirection('up')}
-                    >
-                        <CorrectedSVG src={arrowUp} />
-                    </button>
-                    <button
-                        className={
-                            'move-section-down-btn general-btn-1 ' +
-                            (isMoveSectionBtnDisabled('down') ? 'disabled' : '')
-                        }
-                        onClick={() => switchSectionInDirection('down')}
-                    >
-                        <CorrectedSVG src={arrowDown} />
-                    </button>
-                </div>
-                <div className='sections-container'>
-                    {sections.map((section, index) => (
-                        <div key={index}>{section.component}</div>
-                    ))}
-                </div>
+            {movementArrowsJSX}
+            <div className='sections-container'>
+                {sections.map((section, index) => (
+                    <div key={index}>{section.component}</div>
+                ))}
+            </div>
         </div>
     );
 }

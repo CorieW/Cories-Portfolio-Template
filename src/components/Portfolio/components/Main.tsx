@@ -185,6 +185,11 @@ function Main(props: Props) {
                         if (distance !== 0) navContainer.classList.add('hidden');
                         else navContainer.classList.remove('hidden');
                     }}
+                    arrowKeysEnabled={settings?.general?.arrowKeysEnabled}
+                    mouseWheelEnabled={settings?.general?.mouseWheelEnabled}
+                    visibleMovementArrows={settings?.general?.visibleMovementArrows}
+                    movementMode={settings?.general?.movementMode}
+                    minSectionInterval={settings?.general?.minSectionInterval}
                 />
             </div>
         </>

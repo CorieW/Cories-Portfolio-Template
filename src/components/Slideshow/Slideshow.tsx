@@ -29,7 +29,7 @@ function Slideshow(props: Props) {
 
     const [autoTransitionEnabled, setAutoTransitionEnabled] = useState<boolean>(autoTransition);
     const [slideIndex, setSlideIndex] = useState<number>(0);
-    const [prevSlideChangeTime, setPrevSlideChangeTime] = useState<number>(0);
+    const [lastSlideChangeTime, setLastSlideChangeTime] = useState<number>(0);
     const [nextSlideTimeout, setNextSlideTimeout] =
         useState<NodeJS.Timeout | null>(null);
 
@@ -78,13 +78,13 @@ function Slideshow(props: Props) {
     }, [slideIndex, arrowKeysEnabled]);
 
     function changeSlideIndex(newIndex: number, manual = true) {
-        if (window.performance.now() - prevSlideChangeTime < minSlideInterval) {
+        if (window.performance.now() - lastSlideChangeTime < minSlideInterval) {
             return;
         }
 
         const moddedIndex = (newIndex + slides.length) % slides.length;
         setSlideIndex(moddedIndex);
-        setPrevSlideChangeTime(window.performance.now());
+        setLastSlideChangeTime(window.performance.now());
         // Turn off auto transition when the user manually changes slides
         if (manual) setAutoTransitionEnabled(false);
     }
