@@ -16,6 +16,8 @@ type Props = {
 };
 
 function Slideshow(props: Props) {
+    const SLIDE_TRANSITION_DELAY = 200; // ms
+
     const {
         arrowKeysEnabled = true,
         autoTransition = true,
@@ -27,6 +29,7 @@ function Slideshow(props: Props) {
 
     const [autoTransitionEnabled, setAutoTransitionEnabled] = useState<boolean>(autoTransition);
     const [slideIndex, setSlideIndex] = useState<number>(0);
+    const [prevSlideChangeTime, setPrevSlideChangeTime] = useState<number>(0); // Used to prevent accidental double swipes
     const [nextSlideTimeout, setNextSlideTimeout] =
         useState<NodeJS.Timeout | null>(null);
 
@@ -34,6 +37,7 @@ function Slideshow(props: Props) {
         setSlideIndex(0);
     }, []);
 
+    // Auto transition slides
     useEffect(() => {
         if (typeof slideIndex !== 'number') return;
         if (nextSlideTimeout) clearTimeout(nextSlideTimeout);
@@ -49,7 +53,7 @@ function Slideshow(props: Props) {
 
         setNextSlideTimeout(
             setTimeout(() => {
-                setSlideIndex((slideIndex + 1) % slides.length);
+                changeSlideIndex(slideIndex + 1, false);
             }, transitionTime || 5000)
         );
     }, [slideIndex, slides, autoTransition, autoTransitionEnabled]);
@@ -73,11 +77,16 @@ function Slideshow(props: Props) {
         };
     }, [slideIndex, arrowKeysEnabled]);
 
-    function changeSlideIndex(newIndex: number) {
+    function changeSlideIndex(newIndex: number, manual = true) {
+        if (window.performance.now() - prevSlideChangeTime < SLIDE_TRANSITION_DELAY) {
+            return;
+        }
+
         const moddedIndex = (newIndex + slides.length) % slides.length;
         setSlideIndex(moddedIndex);
+        setPrevSlideChangeTime(window.performance.now());
         // Turn off auto transition when the user manually changes slides
-        setAutoTransitionEnabled(false);
+        if (manual) setAutoTransitionEnabled(false);
     }
 
     function displaySlides() {
