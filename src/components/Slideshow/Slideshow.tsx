@@ -52,7 +52,7 @@ function Slideshow(props: Props) {
                 setSlideIndex((slideIndex + 1) % slides.length);
             }, transitionTime || 5000)
         );
-    }, [slideIndex, slides]);
+    }, [slideIndex, slides, autoTransition, autoTransitionEnabled]);
 
     // Handle arrow key navigation
     useEffect(() => {
@@ -71,7 +71,7 @@ function Slideshow(props: Props) {
         return () => {
             document.removeEventListener('keydown', handleKeyDown);
         };
-    }, [slideIndex]);
+    }, [slideIndex, arrowKeysEnabled]);
 
     function changeSlideIndex(newIndex: number) {
         const moddedIndex = (newIndex + slides.length) % slides.length;
