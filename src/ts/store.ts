@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { IToast } from '../components/Toast/Toast';
-import { SectionEnum } from './SectionEnum';
+import { SectionEnum } from './enum/SectionEnum';
 
 type Store = {
     activeSectionIndex: number;

@@ -2,7 +2,7 @@ import './Skills.scss';
 import Timeline, {
     ITimelineItem,
 } from '../../../../Timeline/Timeline';
-import ISkill from '../../../../../ts/ISkill';
+import ISkill from '../../../../../ts/data/ISkill';
 
 type Props = {
     skills: ISkill[];

@@ -3,11 +3,11 @@ import {
     IExternalProjectShowcase,
     IInternalProjectShowcase,
     IProject,
-} from '../../../../../ts/IProject';
+} from '../../../../../ts/data/IProject';
 import Slideshow from '../../../../Slideshow/Slideshow';
-import IProjectsSlideshowSettings from '../../../../../ts/IProjectsSlideshowSettings';
+import IProjectsSlideshowSettings from '../../../../../ts/settings/IProjectsSlideshowSettings';
 import store from '../../../../../ts/store';
-import { SectionEnum } from '../../../../../ts/SectionEnum';
+import { SectionEnum } from '../../../../../ts/enum/SectionEnum';
 
 type Props = {
     settings?: IProjectsSlideshowSettings | null;

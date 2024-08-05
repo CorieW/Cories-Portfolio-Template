@@ -1,4 +1,4 @@
-import ISocialMedia from '../../../../../ts/ISocialMedia';
+import ISocialMedia from '../../../../../ts/data/ISocialMedia';
 import './SocialMedias.scss';
 
 type Props = {

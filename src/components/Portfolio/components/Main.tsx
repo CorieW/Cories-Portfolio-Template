@@ -8,13 +8,13 @@ import Contact from './components/Contact/Contact';
 import Toast from '../../Toast/Toast';
 import StarryCanvas from '../../StarryCanvas/StarryCanvas';
 import LoadingScreen from './components/LoadingScreen/LoadingScreen';
-import IPortfolio from '../../../ts/IPortfolio';
+import IPortfolio from '../../../ts/data/IPortfolio';
 import useStore from '../../../ts/store';
 import VerticalSectionsSlideshow, {
     ISection,
 } from '../../VerticalSectionsSlideshow/VerticalSectionsSlideshow';
-import ISettings from '../../../ts/ISettings';
-import { SectionEnum } from '../../../ts/SectionEnum';
+import ISettings from '../../../ts/settings/ISettings';
+import { SectionEnum } from '../../../ts/enum/SectionEnum';
 
 type Props = {
     settings: ISettings | null;

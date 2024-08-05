@@ -11,17 +11,17 @@ export interface ISlide {
 type Props = {
     arrowKeysEnabled?: boolean;
     autoTransition?: boolean;
-    transitionTime?: number | null;
+    transitionTime?: number;
+    minSlideInterval?: number;
     slides: ISlide[];
 };
 
 function Slideshow(props: Props) {
-    const SLIDE_TRANSITION_DELAY = 200; // ms
-
     const {
         arrowKeysEnabled = true,
         autoTransition = true,
         transitionTime,
+        minSlideInterval = 200,
         slides
     } = props;
 
@@ -29,7 +29,7 @@ function Slideshow(props: Props) {
 
     const [autoTransitionEnabled, setAutoTransitionEnabled] = useState<boolean>(autoTransition);
     const [slideIndex, setSlideIndex] = useState<number>(0);
-    const [prevSlideChangeTime, setPrevSlideChangeTime] = useState<number>(0); // Used to prevent accidental double swipes
+    const [prevSlideChangeTime, setPrevSlideChangeTime] = useState<number>(0);
     const [nextSlideTimeout, setNextSlideTimeout] =
         useState<NodeJS.Timeout | null>(null);
 
@@ -78,7 +78,7 @@ function Slideshow(props: Props) {
     }, [slideIndex, arrowKeysEnabled]);
 
     function changeSlideIndex(newIndex: number, manual = true) {
-        if (window.performance.now() - prevSlideChangeTime < SLIDE_TRANSITION_DELAY) {
+        if (window.performance.now() - prevSlideChangeTime < minSlideInterval) {
             return;
         }
 

@@ -1,4 +1,4 @@
-export default interface IStyling {
+export default interface IStylingSettings {
     themeColor?: string | null;
     backgroundColor?: string | null;
     contrastColor?: string | null;
