@@ -53,10 +53,12 @@ function Slideshow(props: Props) {
 
         setNextSlideTimeout(
             setTimeout(() => {
+                if (!autoTransitionEnabled) return;
+
                 changeSlideIndex(slideIndex + 1, false);
             }, transitionTime || 5000)
         );
-    }, [slideIndex, slides, autoTransition, autoTransitionEnabled]);
+    }, [slideIndex, slides, autoTransitionEnabled]);
 
     // Handle arrow key navigation
     useEffect(() => {

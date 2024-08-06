@@ -13,10 +13,7 @@ npm i cories-portfolio-template
 See the [Examples](https://github.com/CorieW/Cories-Portfolio-Template/tree/master/examples) folder for information on how to use this package.
 
 # Update Changes
-- Slideshow auto-transition.
-- Slideshow auto-transition disabled when user manually transitions.
-- Slideshow navigation using arrow keys. Arrow keys will only work when project section is active.
-- Applied more consistent styling.
+- Customization of portfolio movement
 
 # Todo
 - More color customization

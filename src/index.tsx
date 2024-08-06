@@ -6,6 +6,7 @@ import Timeline from './components/Timeline/Timeline'
 import VerticalSectionsSlideshow from './components/VerticalSectionsSlideshow/VerticalSectionsSlideshow'
 import IPortfolio from './ts/data/IPortfolio'
 import ISettings from './ts/settings/ISettings'
+import IGeneralSettings from './ts/settings/IGeneralSettings'
 import IProjectsSlideshowSettings from './ts/settings/IProjectsSlideshowSettings'
 import IStyling from './ts/settings/IStylingSettings'
 import IAboutMe from './ts/data/IAboutMe'
@@ -33,6 +34,7 @@ export {
 export type {
   IPortfolio,
   ISettings,
+  IGeneralSettings,
   IProjectsSlideshowSettings,
   IStyling,
   IAboutMe,
