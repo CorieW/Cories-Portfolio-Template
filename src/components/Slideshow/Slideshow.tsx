@@ -125,7 +125,10 @@ function Slideshow(props: Props) {
                         onClick={() => setAutoTransitionEnabled(!autoTransitionEnabled)}
                         aria-label='Toggle auto transition'
                     >
-                        <i class="fa-regular fa-clock"></i>
+                        <div className='background'></div>
+                        <i className="fa-regular fa-clock"></i>
+                        <span>Auto-transition:</span>
+                        <span className='toggled-text'>{autoTransitionEnabled ? 'On' : 'Off'}</span>
                     </button>
                 </div>
 

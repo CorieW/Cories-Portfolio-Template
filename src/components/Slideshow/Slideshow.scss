@@ -64,40 +64,66 @@
 
         .auto-transition-info {
             #toggle-transition-btn {
+                position: relative;
                 display: flex;
                 gap: 10px;
                 justify-content: center;
                 align-items: center;
-                padding: 0;
+                padding: 5px 10px;
+                background-color: transparent;
                 border: none;
-                background-color: rgba($color: #000000, $alpha: 0.5);
-                border-radius: 50%;
+                border-radius: 15px;
+                overflow: hidden;
                 pointer-events: all;
                 cursor: pointer;
 
-                i {
-                    color: var(--intense-text-color);
-                    font-size: 28px;
-                    transition: 0.2s;
-                    padding: 5px 5px;
+                color: var(--intense-text-color);
+                font-size: 22px;
 
-                    &:hover {
-                        color: var(--theme-color);
-                        opacity: 0.5;
-                    }
+                // Need this to change the opacity of the background
+                // without changing the opacity of the text
+                .background {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background-color: var(--background-color);
+                    border-radius: 15px;
+                    opacity: 0.5;
+                    transition: opacity 0.2s;
                 }
 
-                &.on i {
+                i, span {
+                    z-index: 1;
+                    transition: 0.2s;
+                }
+
+                &:hover i, &:hover span {
+                    color: var(--theme-color);
+                    opacity: 0.5;
+                }
+
+                &.on {
                     color: var(--theme-color);
 
-                    &:hover {
+                    &:hover i, &:hover span {
                         color: var(--theme-color);
                         opacity: 1;
                     }
                 }
 
                 @media (max-width: 500px) {
+                    padding: 5px;
                     font-size: 24px;
+
+                    span {
+                        display: none;
+                    }
+
+                    .toggled-text {
+                        display: block;
+                    }
                 }
             }
         }
