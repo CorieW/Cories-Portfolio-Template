@@ -20,7 +20,7 @@ function Slideshow(props: Props) {
     const {
         arrowKeysEnabled = true,
         autoTransition = true,
-        transitionTime,
+        transitionTime = 5000,
         minSlideInterval = 200,
         slides
     } = props;
@@ -42,10 +42,7 @@ function Slideshow(props: Props) {
         if (typeof slideIndex !== 'number') return;
         if (nextSlideTimeout) clearTimeout(nextSlideTimeout);
 
-        // When the slide index changes, update slideshow's background color
-        // to match the slide's background color
         const slideshow = slideshowRef.current;
-
         if (!slideshow) return;
 
         // If autoTransition is false, do not automatically transition slides
@@ -54,11 +51,10 @@ function Slideshow(props: Props) {
         setNextSlideTimeout(
             setTimeout(() => {
                 if (!autoTransitionEnabled) return;
-
                 changeSlideIndex(slideIndex + 1, false);
-            }, transitionTime || 5000)
+            }, transitionTime)
         );
-    }, [slideIndex, slides, autoTransitionEnabled]);
+    }, [slideIndex, autoTransitionEnabled]);
 
     // Handle arrow key navigation
     useEffect(() => {
