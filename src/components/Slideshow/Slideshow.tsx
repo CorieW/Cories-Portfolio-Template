@@ -117,21 +117,34 @@ function Slideshow(props: Props) {
                 <div className='encompassing-shadow-box'></div>
                 {displaySlides()}
             </ul>
-            <ul className='slide-indicators'>
-                <button
-                    className='slide-indicator move-btn'
-                    onClick={() => changeSlideIndex(slideIndex - 1)}
-                >
-                    <CorrectedSVG src={leftArrow} />
-                </button>
-                {displayIndicatorsJSX}
-                <button
-                    className='slide-indicator move-btn'
-                    onClick={() => changeSlideIndex(slideIndex + 1)}
-                >
-                    <CorrectedSVG src={rightArrow} />
-                </button>
-            </ul>
+            <div className='bottom-bar'>
+                <div className='auto-transition-info'>
+                    <button
+                        id='toggle-transition-btn'
+                        className={autoTransitionEnabled ? 'on' : ''}
+                        onClick={() => setAutoTransitionEnabled(!autoTransitionEnabled)}
+                        aria-label='Toggle auto transition'
+                    >
+                        <i class="fa-regular fa-clock"></i>
+                    </button>
+                </div>
+
+                <ul className='slide-indicators'>
+                    <button
+                        className='slide-indicator move-btn'
+                        onClick={() => changeSlideIndex(slideIndex - 1)}
+                    >
+                        <CorrectedSVG src={leftArrow} />
+                    </button>
+                    {displayIndicatorsJSX}
+                    <button
+                        className='slide-indicator move-btn'
+                        onClick={() => changeSlideIndex(slideIndex + 1)}
+                    >
+                        <CorrectedSVG src={rightArrow} />
+                    </button>
+                </ul>
+            </div>
         </div>
     );
 }
