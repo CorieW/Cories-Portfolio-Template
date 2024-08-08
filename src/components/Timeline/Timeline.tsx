@@ -4,7 +4,9 @@ import './Timeline.scss';
 export interface ITimelineItem {
     name: string;
     imageURL: string;
-    acquired: number;
+    timeframe: number;
+    /** @deprecated Use timeframe instead */
+    acquired?: number;
 }
 
 type Props = {
@@ -17,7 +19,15 @@ function Timeline(props: Props) {
 
     const itemsContainerRef = useRef<HTMLDivElement>(null);
 
-    let previousAcquiredStr: string = '';
+    let previousTimeframeStr: string = '';
+
+    // Handle deprecated 'acquired' property
+    for (const item of items) {
+        if (item.acquired) {
+            item.timeframe = item.acquired;
+            delete item.acquired;
+        }
+    }
 
     useEffect(() => {
         setDisplaySettings();
@@ -50,9 +60,9 @@ function Timeline(props: Props) {
         }
     }
 
-    function convertAcquiredNumberToString(acquired: number): string {
-        const decimal = acquired % 1;
-        const year = Math.floor(acquired);
+    function convertTimeframeNumberToString(timeframe: number): string {
+        const decimal = timeframe % 1;
+        const year = Math.floor(timeframe);
 
         if (decimal < 0.01) return `${year.toString()}`;
         if (decimal <= 0.33) return `<span class='year-point'>Early </span>${year}`;
@@ -62,10 +72,10 @@ function Timeline(props: Props) {
     }
 
     function renderItemsTimeline() {
-        // Order items by acquired date
+        // Order items by timeframe date
         const orderedItems = [...items].sort((a, b) => {
-            if (a.acquired < b.acquired) return -1;
-            if (a.acquired > b.acquired) return 1;
+            if (a.timeframe < b.timeframe) return -1;
+            if (a.timeframe > b.timeframe) return 1;
             return 0;
         });
 
@@ -113,11 +123,11 @@ function Timeline(props: Props) {
                 {items.map((item, index) => {
                     const isLastItem = item === items[items.length - 1];
                     const isVeryFirstItem = item === items[0] && isFirst;
-                    const acquired = item.acquired;
-                    const acquiredStr: string = convertAcquiredNumberToString(acquired);
-                    const cachedPreviousAcquiredStr = previousAcquiredStr;
+                    const timeframe = item.timeframe;
+                    const timeframeStr: string = convertTimeframeNumberToString(timeframe);
+                    const cachedPreviousTimeframeStr = previousTimeframeStr;
 
-                    previousAcquiredStr = acquiredStr;
+                    previousTimeframeStr = timeframeStr;
 
                     if (isLastItem && isLast) {
                         return (
@@ -125,18 +135,18 @@ function Timeline(props: Props) {
                                 <div className='timeline-row-line'>
                                     <span
                                         className={
-                                            'acquired ' +
-                                            (cachedPreviousAcquiredStr ===
-                                            acquiredStr
+                                            'timeframe ' +
+                                            (cachedPreviousTimeframeStr ===
+                                            timeframeStr
                                                 ? 'hidden'
                                                 : '')
                                         }
-                                        dangerouslySetInnerHTML={{__html: acquiredStr}}
+                                        dangerouslySetInnerHTML={{__html: timeframeStr}}
                                     />
                                 </div>
                                 {renderItem(item, index)}
                                 <div className='timeline-row-line final'>
-                                    <span className='acquired'>Today</span>
+                                    <span className='timeframe'>Today</span>
                                 </div>
                                 <div className='edge'></div>
                             </>
@@ -153,12 +163,12 @@ function Timeline(props: Props) {
                             >
                                 <span
                                     className={
-                                        'acquired ' +
-                                        (cachedPreviousAcquiredStr === acquiredStr
+                                        'timeframe ' +
+                                        (cachedPreviousTimeframeStr === timeframeStr
                                             ? 'hidden'
                                             : '')
                                     }
-                                    dangerouslySetInnerHTML={{__html: acquiredStr}}
+                                    dangerouslySetInnerHTML={{__html: timeframeStr}}
                                 />
                             </div>
                             {renderItem(item, index)}

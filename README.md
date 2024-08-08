@@ -14,6 +14,7 @@ See the [Examples](https://github.com/CorieW/Cories-Portfolio-Template/tree/mast
 
 # Update Changes
 - Customization of portfolio movement
+- Added auto-transition toggle button
 
 # Todo
 - More color customization
