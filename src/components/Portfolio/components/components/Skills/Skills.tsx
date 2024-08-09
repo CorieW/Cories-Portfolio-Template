@@ -30,7 +30,7 @@ function Skills(props: Props) {
             return {
                 name: skill.name,
                 imageURL: skill.iconUrl,
-                acquired,
+                timeframe: acquired,
             };
         });
     }
