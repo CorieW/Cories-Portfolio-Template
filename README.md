@@ -39,6 +39,10 @@ See the [Examples](https://github.com/CorieW/Cories-Portfolio-Template/tree/mast
 - Custom about me section
     - Can modify description text using a custom component
     - Override default format by allowing a custom component to be used for the section
+- Fix browser issues
+    - Fix Mobile Safari profile picture being zoomed in
+    - Fix Mobile FireFox cutting off the bottom of sections
+    - Fix Mobile Edge cutting off the bottom of sections
 
 # Examples
 - [Example 1](https://master--luminous-dango-5cec72.netlify.app/) [(source code)](https://github.com/CorieW/Cories-Portfolio-Template/tree/master/examples/example1)
