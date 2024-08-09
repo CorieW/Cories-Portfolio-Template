@@ -23,6 +23,8 @@ type Props = {
 };
 
 function VerticalSectionsSlideshow(props: Props) {
+    const PHONE_SWIPE_THRESHOLD = 20;
+
     const {
         sections,
         sectionIndex: passSectionIndex = 0,
@@ -167,10 +169,11 @@ function VerticalSectionsSlideshow(props: Props) {
 
         const touchEndHandler = (e: TouchEvent) => {
             touchEndY = e.changedTouches[0].clientY;
+            const distanceMoved = touchStartY - touchEndY;
 
-            if (touchStartY < touchEndY && topDistance == 0) {
+            if (distanceMoved < -PHONE_SWIPE_THRESHOLD && topDistance == 0) {
                 switchSectionInDirection('up');
-            } else if (touchStartY > touchEndY && bottomDistance == 0) {
+            } else if (distanceMoved > PHONE_SWIPE_THRESHOLD && bottomDistance == 0) {
                 switchSectionInDirection('down');
             }
         };
