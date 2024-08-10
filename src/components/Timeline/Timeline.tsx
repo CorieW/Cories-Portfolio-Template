@@ -45,10 +45,6 @@ function Timeline(props: Props) {
         };
     }, []);
 
-    // 
-    useEffect(() => {
-    }, []);
-
     function setDisplaySettings() {
         const itemsContainer = itemsContainerRef.current;
         if (!itemsContainer) return;
@@ -190,6 +186,8 @@ function Timeline(props: Props) {
                                         dangerouslySetInnerHTML={{__html: timeframeStr}}
                                         onMouseEnter={() => onTimelineBtn(true, simpleTimeframeStr)}
                                         onMouseLeave={() => onTimelineBtn(false, simpleTimeframeStr)}
+                                        onTouchStart={() => onTimelineBtn(true, simpleTimeframeStr)}
+                                        onTouchEnd={() => onTimelineBtn(false, simpleTimeframeStr)}
                                     />
                                 </div>
                                 {renderItem(item, timeframeIndex)}
@@ -219,6 +217,8 @@ function Timeline(props: Props) {
                                     dangerouslySetInnerHTML={{__html: timeframeStr}}
                                     onMouseEnter={() => onTimelineBtn(true, simpleTimeframeStr)}
                                     onMouseLeave={() => onTimelineBtn(false, simpleTimeframeStr)}
+                                    onTouchStart={() => onTimelineBtn(true, simpleTimeframeStr)}
+                                    onTouchEnd={() => onTimelineBtn(false, simpleTimeframeStr)}
                                 />
                             </div>
                             {renderItem(item, timeframeIndex)}
