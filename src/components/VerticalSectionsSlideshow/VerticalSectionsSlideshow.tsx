@@ -41,6 +41,7 @@ function VerticalSectionsSlideshow(props: Props) {
 
     const [sectionIndex, setSectionIndex] = useState(0);
     const [lastSectionChangeTime, setLastSectionChangeTime] = useState(0);
+    const isChangingSectionRef = useRef(false);
     const slideShowRef = useRef<HTMLDivElement>(null);
 
     // Handle section index changes
@@ -56,6 +57,18 @@ function VerticalSectionsSlideshow(props: Props) {
         const clampScrolling = () => {
             const topDistance = distanceFromTopOfSection(getActiveSection());
             passDistanceFromTopOfSection(topDistance);
+
+            // When already changing sections
+            // - Don't run the clampToSection function if the user is at the top of the section
+            //   because it spams it, causing some browser smooth scrolling to break, like Opera.
+            // - If the user is at the top of the section, set isChangingSection to false
+            if (isChangingSectionRef.current) {
+                if (topDistance === 0) {
+                    isChangingSectionRef.current = false;
+                } else {
+                    return;
+                }
+            }
 
             clampToSection(getActiveSection());
 
@@ -96,17 +109,7 @@ function VerticalSectionsSlideshow(props: Props) {
 
     // Handle section index changes
     useEffect(() => {
-        // Scroll to the active section when the section index changes
-        const sectionElements: HTMLCollectionOf<Element> =
-            document.getElementsByClassName('section');
-        let activeSection: HTMLElement = sectionElements[sectionIndex] as HTMLElement;
-        const scrollOptions: ScrollToOptions = {
-            top: activeSection.offsetTop,
-            behavior: movementMode,
-        };
-
-        // Scroll to the active section
-        slideShowRef.current?.scrollTo(scrollOptions);
+        scrollToSection(sectionIndex);
     }, [sectionIndex]);
 
     // Handle arrow key navigation
@@ -142,6 +145,9 @@ function VerticalSectionsSlideshow(props: Props) {
                 switchSectionInDirection('down');
             } else if (e.deltaY < 0 && topDistance <= 0) {
                 switchSectionInDirection('up');
+            } else if (isChangingSectionRef.current) {
+                // Scroll to the current section when the user tries to scroll while changing sections
+                scrollToSection(sectionIndex);
             }
         };
 
@@ -192,6 +198,21 @@ function VerticalSectionsSlideshow(props: Props) {
         const sectionElements: HTMLCollectionOf<Element> =
             slideShowElement.getElementsByClassName('section');
         return sectionElements[sectionIndex] as HTMLElement;
+    }
+
+    function scrollToSection(sectionIndex: number) {
+        // Scroll to the active section when the section index changes
+        const sectionElements: HTMLCollectionOf<Element> =
+            document.getElementsByClassName('section');
+        let activeSection: HTMLElement = sectionElements[sectionIndex] as HTMLElement;
+        const scrollOptions: ScrollToOptions = {
+            top: activeSection.offsetTop,
+            behavior: movementMode,
+        };
+        isChangingSectionRef.current = true;
+
+        // Scroll to the active section
+        slideShowRef.current?.scrollTo(scrollOptions);
     }
 
     function distanceFromTopOfSection(sectionContainer: HTMLElement): number {
