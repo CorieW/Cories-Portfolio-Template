@@ -26,7 +26,7 @@
 
             &:nth-child(2n + 1) {
                 // Arrow
-                .acquired {
+                .timeframe {
                     &::before {
                         content: '';
 
@@ -40,7 +40,7 @@
                 .timeline-row-line {
                     // Very last line (on whole timeline)
                     &.final {
-                        >.acquired {
+                        >.timeframe {
                             left: 100%;
                         }
                     }
@@ -52,11 +52,11 @@
                         box-sizing: content-box;
 
                         border: none;
-                        border-bottom: 2px solid white;
-                        border-left: 2px solid white;
+                        border-bottom: 2px solid;
+                        border-left: 2px solid;
                         border-bottom-left-radius: 15px;
 
-                        >.acquired {
+                        >.timeframe {
                             top: 100%;
                         }
                     }
@@ -67,11 +67,11 @@
                         box-sizing: content-box;
 
                         border: none;
-                        border-top: 2px solid white;
-                        border-right: 2px solid white;
+                        border-top: 2px solid;
+                        border-right: 2px solid;
                         border-top-right-radius: 15px;
 
-                        .acquired {
+                        .timeframe {
                             top: 30%;
                             left: 100%;
                         }
@@ -91,7 +91,7 @@
 
             &:nth-child(2n) {
                 // Arrow
-                .acquired {
+                .timeframe {
                     &::after {
                         content: '';
 
@@ -105,7 +105,7 @@
                 >.timeline-row-line {
                     // Very last line (on whole timeline)
                     &.final {
-                        >.acquired {
+                        >.timeframe {
                             left: 0%;
                         }
                     }
@@ -117,11 +117,11 @@
                         box-sizing: content-box;
 
                         border: none;
-                        border-bottom: 2px solid white;
-                        border-right: 2px solid white;
+                        border-bottom: 2px solid;
+                        border-right: 2px solid;
                         border-bottom-right-radius: 15px;
 
-                        >.acquired {
+                        >.timeframe {
                             top: 100%;
                         }
                     }
@@ -132,12 +132,12 @@
                         box-sizing: content-box;
 
                         border: none;
-                        border-top: 2px solid white;
-                        border-left: 2px solid white;
+                        border-top: 2px solid;
+                        border-left: 2px solid;
                         border-radius: 0;
                         border-top-left-radius: 15px;
 
-                        >.acquired {
+                        >.timeframe {
                             top: 30%;
                             left: 0%;
                         }
@@ -197,6 +197,9 @@
 
                 &:hover {
                     cursor: pointer;
+                }
+
+                &.active {
                     transform: scale(1.4);
 
                     img {
@@ -218,7 +221,7 @@
                         transition: all 0.2s;
                     }
 
-                    &:hover {
+                    &.active {
                         span {
                             opacity: 1;
                         }
@@ -233,6 +236,10 @@
                 flex: 1;
                 margin: auto 0;
                 border: 1px solid var(--contrast-background-color);
+
+                &.active {
+                    border-color: var(--theme-color) !important
+                }
 
                 // Very first line (on whole timeline)
                 &.start {
@@ -260,7 +267,7 @@
                     flex: 1;
                     border-right: none !important;
 
-                    .acquired {
+                    .timeframe {
                         color: var(--theme-color);
                         font-size: 24px;
                         text-transform: uppercase;
@@ -281,7 +288,7 @@
                             background-color: var(--contrast-background-color);
                         }
 
-                        .acquired {
+                        .timeframe {
                             display: none;
                         }
                     }
@@ -292,7 +299,7 @@
                     min-width: 50px;
                 }
 
-                >.acquired {
+                >.timeframe {
                     position: absolute;
                     top: 50%;
                     left: 50%;
@@ -302,12 +309,17 @@
                     padding: 5px 10px;
                     margin: auto 0;
 
+                    border: none;
                     border-radius: 10px;
 
                     white-space: nowrap;
                     color: var(--theme-color);
+                    font-size: 16px;
                     font-weight: 600;
                     line-height: 50px;
+
+                    pointer-events: all !important;
+                    cursor: pointer;
 
                     // Arrows
                     &::before,

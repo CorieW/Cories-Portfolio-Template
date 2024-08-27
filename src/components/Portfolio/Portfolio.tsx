@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react';
 import './Portfolio.scss';
 import Main from './components/Main';
-import IPortfolio from '../../ts/IPortfolio';
-import ISettings from '../../ts/ISettings';
+import IPortfolio from '../../ts/data/IPortfolio';
+import ISettings from '../../ts/settings/ISettings';
 
 type Props = {
     settings?: ISettings | null;

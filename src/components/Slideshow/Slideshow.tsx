@@ -11,17 +11,17 @@ export interface ISlide {
 type Props = {
     arrowKeysEnabled?: boolean;
     autoTransition?: boolean;
-    transitionTime?: number | null;
+    transitionTime?: number;
+    minSlideInterval?: number;
     slides: ISlide[];
 };
 
 function Slideshow(props: Props) {
-    const SLIDE_TRANSITION_DELAY = 200; // ms
-
     const {
         arrowKeysEnabled = true,
         autoTransition = true,
-        transitionTime,
+        transitionTime = 5000,
+        minSlideInterval = 200,
         slides
     } = props;
 
@@ -29,7 +29,7 @@ function Slideshow(props: Props) {
 
     const [autoTransitionEnabled, setAutoTransitionEnabled] = useState<boolean>(autoTransition);
     const [slideIndex, setSlideIndex] = useState<number>(0);
-    const [prevSlideChangeTime, setPrevSlideChangeTime] = useState<number>(0); // Used to prevent accidental double swipes
+    const [lastSlideChangeTime, setLastSlideChangeTime] = useState<number>(0);
     const [nextSlideTimeout, setNextSlideTimeout] =
         useState<NodeJS.Timeout | null>(null);
 
@@ -42,10 +42,7 @@ function Slideshow(props: Props) {
         if (typeof slideIndex !== 'number') return;
         if (nextSlideTimeout) clearTimeout(nextSlideTimeout);
 
-        // When the slide index changes, update slideshow's background color
-        // to match the slide's background color
         const slideshow = slideshowRef.current;
-
         if (!slideshow) return;
 
         // If autoTransition is false, do not automatically transition slides
@@ -53,10 +50,11 @@ function Slideshow(props: Props) {
 
         setNextSlideTimeout(
             setTimeout(() => {
+                if (!autoTransitionEnabled) return;
                 changeSlideIndex(slideIndex + 1, false);
-            }, transitionTime || 5000)
+            }, transitionTime)
         );
-    }, [slideIndex, slides, autoTransition, autoTransitionEnabled]);
+    }, [slideIndex, autoTransitionEnabled]);
 
     // Handle arrow key navigation
     useEffect(() => {
@@ -78,13 +76,13 @@ function Slideshow(props: Props) {
     }, [slideIndex, arrowKeysEnabled]);
 
     function changeSlideIndex(newIndex: number, manual = true) {
-        if (window.performance.now() - prevSlideChangeTime < SLIDE_TRANSITION_DELAY) {
+        if (window.performance.now() - lastSlideChangeTime < minSlideInterval) {
             return;
         }
 
         const moddedIndex = (newIndex + slides.length) % slides.length;
         setSlideIndex(moddedIndex);
-        setPrevSlideChangeTime(window.performance.now());
+        setLastSlideChangeTime(window.performance.now());
         // Turn off auto transition when the user manually changes slides
         if (manual) setAutoTransitionEnabled(false);
     }
@@ -119,21 +117,37 @@ function Slideshow(props: Props) {
                 <div className='encompassing-shadow-box'></div>
                 {displaySlides()}
             </ul>
-            <ul className='slide-indicators'>
-                <button
-                    className='slide-indicator move-btn'
-                    onClick={() => changeSlideIndex(slideIndex - 1)}
-                >
-                    <CorrectedSVG src={leftArrow} />
-                </button>
-                {displayIndicatorsJSX}
-                <button
-                    className='slide-indicator move-btn'
-                    onClick={() => changeSlideIndex(slideIndex + 1)}
-                >
-                    <CorrectedSVG src={rightArrow} />
-                </button>
-            </ul>
+            <div className='bottom-bar'>
+                <div className='auto-transition-info'>
+                    <button
+                        id='toggle-transition-btn'
+                        className={autoTransitionEnabled ? 'on' : ''}
+                        onClick={() => setAutoTransitionEnabled(!autoTransitionEnabled)}
+                        aria-label='Toggle auto transition'
+                    >
+                        <div className='background'></div>
+                        <i className="fa-regular fa-clock"></i>
+                        <span>Auto-transition:</span>
+                        <span className='toggled-text'>{autoTransitionEnabled ? 'On' : 'Off'}</span>
+                    </button>
+                </div>
+
+                <ul className='slide-indicators'>
+                    <button
+                        className='slide-indicator move-btn'
+                        onClick={() => changeSlideIndex(slideIndex - 1)}
+                    >
+                        <CorrectedSVG src={leftArrow} />
+                    </button>
+                    {displayIndicatorsJSX}
+                    <button
+                        className='slide-indicator move-btn'
+                        onClick={() => changeSlideIndex(slideIndex + 1)}
+                    >
+                        <CorrectedSVG src={rightArrow} />
+                    </button>
+                </ul>
+            </div>
         </div>
     );
 }

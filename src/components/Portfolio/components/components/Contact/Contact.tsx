@@ -1,7 +1,7 @@
 import './Contact.scss';
 import axios from 'axios';
 import SocialMedias from '../SocialMedias/SocialMedias';
-import IContact from '../../../../../ts/IContact';
+import IContact from '../../../../../ts/data/IContact';
 import useStore from '../../../../../ts/store';
 import ContactForm, {
     IContactData,
@@ -10,8 +10,8 @@ import {
     IContactForm,
     IHook,
     IOpenEmailApp,
-} from '../../../../../ts/IContactForm';
-import ISocialMedia from '../../../../../ts/ISocialMedia';
+} from '../../../../../ts/data/IContactForm';
+import ISocialMedia from '../../../../../ts/data/ISocialMedia';
 
 type Props = {
     contactForm: IContactForm;

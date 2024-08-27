@@ -1,78 +1,194 @@
 .slideshow {
     position: absolute;
-    top: 0; bottom: 0; left: 0; right: 0;
-    background-color: transparent;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
     overflow: hidden;
+    background-color: transparent;
     transition: background-color 1s ease-in-out;
 
     .slide-list {
         position: relative;
         display: flex;
         flex-direction: row;
-        margin: 0; padding: 0;
+        margin: 0;
+        padding: 0;
 
         .slide {
             position: absolute;
-            z-index: -1; opacity: 0;
-            min-width: 100%; height: 100vh; min-height: fit-content; padding: 0;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: -1;
+            opacity: 0;
+            min-width: 100%;
+            height: 100vh;
+            min-height: fit-content;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             box-sizing: border-box;
             transition: opacity 1s ease-in-out;
 
-            &.active { z-index: 0; opacity: 1; }
+            &.active {
+                z-index: 0;
+                opacity: 1;
+            }
         }
 
         .encompassing-shadow-box {
             position: absolute;
-            top: 0; bottom: 0; left: -100vw; right: -100vw;
+            top: 0;
+            bottom: 0;
+            left: -100vw;
+            right: -100vw;
             box-shadow: inset 0 -100px 100px 0 var(--background-color), inset -0px 100px 100px 0 var(--background-color);
         }
     }
 
-    .slide-indicators {
+    .bottom-bar {
         position: absolute;
-        bottom: 30px; left: 0; right: 0;
-        display: flex; justify-content: center; align-items: center;
+        bottom: 30px;
+        left: 0;
+        right: 0;
         pointer-events: none;
-        padding: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
 
-        button {
-            display: inline-block;
-            margin: 0 10px; width: 25px; height: 25px;
-            border-radius: 50%; background-color: var(--border-color);
-            cursor: default; pointer-events: all;
-            border: none; box-shadow: 0 0 5px 0 var(--border-color);
-            transition: background-color 0.2s ease-in-out, opacity 0.2s ease-in-out;
+        @media (max-width: 600px) {
+            gap: 0;
+        }
 
-            &.active {
-                background-color: var(--theme-color);
-                &:hover { background-color: var(--theme-color); opacity: 1; cursor: default; }
-            }
+        .auto-transition-info {
+            #toggle-transition-btn {
+                position: relative;
+                display: flex;
+                gap: 10px;
+                justify-content: center;
+                align-items: center;
+                padding: 5px 10px;
+                background-color: transparent;
+                border: none;
+                border-radius: 15px;
+                overflow: hidden;
+                pointer-events: all;
+                cursor: pointer;
 
-            &:hover { background-color: var(--theme-color); opacity: 0.5; cursor: pointer; }
+                color: var(--intense-text-color);
+                font-size: 22px;
 
-            &.move-btn {
-                width: 40px;
-                height: 40px;
-                background-color: var(--contrast-background-color);
-
-                &:hover {
-                    background-color: var(--theme-color);
-                    opacity: 1;
+                // Need this to change the opacity of the background
+                // without changing the opacity of the text
+                .background {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background-color: var(--background-color);
+                    border-radius: 15px;
+                    opacity: 0.5;
+                    transition: opacity 0.2s;
                 }
 
-                svg {
-                    width: 16px;
+                i, span {
+                    z-index: 1;
+                    transition: 0.2s;
+                }
+
+                &:hover i, &:hover span {
+                    color: var(--theme-color);
+                    opacity: 0.5;
+                }
+
+                &.on {
+                    color: var(--theme-color);
+
+                    &:hover i, &:hover span {
+                        color: var(--theme-color);
+                        opacity: 1;
+                    }
+                }
+
+                @media (max-width: 500px) {
+                    padding: 5px;
+                    font-size: 24px;
+
+                    span {
+                        display: none;
+                    }
+
+                    .toggled-text {
+                        display: block;
+                    }
                 }
             }
         }
 
-        // Mobile-Tablet
-        @media (max-width: 600px) {
-            bottom: 5px;
+        .slide-indicators {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
 
             button {
-                margin: 0 5px; width: 20px; height: 20px;
+                display: inline-block;
+                margin: 0 10px;
+                width: 25px;
+                height: 25px;
+                border-radius: 50%;
+                background-color: var(--border-color);
+                cursor: default;
+                pointer-events: all;
+                border: none;
+                box-shadow: 0 0 5px 0 var(--border-color);
+                transition: background-color 0.2s ease-in-out, opacity 0.2s ease-in-out;
+
+                &.active {
+                    background-color: var(--theme-color);
+                    &:hover {
+                        background-color: var(--theme-color);
+                        opacity: 1;
+                        cursor: default;
+                    }
+                }
+
+                &:hover {
+                    background-color: var(--theme-color);
+                    opacity: 0.5;
+                    cursor: pointer;
+                }
+
+                &.move-btn {
+                    width: 40px;
+                    height: 40px;
+                    background-color: var(--contrast-background-color);
+
+                    &:hover {
+                        background-color: var(--theme-color);
+                        opacity: 1;
+                    }
+
+                    svg {
+                        width: 16px;
+                    }
+                }
+            }
+
+            // Mobile-Tablet
+            @media (max-width: 600px) {
+                bottom: 5px;
+
+                button {
+                    margin: 0 5px;
+                    width: 20px;
+                    height: 20px;
+                }
             }
         }
     }

@@ -13,17 +13,35 @@ type Props = {
     sectionIndex?: number;
     onSectionIndexChange?: (index: number) => void;
     distanceFromTopOfSection?: (distance: number) => void;
+
+    arrowKeysEnabled?: boolean;
+    mouseWheelEnabled?: boolean;
+    touchSwipeEnabled?: boolean;
+    visibleMovementArrows?: boolean;
+    movementMode?: 'instant' | 'smooth';
+    minSectionInterval?: number;
 };
 
 function VerticalSectionsSlideshow(props: Props) {
+    const PHONE_SWIPE_THRESHOLD = 20;
+
     const {
         sections,
         sectionIndex: passSectionIndex = 0,
         onSectionIndexChange = () => {},
-        distanceFromTopOfSection: passDistanceFromTopOfSection = () => {}
+        distanceFromTopOfSection: passDistanceFromTopOfSection = () => {},
+
+        arrowKeysEnabled = true,
+        mouseWheelEnabled = true,
+        touchSwipeEnabled = true,
+        visibleMovementArrows = true,
+        movementMode = 'smooth',
+        minSectionInterval = 200,
     } = props;
 
     const [sectionIndex, setSectionIndex] = useState(0);
+    const [lastSectionChangeTime, setLastSectionChangeTime] = useState(0);
+    const isChangingSectionRef = useRef(false);
     const slideShowRef = useRef<HTMLDivElement>(null);
 
     // Handle section index changes
@@ -40,6 +58,18 @@ function VerticalSectionsSlideshow(props: Props) {
             const topDistance = distanceFromTopOfSection(getActiveSection());
             passDistanceFromTopOfSection(topDistance);
 
+            // When already changing sections
+            // - Don't run the clampToSection function if the user is at the top of the section
+            //   because it spams it, causing some browser smooth scrolling to break, like Opera.
+            // - If the user is at the top of the section, set isChangingSection to false
+            if (isChangingSectionRef.current) {
+                if (topDistance === 0) {
+                    isChangingSectionRef.current = false;
+                } else {
+                    return;
+                }
+            }
+
             clampToSection(getActiveSection());
 
             function clampToSection(section: HTMLElement) {
@@ -54,7 +84,7 @@ function VerticalSectionsSlideshow(props: Props) {
                 if (Math.round(remainingScrollFromBottom) <= 0) {
                     const scrollOptions: ScrollToOptions = {
                         top: sectionBottom - slideShowElement.clientHeight,
-                        behavior: 'smooth',
+                        behavior: movementMode,
                     };
 
                     slideShowElement.scrollTo(scrollOptions);
@@ -62,7 +92,7 @@ function VerticalSectionsSlideshow(props: Props) {
                 else if (Math.round(remainingScrollFromTop) <= 0) {
                     const scrollOptions: ScrollToOptions = {
                         top: sectionTop,
-                        behavior: 'smooth',
+                        behavior: movementMode,
                     };
 
                     slideShowElement.scrollTo(scrollOptions);
@@ -77,21 +107,15 @@ function VerticalSectionsSlideshow(props: Props) {
         };
     }, [sectionIndex]);
 
-    // Handle section index changes and arrow key navigation
+    // Handle section index changes
     useEffect(() => {
-        // Scroll to the active section when the section index changes
-        const sectionElements: HTMLCollectionOf<Element> =
-            document.getElementsByClassName('section');
-        let activeSection: HTMLElement = sectionElements[sectionIndex] as HTMLElement;
-        const scrollOptions: ScrollToOptions = {
-            top: activeSection.offsetTop,
-            behavior: 'smooth',
-        };
+        scrollToSection(sectionIndex);
+    }, [sectionIndex]);
 
-        // Scroll to the active section
-        slideShowRef.current?.scrollTo(scrollOptions);
+    // Handle arrow key navigation
+    useEffect(() => {
+        if (!arrowKeysEnabled) return
 
-        // Handle arrow key navigation
         const keyDownHandler = (e: KeyboardEvent) => {
             if (e.key === 'ArrowDown') {
                 e.preventDefault();
@@ -109,11 +133,86 @@ function VerticalSectionsSlideshow(props: Props) {
         };
     }, [sectionIndex]);
 
+    // Handle mouse wheel navigation
+    useEffect(() => {
+        if (!mouseWheelEnabled) return;
+
+        const wheelHandler = (e: WheelEvent) => {
+            const topDistance = distanceFromTopOfSection(getActiveSection());
+            const bottomDistance = distanceFromBottomOfSection(getActiveSection());
+
+            if (e.deltaY > 0 && bottomDistance <= 0) {
+                switchSectionInDirection('down');
+            } else if (e.deltaY < 0 && topDistance <= 0) {
+                switchSectionInDirection('up');
+            } else if (isChangingSectionRef.current) {
+                // Scroll to the current section when the user tries to scroll while changing sections
+                scrollToSection(sectionIndex);
+            }
+        };
+
+        slideShowRef.current?.addEventListener('wheel', wheelHandler);
+
+        return () => {
+            slideShowRef.current?.removeEventListener('wheel', wheelHandler);
+        };
+    }, [sectionIndex]);
+
+    // Handle touch swipe navigation
+    useEffect(() => {
+        if (!touchSwipeEnabled) return;
+
+        let topDistance = -1;
+        let bottomDistance = -1;
+        let touchStartY: number;
+        let touchEndY: number;
+
+        const touchStartHandler = (e: TouchEvent) => {
+            touchStartY = e.touches[0].clientY;
+            topDistance = distanceFromTopOfSection(getActiveSection());
+            bottomDistance = distanceFromBottomOfSection(getActiveSection());
+        };
+
+        const touchEndHandler = (e: TouchEvent) => {
+            touchEndY = e.changedTouches[0].clientY;
+            const distanceMoved = touchStartY - touchEndY;
+
+            if (distanceMoved < -PHONE_SWIPE_THRESHOLD && topDistance == 0) {
+                switchSectionInDirection('up');
+            } else if (distanceMoved > PHONE_SWIPE_THRESHOLD && bottomDistance == 0) {
+                switchSectionInDirection('down');
+            }
+        };
+
+        slideShowRef.current?.addEventListener('touchstart', touchStartHandler);
+        slideShowRef.current?.addEventListener('touchend', touchEndHandler);
+
+        return () => {
+            slideShowRef.current?.removeEventListener('touchstart', touchStartHandler);
+            slideShowRef.current?.removeEventListener('touchend', touchEndHandler);
+        };
+    }, [sectionIndex]);
+
     function getActiveSection(): HTMLElement {
         const slideShowElement = slideShowRef.current as HTMLElement;
         const sectionElements: HTMLCollectionOf<Element> =
             slideShowElement.getElementsByClassName('section');
         return sectionElements[sectionIndex] as HTMLElement;
+    }
+
+    function scrollToSection(sectionIndex: number) {
+        // Scroll to the active section when the section index changes
+        const sectionElements: HTMLCollectionOf<Element> =
+            document.getElementsByClassName('section');
+        let activeSection: HTMLElement = sectionElements[sectionIndex] as HTMLElement;
+        const scrollOptions: ScrollToOptions = {
+            top: activeSection.offsetTop,
+            behavior: movementMode,
+        };
+        isChangingSectionRef.current = true;
+
+        // Scroll to the active section
+        slideShowRef.current?.scrollTo(scrollOptions);
     }
 
     function distanceFromTopOfSection(sectionContainer: HTMLElement): number {
@@ -131,8 +230,11 @@ function VerticalSectionsSlideshow(props: Props) {
     }
 
     function switchSectionToIndex(index: number) {
+        if (window.performance.now() - lastSectionChangeTime < minSectionInterval) return;
+
         if (index < 0 || index >= sections.length) return;
         setSectionIndex(index);
+        setLastSectionChangeTime(window.performance.now());
         onSectionIndexChange(index);
     }
 
@@ -151,36 +253,40 @@ function VerticalSectionsSlideshow(props: Props) {
         return newIndex < 0 || newIndex >= sections.length;
     }
 
+    const movementArrowsJSX = visibleMovementArrows ? (
+        <div className='move-section-btns-container'>
+            <button
+                className={
+                    'move-section-up-btn general-btn-1 ' +
+                    (isMoveSectionBtnDisabled('up') ? 'disabled' : '')
+                }
+                onClick={() => switchSectionInDirection('up')}
+            >
+                <CorrectedSVG src={arrowUp} />
+            </button>
+            <button
+                className={
+                    'move-section-down-btn general-btn-1 ' +
+                    (isMoveSectionBtnDisabled('down') ? 'disabled' : '')
+                }
+                onClick={() => switchSectionInDirection('down')}
+            >
+                <CorrectedSVG src={arrowDown} />
+            </button>
+        </div>
+    ) : null;
+
     return (
         <div
             className={`vertical-sections-slideshow-container fade-in-500ms`}
             ref={slideShowRef}
         >
-                <div className='move-section-btns-container'>
-                    <button
-                        className={
-                            'move-section-up-btn general-btn-1 ' +
-                            (isMoveSectionBtnDisabled('up') ? 'disabled' : '')
-                        }
-                        onClick={() => switchSectionInDirection('up')}
-                    >
-                        <CorrectedSVG src={arrowUp} />
-                    </button>
-                    <button
-                        className={
-                            'move-section-down-btn general-btn-1 ' +
-                            (isMoveSectionBtnDisabled('down') ? 'disabled' : '')
-                        }
-                        onClick={() => switchSectionInDirection('down')}
-                    >
-                        <CorrectedSVG src={arrowDown} />
-                    </button>
-                </div>
-                <div className='sections-container'>
-                    {sections.map((section, index) => (
-                        <div key={index}>{section.component}</div>
-                    ))}
-                </div>
+            {movementArrowsJSX}
+            <div className='sections-container'>
+                {sections.map((section, index) => (
+                    <div key={index}>{section.component}</div>
+                ))}
+            </div>
         </div>
     );
 }

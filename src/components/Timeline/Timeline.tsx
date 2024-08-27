@@ -4,7 +4,9 @@ import './Timeline.scss';
 export interface ITimelineItem {
     name: string;
     imageURL: string;
-    acquired: number;
+    timeframe: number;
+    /** @deprecated Use timeframe instead */
+    acquired?: number;
 }
 
 type Props = {
@@ -17,7 +19,16 @@ function Timeline(props: Props) {
 
     const itemsContainerRef = useRef<HTMLDivElement>(null);
 
-    let previousAcquiredStr: string = '';
+    let previousTimeframeStr: string = '';
+    let timeframeIndex: number = 0;
+
+    // Handle deprecated 'acquired' property
+    for (const item of items) {
+        if (item.acquired) {
+            item.timeframe = item.acquired;
+            delete item.acquired;
+        }
+    }
 
     useEffect(() => {
         setDisplaySettings();
@@ -50,9 +61,20 @@ function Timeline(props: Props) {
         }
     }
 
-    function convertAcquiredNumberToString(acquired: number): string {
-        const decimal = acquired % 1;
-        const year = Math.floor(acquired);
+    function convertTimeframeNumberToSimpleString(timeframe: number): string {
+        const decimal = timeframe % 1;
+        const year = Math.floor(timeframe);
+
+        if (decimal < 0.01) return `year-${year.toString()}`;
+        if (decimal <= 0.33) return `early-${year}`;
+        if (decimal <= 0.66) return `mid-${year}`;
+        if (decimal <= 1) return `late-${year}`;
+        else return `${year.toString()}`;
+    }
+
+    function convertTimeframeNumberToString(timeframe: number): string {
+        const decimal = timeframe % 1;
+        const year = Math.floor(timeframe);
 
         if (decimal < 0.01) return `${year.toString()}`;
         if (decimal <= 0.33) return `<span class='year-point'>Early </span>${year}`;
@@ -61,11 +83,36 @@ function Timeline(props: Props) {
         else return `${year.toString()}`;
     }
 
+    function onTimelineBtn(hovered: boolean, timeframe: string) {
+        const foundElements = document.querySelectorAll(`.${timeframe}`);
+        console.log(foundElements);
+        foundElements.forEach((element) => {
+            if (hovered) {
+                element.classList.add('active');
+            } else {
+                element.classList.remove('active');
+            }
+        });
+    }
+
+    function onItemBtn(hovered: boolean, item: ITimelineItem, key: number) {
+        const simpleTimeframeStr: string = convertTimeframeNumberToSimpleString(item.timeframe);
+        const foundBtn = document.querySelectorAll(`.timeline-item-btn.${simpleTimeframeStr}`)[key] as HTMLButtonElement;
+
+        if (foundBtn) {
+            if (hovered) {
+                foundBtn.classList.add('active');
+            } else {
+                foundBtn.classList.remove('active');
+            }
+        }
+    }
+
     function renderItemsTimeline() {
-        // Order items by acquired date
+        // Order items by timeframe date
         const orderedItems = [...items].sort((a, b) => {
-            if (a.acquired < b.acquired) return -1;
-            if (a.acquired > b.acquired) return 1;
+            if (a.timeframe < b.timeframe) return -1;
+            if (a.timeframe > b.timeframe) return 1;
             return 0;
         });
 
@@ -113,30 +160,39 @@ function Timeline(props: Props) {
                 {items.map((item, index) => {
                     const isLastItem = item === items[items.length - 1];
                     const isVeryFirstItem = item === items[0] && isFirst;
-                    const acquired = item.acquired;
-                    const acquiredStr: string = convertAcquiredNumberToString(acquired);
-                    const cachedPreviousAcquiredStr = previousAcquiredStr;
+                    const timeframe = item.timeframe;
+                    const timeframeStr: string = convertTimeframeNumberToString(timeframe);
+                    const simpleTimeframeStr: string = convertTimeframeNumberToSimpleString(timeframe);
+                    const cachedPreviousTimeframeStr = previousTimeframeStr;
 
-                    previousAcquiredStr = acquiredStr;
+                    timeframeIndex++;
+                    if (previousTimeframeStr !== simpleTimeframeStr) {
+                        previousTimeframeStr = simpleTimeframeStr;
+                        timeframeIndex = 0;
+                    }
 
                     if (isLastItem && isLast) {
                         return (
                             <>
-                                <div className='timeline-row-line'>
-                                    <span
+                                <div className={`timeline-row-line ${cachedPreviousTimeframeStr !== simpleTimeframeStr && cachedPreviousTimeframeStr} ${simpleTimeframeStr}`}>
+                                    <button
                                         className={
-                                            'acquired ' +
-                                            (cachedPreviousAcquiredStr ===
-                                            acquiredStr
+                                            'timeframe ' +
+                                            (cachedPreviousTimeframeStr ===
+                                            simpleTimeframeStr
                                                 ? 'hidden'
-                                                : '')
+                                                : 'new-timeframe')
                                         }
-                                        dangerouslySetInnerHTML={{__html: acquiredStr}}
+                                        dangerouslySetInnerHTML={{__html: timeframeStr}}
+                                        onMouseEnter={() => onTimelineBtn(true, simpleTimeframeStr)}
+                                        onMouseLeave={() => onTimelineBtn(false, simpleTimeframeStr)}
+                                        onTouchStart={() => onTimelineBtn(true, simpleTimeframeStr)}
+                                        onTouchEnd={() => onTimelineBtn(false, simpleTimeframeStr)}
                                     />
                                 </div>
-                                {renderItem(item, index)}
-                                <div className='timeline-row-line final'>
-                                    <span className='acquired'>Today</span>
+                                {renderItem(item, timeframeIndex)}
+                                <div className={`timeline-row-line final ${simpleTimeframeStr}`}>
+                                    <span className='timeframe'>Today</span>
                                 </div>
                                 <div className='edge'></div>
                             </>
@@ -149,20 +205,24 @@ function Timeline(props: Props) {
                                 <div className='edge'></div>
                             ) : null}
                             <div
-                                className={`timeline-row-line ${isVeryFirstItem ? 'start' : ''}`}
+                                className={`timeline-row-line ${cachedPreviousTimeframeStr !== simpleTimeframeStr && cachedPreviousTimeframeStr} ${simpleTimeframeStr} ${isVeryFirstItem ? 'start' : ''}`}
                             >
-                                <span
+                                <button
                                     className={
-                                        'acquired ' +
-                                        (cachedPreviousAcquiredStr === acquiredStr
+                                        'timeframe ' +
+                                        (cachedPreviousTimeframeStr === simpleTimeframeStr
                                             ? 'hidden'
-                                            : '')
+                                            : 'new-timeframe')
                                     }
-                                    dangerouslySetInnerHTML={{__html: acquiredStr}}
+                                    dangerouslySetInnerHTML={{__html: timeframeStr}}
+                                    onMouseEnter={() => onTimelineBtn(true, simpleTimeframeStr)}
+                                    onMouseLeave={() => onTimelineBtn(false, simpleTimeframeStr)}
+                                    onTouchStart={() => onTimelineBtn(true, simpleTimeframeStr)}
+                                    onTouchEnd={() => onTimelineBtn(false, simpleTimeframeStr)}
                                 />
                             </div>
-                            {renderItem(item, index)}
-                            {isLastItem ? (<div className='timeline-row-line'></div>) : null}
+                            {renderItem(item, timeframeIndex)}
+                            {isLastItem ? (<div className={`timeline-row-line ${simpleTimeframeStr}`}></div>) : null}
                         </>
                     );
                 })}
@@ -172,9 +232,15 @@ function Timeline(props: Props) {
 
     function renderItem(item: ITimelineItem, key: number) {
         const { name, imageURL } = item;
+        const simpleTimeframeStr: string = convertTimeframeNumberToSimpleString(item.timeframe);
 
         return (
-            <button className='timeline-item-btn' key={key}>
+            <button
+                className={`timeline-item-btn ${simpleTimeframeStr}`}
+                key={key}
+                onMouseEnter={() => onItemBtn(true, item, key)}
+                onMouseLeave={() => onItemBtn(false, item, key)}
+            >
                 <img src={imageURL} alt={name} draggable={false} />
                 <span>{name}</span>
             </button>
