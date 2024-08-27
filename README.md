@@ -17,6 +17,7 @@ See the [Examples](https://github.com/CorieW/Cories-Portfolio-Template/tree/mast
 - Added auto-transition toggle button
 
 # Todo
+- Need to update examples to reflect new version
 - More color customization
 - StarryCanvas customization
     - Toggle StarryCanvas
