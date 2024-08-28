@@ -18,6 +18,7 @@ See the [Examples](https://github.com/CorieW/Cories-Portfolio-Template/tree/mast
 
 # Todo
 - Need to update examples to reflect new version
+- Scrolling could be smoother when scrolling many times at once.
 - More color customization
 - StarryCanvas customization
     - Toggle StarryCanvas
